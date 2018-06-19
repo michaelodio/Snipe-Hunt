@@ -1,5 +1,7 @@
 from nose.tools import *
-from ex1 import code
+from ex1 import VideoManager
+
+
 
 def test_add():
     print add(2, 3)
