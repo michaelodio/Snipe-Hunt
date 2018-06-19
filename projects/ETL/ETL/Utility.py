@@ -12,9 +12,7 @@ from tkFileDialog import askopenfilename
 class Utility(object):
 
     def __init__(self):
-        """
-        This is the constructor
-        """
+        """This is the constructor"""
         self.storePaths = []
 
     def get_file_paths(self, directory):
@@ -27,4 +25,6 @@ class Utility(object):
     def display_file_paths(self):
         for stuff in self.storePaths:
             print stuff
+    
+    
 
