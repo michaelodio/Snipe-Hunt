@@ -4,35 +4,30 @@ import ntpath
 import base64
 
 
-
 class VideoETL(object):
-    def __init__(self, filePath):
-        self.filePath = filePath
-        self.fileName = ntpath.basename(self.filePath)
-        self.frameList = []
-        self.frameMetadataDictList = []
-        self.videoMetadataDict = {}
+    def __init__(self, videoPath):
+        self.videoPath = videoPath
+        self.videoName = ntpath.basename(self.videoPath)
         self.videoMetadataJson = None
         self.frameMetadataJsonList = []
         self.totalFrame = None
         self.FPS = None
-
-
+        self.videoDuration = None
 
     def splitFrames(self):
-        print("Splitting Frames...\n")
-        cap = cv2.VideoCapture(self.filePath)    # open video in openCV
-        # collect metadata on video as a whole
+        print("Splitting Frames and extracting metadata...\n")
+        cap = cv2.VideoCapture(self.videoPath)    # open video in openCV
         self.totalFrame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))    # grab total frames in the video
         self.FPS = int(cap.get(cv2.CAP_PROP_FPS))     # grab the frames per second of the video
-        self.videoMetadataDict = {'filePath': self.filePath, 'fileName': self.fileName, 'totalFrames': self.totalFrame, 'FPS': self.FPS}    # store collected metadata of the video as a dict
-        # if video cap(ture) is open then start loop for splitting frames and extracting metadata on each frame.
+        self.videoDuration = round(self.totalFrame / self.FPS)   # calculate the video's duration
+        self.videoMetadataJson = json.dumps({'videoPath': self.videoPath, 'videoName': self.videoName, 'videoDuration': str(self.videoDuration) + " seconds", 'totalFrames': self.totalFrame, 'FPS': self.FPS})  # convert metadata to json
         if cap.isOpened is False:
             print("Error opening video stream or file")
         for x in range(self.totalFrame):     # loop through all of the frames and add the frames to a list and extract meta data on each frame
             frameNum = cap.get(cv2.CAP_PROP_POS_FRAMES)
-            retval, frame = cap.read()     # grab the next frame
-            self.frameList.append(frame)    # add the frame to a list
+            retval, videoframe = cap.read()     # grab the next frame
+            cv2.imencode(".jpeg", videoframe)    # convert frame to JPEG image.
+            frame = cv2.resize(videoframe, (300,300))    # resize frame to 300x300
             self.extractFrameMetadata(frame, frameNum, cap)    # collect metadata on the frame
         cap.release()
 
@@ -40,26 +35,21 @@ class VideoETL(object):
         timeStamp = round(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000    # collect time stamp and convert it to seconds
         retval, frameConvertedToJPG = cv2.imencode('.jpg', frame)   # encode frame to .jpg for base64string conversion
         frameAsBase64String = base64.b64encode(frameConvertedToJPG)    # encode frame to base64String
-        self.frameMetadataDictList.append({'frameNum': frameNum, 'timeStamp': str(timeStamp) + " seconds", 'imageBase64': frameAsBase64String})    # add collected frame metadata to list
+        self.frameMetadataJsonList.append(json.dumps({'frameNum': frameNum, 'timeStamp': str(timeStamp) + " seconds", 'imageBase64': frameAsBase64String}))    # convert collected frame metadata to json and add it to list
         return
 
-    def createJson(self):
-        self.videoMetadataJson = json.dumps(self.videoMetadataDict)    # creates a JSON string of the video metadata python dictionary
-        print("Video metadata converted to Json: " + self.videoMetadataJson + "\n")
-        print("Each frame's metadata converted to Json: ")
-        for i in range(len(self.frameMetadataDictList)):
-            frameMetadataDictToJson = json.dumps(self.frameMetadataDictList[i])    # creates a JSON string of the metadata of a certain frame from a python dictionary
-            self.frameMetadataJsonList.append(frameMetadataDictToJson)    # adds the JSON string of that certain frame to a list
-
-
-
-def main():
-    videoEditor = VideoETL("/home/bt-intern2/Videos/Nature Beautiful short video 720p HD.mp4")  # creates a videoETL object that can perform the ETL methods on a video
-    videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
-    videoEditor.createJson()   # creates and stores a JSON of the video metadata and JSONS of each frame's metadata.
-    return
-
+    def storeJson(self):
+        print("Storing metadata Json files locally... \n")
+        file1 = open('/home/bt-intern2/French-Flag-Finder/projects/ETL/ETL/videoJson.txt', 'w')   # open file handler for videoJson.txt
+        file2 = open('/home/bt-intern2/French-Flag-Finder/projects/ETL/ETL/framesJson.txt', 'w')   # open file handler for framesJson.txt
+        file1.write(self.videoMetadataJson)     # write the metadata Json information on the video to the file
+        for i in range(len(self.frameMetadataJsonList)):     # loop through the list of the frames metadata Jsons and write them to the the file
+            file2.write(str(self.frameMetadataJsonList[i]) + "\n\n")
+        file1.close()
+        file2.close()
 
 if __name__ == "__main__":
-    main()
+    videoEditor = VideoETL("/home/bt-intern2/Videos/Nature Beautiful short video 720p HD.mp4")  # creates a videoETL object that can perform the ETL methods on a video
+    videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
+    videoEditor.storeJson()    # stores the Json files locally
 
