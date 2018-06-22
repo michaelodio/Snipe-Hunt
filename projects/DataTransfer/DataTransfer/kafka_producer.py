@@ -1,23 +1,25 @@
 # Matt Stillwell
 from kafka import KafkaProducer
-import json
 
 
-class Producer(object):
+class Producer:
 
-    def __init__(self):
-        """ Constructor: Sets up the kafka producer to serialized json output on localhost port 9092 """
-        self.producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
-        self.timeout = 30    # blocks for syncronized sends: ensures message sent within 30 seconds
-
-    def push_json(self, topic_name, json):
+    @staticmethod
+    def push_json(topic_name, data):
         """ Pushes JSON to topic within time interval """
-        self.producer.send(topic_name, json).get(timeout=self.timeout)
+        import json
+        # Sets up the kafka producer to serialized json output on localhost port 9092
+        producer = KafkaProducer(bootstrap_servers='localhost:9092',
+                                      value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+        # blocks for syncronized sends: ensures message sent within 30 seconds
+        timeout = 30
+        producer.send(topic_name, data).get(timeout=timeout)
 
-    def push_jsons(self, topic_name, json_array):
+    @staticmethod
+    def push_jsons(topic_name, json_array):
         """ Pushes array of JSONs to topic within time interval"""
         for json in json_array:
-            self.push_json(topic_name, json)
+            Producer.push_json(topic_name, json)
 
 
 def main():
@@ -31,9 +33,8 @@ def main():
              {"frameNum": 5, "timeStamp": 50, "imageBase64": "1293948e43"},
              {"frameNum": 6, "timeStamp": 60, "imageBase64": "555405039k"}]
 
-    p = Producer()
-    #p.push_jsons(topic_name, data)
-    p.push_jsons(topic_name, data2)
+    Producer.push_jsons(topic_name, data)
+    Producer.push_jsons(topic_name, data2)
 
 
 if __name__ == "__main__":

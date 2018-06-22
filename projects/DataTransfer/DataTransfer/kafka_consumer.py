@@ -1,39 +1,38 @@
 # Matt Stillwell
 from kafka import KafkaConsumer
-import json
 # listens on port 2181
 
 
 class Consumer(object):
 
-    def __init__(self, topic_name):
-        """ Constructor: Sets up the kafka consumer to listen for serialized json files on a specific topic """
-        self.consumer = KafkaConsumer(topic_name, value_deserializer=lambda m: json.loads(m.decode('ascii')))
-        # all:  auto_offset_reset='earliest', enable_auto_commit=False
-
-    def pull_jsons(self):
+    @staticmethod
+    def pull_jsons(topic_name):
         """ Listens on a topic for dictionaries """
+        import json
+        # Sets up the kafka consumer to listen for serialized json files on a specific topic
+        consumer = KafkaConsumer(topic_name, value_deserializer=lambda m: json.loads(m.decode('ascii')))
+        # all:  auto_offset_reset='earliest', enable_auto_commit=False
         print "------------------------------\nFrame#\tTime\tImage\n------------------------------"
-        for message in self.consumer:
-            json = message.value
-            print "%r\t\t%r\t\t%r" % (get_frame_num(json),
-                                  get_time_stamp(json),
-                                  get_image_base_64(json))
+        for message in consumer:
+            data = message.value
+            print "%r\t\t%r\t\t%r" % (get_frame_num(data),
+                                  get_time_stamp(data),
+                                  get_image_base_64(data))
 
 
-def get_frame_num(json):
+def get_frame_num(data):
     """ Returns frame number from json """
-    return json['frameNum']
+    return data['frameNum']
 
 
-def get_time_stamp(json):
+def get_time_stamp(data):
     """ Returns time stamp from json """
-    return json['timeStamp']
+    return data['timeStamp']
 
 
-def get_image_base_64(json):
+def get_image_base_64(data):
     """ Returns image base 64 from json """
-    return json['imageBase64'].encode("ascii")
+    return data['imageBase64'].encode("ascii")
 
 
 def main():
