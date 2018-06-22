@@ -6,8 +6,7 @@ def test_push_json():
     """ Tests the push_json method """
     topic_name = 'bay'
     data = {"frameNum": 0, "timeStamp": 0, "imageBase64": "32ff33ff32"}
-    producer = Producer()
-    producer.push_json(topic_name, data)
+    Producer.push_json(topic_name, data)
 
 
 def test_push_jsons():
@@ -21,6 +20,5 @@ def test_push_jsons():
              {"frameNum": 5, "timeStamp": 50, "imageBase64": "1293948e43"},
              {"frameNum": 6, "timeStamp": 60, "imageBase64": "555405039k"}]
 
-    p = Producer()
-    p.push_jsons(topic_name, data)
-    p.push_jsons(topic_name, data2)
+    Producer.push_jsons(topic_name, data)
+    Producer.push_jsons(topic_name, data2)
