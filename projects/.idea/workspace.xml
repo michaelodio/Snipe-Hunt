@@ -11,21 +11,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="kafka_producer_tests.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/DataTransfer/tests/kafka_producer_tests.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="370">
-              <caret line="20" column="44" lean-forward="false" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="kafka_consumer.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="kafka_consumer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DataTransfer/DataTransfer/kafka_consumer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+            <state relative-caret-position="351">
+              <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -34,30 +24,8 @@
       <file leaf-file-name="kafka_producer.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DataTransfer/DataTransfer/kafka_producer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-181">
-              <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-              <folding>
-                <element signature="e#17#48#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="etl_tests.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ETL/tests/etl_tests.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38">
-              <caret line="4" column="20" lean-forward="false" selection-start-line="4" selection-start-column="20" selection-end-line="4" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="kafka_consumer_tests.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DataTransfer/tests/kafka_consumer_tests.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="532">
-              <caret line="28" column="0" lean-forward="true" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+            <state relative-caret-position="541">
+              <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -84,11 +52,11 @@
         <option value="$PROJECT_DIR$/ETL/ETL/ETLProcess.py" />
         <option value="$PROJECT_DIR$/DataTransfer/DataTransfer/kafkaproducer.py" />
         <option value="$PROJECT_DIR$/DataTransfer/DataTransfer/kafkaconsumer.py" />
-        <option value="$PROJECT_DIR$/DataTransfer/DataTransfer/kafka_producer.py" />
-        <option value="$PROJECT_DIR$/DataTransfer/DataTransfer/kafka_consumer.py" />
         <option value="$PROJECT_DIR$/DataTransfer/DataTransfer/kafka_producer_tests.py" />
         <option value="$PROJECT_DIR$/DataTransfer/tests/kafka_producer_tests.py" />
         <option value="$PROJECT_DIR$/DataTransfer/tests/kafka_consumer_tests.py" />
+        <option value="$PROJECT_DIR$/DataTransfer/DataTransfer/kafka_producer.py" />
+        <option value="$PROJECT_DIR$/DataTransfer/DataTransfer/kafka_consumer.py" />
       </list>
     </option>
   </component>
@@ -163,7 +131,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Python-the-Hard-Way" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -189,7 +157,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.kafka_consumer_tests">
+  <component name="RunManager" selected="Python.kafkaproducer">
     <configuration name="ETLProcess" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -286,10 +254,10 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.kafka_consumer_tests" />
-        <item index="1" class="java.lang.String" itemvalue="Python tests.Nosetests in kafka_producer_tests.py" />
-        <item index="2" class="java.lang.String" itemvalue="Python.kafkaconsumer" />
-        <item index="3" class="java.lang.String" itemvalue="Python.kafkaproducer" />
+        <item index="0" class="java.lang.String" itemvalue="Python.kafkaproducer" />
+        <item index="1" class="java.lang.String" itemvalue="Python.kafkaconsumer" />
+        <item index="2" class="java.lang.String" itemvalue="Python.kafka_consumer_tests" />
+        <item index="3" class="java.lang.String" itemvalue="Python tests.Nosetests in kafka_producer_tests.py" />
         <item index="4" class="java.lang.String" itemvalue="Python.ETLProcess" />
       </list>
     </recent_temporary>
@@ -536,24 +504,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DataTransfer/DataTransfer/kafka_consumer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DataTransfer/DataTransfer/kafka_producer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-181">
-          <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding>
-            <element signature="e#17#48#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ETL/tests/etl_tests.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="38">
@@ -564,8 +514,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DataTransfer/tests/kafka_producer_tests.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="370">
-          <caret line="20" column="44" lean-forward="false" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
+        <state relative-caret-position="342">
+          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataTransfer/DataTransfer/kafka_producer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="541">
+          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataTransfer/DataTransfer/kafka_consumer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
           <folding />
         </state>
       </provider>
