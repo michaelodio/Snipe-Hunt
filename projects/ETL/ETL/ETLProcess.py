@@ -54,7 +54,7 @@ class VideoETL(object):
 
 
 def main():
-    videoEditor = VideoETL("/home/bt-intern2/Videos/Nature Beautiful short video 720p HD.mp4")  # creates a videoETL object that can perform the ETL methods on a video
+    videoEditor = VideoETL("/home/bt-intern5/Videos/Nature Beautiful short video 720p HD.mp4")  # creates a videoETL object that can perform the ETL methods on a video
     videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
     videoEditor.createJson()   # creates and stores a JSON of the video metadata and JSONS of each frame's metadata.
     return
