@@ -23,7 +23,7 @@ class VideoETL(object):
         self.videoMetadataJson = json.dumps({'videoPath': self.videoPath, 'videoName': self.videoName, 'videoDuration': str(self.videoDuration) + " seconds", 'totalFrames': self.totalFrame, 'FPS': self.FPS})  # convert metadata to json
         if cap.isOpened is False:
             print("Error opening video stream or file")
-        for x in range(self.totalFrame):     # loop through all of the frames and add the frames to a list and extract meta data on each frame
+        for x in range(self.totalFrame):     # loop through all of the frames and extract meta data on each frame
             frameNum = cap.get(cv2.CAP_PROP_POS_FRAMES)
             retval, videoframe = cap.read()     # grab the next frame
             cv2.imencode(".jpeg", videoframe)    # convert frame to JPEG image.
