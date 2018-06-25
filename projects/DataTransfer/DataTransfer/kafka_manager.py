@@ -12,7 +12,7 @@ class Manager:
 
     @staticmethod
     def stop_server():
-        """ Starts kafka """
+        """ Stops kafka """
         import os
         os.system('./stop_server.sh')
 
