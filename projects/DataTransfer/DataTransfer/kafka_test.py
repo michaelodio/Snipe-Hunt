@@ -7,7 +7,7 @@ def main():
                 {"frameNum": 2, "timeStamp": 20, "imageBase64": "43hfhuf6b3"},
                 {"frameNum": 3, "timeStamp": 30, "imageBase64": "9fbufbh434"}]
 
-        Manager.start_server()
+        #Manager.start_server()
 
         # Manager.clear_topic('TutorialTopic')
         Manager.list_topics()
