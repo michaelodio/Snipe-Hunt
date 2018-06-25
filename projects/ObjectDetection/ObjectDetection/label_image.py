@@ -76,8 +76,8 @@ def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frame)
   file_name = frame
   model_file = graph
   label_file = labels
-  input_height = int(inputHeight)
-  input_width = int(inputWidth)
+  input_height = inputHeight
+  input_width = inputWidth
   input_mean = 0
   input_std = 255
   input_layer = inputLayer
