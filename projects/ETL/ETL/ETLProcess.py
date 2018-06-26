@@ -20,10 +20,7 @@ class VideoETL(object):
         cap = cv2.VideoCapture(self.videoPath)    # open video in openCV
         self.totalFrame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))    # grab total frames in the video
         self.FPS = int(cap.get(cv2.CAP_PROP_FPS))     # grab the frames per second of the video
-        if self.FPS != 0:
-            self.videoDuration = round(self.totalFrame / self.FPS)   # calculate the video's duration
-        else:
-            self.videoDuration = "roughly " + str(round(self.totalFrame / 30))   # if OpenCV returns '0' for the video's FPS then we assume the standard 30 FPS for an estimated video duration
+        self.videoDuration = round(self.totalFrame / self.FPS)   # calculate the video's duration
         self.videoMetadataJson = json.dumps({'videoPath': self.videoPath, 'videoName': self.videoName, 'videoDuration': str(self.videoDuration) + " seconds", 'totalFrames': self.totalFrame, 'FPS': self.FPS})  # convert metadata to json
         if cap.isOpened is False:
             print("Error opening video stream or file")
