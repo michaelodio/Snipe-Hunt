@@ -2,6 +2,7 @@ import cv2
 import json
 import ntpath
 import base64
+import argparse
 
 
 class VideoETL(object):
@@ -19,7 +20,10 @@ class VideoETL(object):
         cap = cv2.VideoCapture(self.videoPath)    # open video in openCV
         self.totalFrame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))    # grab total frames in the video
         self.FPS = int(cap.get(cv2.CAP_PROP_FPS))     # grab the frames per second of the video
-        self.videoDuration = round(self.totalFrame / self.FPS)   # calculate the video's duration
+        if self.FPS != 0:
+            self.videoDuration = round(self.totalFrame / self.FPS)   # calculate the video's duration
+        else:
+            self.videoDuration = "roughly " + str(round(self.totalFrame / 30))   # if OpenCV returns '0' for the video's FPS then we assume the standard 30 FPS for an estimated video duration
         self.videoMetadataJson = json.dumps({'videoPath': self.videoPath, 'videoName': self.videoName, 'videoDuration': str(self.videoDuration) + " seconds", 'totalFrames': self.totalFrame, 'FPS': self.FPS})  # convert metadata to json
         if cap.isOpened is False:
             print("Error opening video stream or file")
@@ -49,7 +53,11 @@ class VideoETL(object):
         file2.close()
 
 if __name__ == "__main__":
-    videoEditor = VideoETL("/home/bt-intern2/Videos/Nature Beautiful short video 720p HD.mp4")  # creates a videoETL object that can perform the ETL methods on a video
-    videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
-    videoEditor.storeJson()    # stores the Json files locally
-
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--video', type=str, help='Path to video for processing')
+    FLAGS, unparsed = parser.parse_known_args()
+    if FLAGS.video:
+        videoEditor = VideoETL(FLAGS.video)
+        videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
+        videoEditor.storeJson()    # stores the Json files locally
+          
