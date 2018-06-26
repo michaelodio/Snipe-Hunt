@@ -5,10 +5,8 @@ graph = "/home/bt-intern2/TfModule/output_graph.pb"
 labels = "/home/bt-intern2/TfModule/output_labels.txt"
 input_layer = "Placeholder"
 output_layer = "final_result"
-input_height = 224
-input_width = 224
-frame = "/home/bt-intern2/Downloads/TestImages/TestImagesCar/TestCar1.jpeg"
-video = "/home/bt-intern2/Videos/French Flag Presented by Army Football Team.mp4"
+input_height = 224   # Neccessary input_height for mobilnet model
+input_width = 224    # Neccessary input_wifth for mobilenet model
 
 if __name__ == "__main__":
     cap = cv2.VideoCapture(video)    # open video in openCV
