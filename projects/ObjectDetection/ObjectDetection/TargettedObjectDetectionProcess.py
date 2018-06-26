@@ -3,6 +3,10 @@ import cv2
 import base64
 import json
 import numpy as np
+import sys
+sys.path.insert(0, '/home/bt-intern2/French-Flag-Finder/projects/DataTransfer/DataTransfer/')
+from kafka_manager import *
+
 
 graph = "/home/bt-intern2/TfModule/output_graph.pb"
 labels = "/home/bt-intern2/TfModule/output_labels.txt"
@@ -14,6 +18,7 @@ fh = open("/home/bt-intern2/Pictures/testingB64decode.jpeg", "wb")   # used for 
 
 
 if __name__ == "__main__":
+    json_data = Consumer.pull_jsons("framefeeder")
     json_data_parsed = json.loads(json_data)   # loads json data into a parsed string (back to dict)
     frameBase64 = json_data_parsed["imageBase64"]   # extracts base64 string of image (frame)
     frame = base64.b64decode(frameBase64)         # decodes base64 image
