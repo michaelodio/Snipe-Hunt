@@ -5,8 +5,8 @@ import base64
 import argparse
 import sys
 from os.path import expanduser
-sys.path.insert(0, expanduser("~") + "/French-Flag-Finder/projects/DataTransfer/DataTransfer/")   # used to import files from other folder dir in project
-sys.path.insert(0, expanduser("~") + "/French-Flag-Finder/projects/ObjectDetection/ObjectDetection")   # used to import files from other folder dir in project
+sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
+sys.path.insert(0, "../ObjectDetection/")   # used to import files from other folder dir in project
 from kafka_manager import *
 from TargettedObjectDetectionProcess import main as targetedObjDet
 
@@ -47,8 +47,8 @@ class VideoETL(object):
 
     def storeJson(self):
         print("Storing metadata Json files locally... \n")
-        file1 = open('/home/bt-intern2/French-Flag-Finder/projects/ETL/ETL/videoJson.txt', 'w')   # open file handler for videoJson.txt
-        file2 = open('/home/bt-intern2/French-Flag-Finder/projects/ETL/ETL/framesJson.txt', 'w')   # open file handler for framesJson.txt
+        file1 = open('../../res/videoJson.txt', 'w')   # open file handler for videoJson.txt
+        file2 = open('../../res/framesJson.txt', 'w')   # open file handler for framesJson.txt
         file1.write(self.videoMetadataJson)     # write the metadata Json information on the video to the file
         for i in range(len(self.frameMetadataJsonList)):     # loop through the list of the frames metadata Jsons and write them to the the file
             file2.write(str(self.frameMetadataJsonList[i]) + "\n\n")

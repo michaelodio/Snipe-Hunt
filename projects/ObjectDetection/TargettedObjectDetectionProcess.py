@@ -5,18 +5,18 @@ import base64
 import json
 import numpy as np
 import sys
-sys.path.insert(0, expanduser("~") + "/French-Flag-Finder/projects/DataTransfer/DataTransfer/")   # used to import files from other folder (DataTransfer) dir in project
+sys.path.insert(0, "../DataTransfer")   # used to import files from other folder (DataTransfer) dir in project
 from kafka_manager import *
 
 
 
-graph = "/home/bt-intern2/TfModule/output_graph.pb"
-labels = "/home/bt-intern2/TfModule/output_labels.txt"
+graph = "../../res/TfModel/output_graph.pb"
+labels = "../../res/TfModel/output_labels.txt"
 input_layer = "Placeholder"
 output_layer = "final_result"
 input_height = 224   # Neccessary input_height for mobilnet model
 input_width = 224    # Neccessary input_wifth for mobilenet model
-fh = open(expanduser("~") + "/Pictures/testingB64decode.jpeg", "wb")   # used for writing decoded base64 image locally to then be tested against with label_image()
+fh = open("../../res/testingB64decode.jpeg", "wb")   # used for writing decoded base64 image locally to then be tested against with label_image()
 
 
 def main():
@@ -28,7 +28,7 @@ def main():
         frameBase64 = json_data_parsed["imageBase64"]   # extracts base64 string of image (frame)
         frame = base64.b64decode(frameBase64)         # decodes base64 image
         fh.write(frame)        # writes decoded image to file in order to pass filepath to label_Image script
-        labelImage(graph, labels, input_layer, output_layer, input_height, input_width, (expanduser("~") + "/Pictures/testingB64decode.jpeg"))    # tests frame for targeted object
+        labelImage(graph, labels, input_layer, output_layer, input_height, input_width, "../../res/testingB64decode.jpeg")    # tests frame for targeted object
     fh.close()
 
 if __name__ == "__main__":
