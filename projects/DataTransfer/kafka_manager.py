@@ -22,14 +22,14 @@ class Manager:
         import os
         str = 'cd ../../bin/ && ./clear_topic.sh %s' % topic_name
         os.system(str)
-        
+
     @staticmethod
     def delete_topic(topic_name):
         """ Deletes the topic """
         import os
         str = 'cd ../../bin/ && ./delete_topic.sh %s' % topic_name
         os.system(str)
-        
+
     @staticmethod
     def describe_topic(topic_name):
         """ Describes the topic """
