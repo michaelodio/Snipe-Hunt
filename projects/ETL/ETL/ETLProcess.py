@@ -3,6 +3,12 @@ import json
 import ntpath
 import base64
 import argparse
+import sys
+from os.path import expanduser
+sys.path.insert(0, expanduser("~") + "/French-Flag-Finder/projects/DataTransfer/DataTransfer/")   # used to import files from other folder dir in project
+sys.path.insert(0, expanduser("~") + "/French-Flag-Finder/projects/ObjectDetection/ObjectDetection")   # used to import files from other folder dir in project
+from kafka_manager import *
+from TargettedObjectDetectionProcess import main as targetedObjDet
 
 
 class VideoETL(object):
@@ -48,6 +54,13 @@ class VideoETL(object):
             file2.write(str(self.frameMetadataJsonList[i]) + "\n\n")
         file1.close()
         file2.close()
+        
+    def exportJsons(self):
+        print("Exporting Json files to kafka topic 'framefeeder'")
+        for i in range(len(self.frameMetadataJsonList)/10):
+            print("Exporting frame " + str(i))
+            Producer.push_json("framefeeder", self.frameMetadataJsonList[i])
+        
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -57,4 +70,6 @@ if __name__ == "__main__":
         videoEditor = VideoETL(FLAGS.video)
         videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
         videoEditor.storeJson()    # stores the Json files locally
+        videoEditor.exportJsons()  # push json files to kafka topic 'framefeeder'
+    targetedObjDet()               # run targeted object detection script now that json files (frames) are pushed to kafka
           
