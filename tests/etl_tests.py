@@ -1,11 +1,11 @@
 from nose.tools import *
 
 import sys
-sys.path.insert(0, 'C:\\Users\\Matt\\Desktop\\Python\\French-Flag-Finder\\projects\\ETL\\')
+sys.path.insert(0, '../projects')
 from ETL import etl 
 
 def test_display():
-    vm = etl.VideoManager('C:\\Users\\Matt\\Desktop\\Python\\French-Flag-Finder\\projects\\ETL\\res\\bunny.mp4')
+    vm = etl.VideoManager('../res/bunny.mp4')
     vm.display()
     vm.split()
 
