@@ -82,6 +82,7 @@ def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frame)
   input_std = 255
   input_layer = inputLayer
   output_layer = outputLayer
+  
 
   #parser = argparse.ArgumentParser()
   #parser.add_argument("--image", help="image to be processed")
