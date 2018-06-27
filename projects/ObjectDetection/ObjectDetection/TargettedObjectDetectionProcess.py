@@ -1,11 +1,13 @@
 from label_image import main as labelImage
+from os.path import expanduser
 import cv2
 import base64
 import json
 import numpy as np
 import sys
-sys.path.insert(0, '/home/bt-intern2/French-Flag-Finder/projects/DataTransfer/DataTransfer/')
+sys.path.insert(0, expanduser("~") + "/French-Flag-Finder/projects/DataTransfer/DataTransfer/")   # used to import files from other folder dir in project
 from kafka_manager import *
+
 
 
 graph = "/home/bt-intern2/TfModule/output_graph.pb"
@@ -24,10 +26,7 @@ if __name__ == "__main__":
     Producer.push_json("framefeeder", a)
     Producer.push_json("framefeeder", b)
     Producer.push_json("framefeeder", c)
-    json_data_list = Consumer.pull_jsons("framefeeder")   # pull next json from kafka topic
-    print(json_data_list[0])
-    print(json_data_list[1])
-    print(json_data_list[2])
+    json_data_list = Consumer.pull_jsons("framefeeder")   # pull jsons from kafka topic into list for processing
     #json_data_parsed = json.loads(json_data)   # loads json data into a parsed string (back to dict)
     #frameBase64 = json_data_parsed["imageBase64"]   # extracts base64 string of image (frame)
     #frame = base64.b64decode(frameBase64)         # decodes base64 image
