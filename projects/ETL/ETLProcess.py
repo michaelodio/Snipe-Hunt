@@ -57,7 +57,7 @@ class VideoETL(object):
         
     def exportJsons(self):
         print("Exporting Json files to kafka topic 'framefeeder'")
-        for i in range(len(self.frameMetadataJsonList)/10):
+        for i in range(len(self.frameMetadataJsonList)):
             print("Exporting frame " + str(i))
             Producer.push_json("framefeeder", self.frameMetadataJsonList[i])
         
