@@ -25,6 +25,4 @@ class Utility(object):
     def display_file_paths(self):
         for stuff in self.storePaths:
             print stuff
-    
-    
 

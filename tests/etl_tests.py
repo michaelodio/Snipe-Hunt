@@ -1,16 +1,21 @@
 from nose.tools import *
 
 import sys
-sys.path.insert(0, '../projects')
-from ETL import etl 
+sys.path.insert(0, '../projects/ETL/')
+from etl import * 
+
 
 def test_display():
-    vm = etl.VideoManager('../res/bunny.mp4')
+    """ Tests the display method of etl """
+    vm = VideoManager('../res/bunny.mp4')
     vm.display()
-    vm.split()
+    #vm.split()
+
 
 def main():
-    test_display
-    
+    """ Auto run main method """
+    test_display()
+
+
 if __name__ == "__main__":
     main()
