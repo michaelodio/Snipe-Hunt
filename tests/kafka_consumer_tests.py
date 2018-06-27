@@ -1,5 +1,9 @@
 # Matt Stillwell
-from DataTransfer.DataTransfer.kafka_consumer import *
+from nose.tools import *
+
+import sys
+sys.path.insert(0, '../projects/DataTransfer/')
+from kafka_consumer import *
 
 
 def test_pull_jsons():
@@ -8,20 +12,10 @@ def test_pull_jsons():
     Consumer.pull_jsons(topic_name)
 
 
-def test_get_num_frame():
-    """ Tests the get_num_frame method """
-    data = {"frameNum": 13, "timeStamp": 0, "imageBase64": "32ff33ff32"}
-    Consumer.get_frame_num(data)
+def main():
+    """ Auto run main method """
+    test_pull_jsons()
 
 
-def test_get_time_stamp():
-    """ Tests the get_time_stamp method """
-    data = {"frameNum": 13, "timeStamp": 0, "imageBase64": "32ff33ff32"}
-    Consumer.get_time_stamp(data)
-
-
-def test_get_image_base_64():
-    """ Tests the get_image_base_64 method """
-    data = {"frameNum": 13, "timeStamp": 0, "imageBase64": "32ff33ff32"}
-    Consumer.get_image_base_64(data)
-
+if __name__ == "__main__":
+    main()
