@@ -1,3 +1,3 @@
-# French-Flag-Finder
+# Iris
 
 I moved the code into projects/ETL/ETL
