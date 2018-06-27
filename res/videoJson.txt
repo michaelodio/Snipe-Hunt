@@ -1,0 +1,1 @@
+{"videoDuration": "29.0 seconds", "videoName": "bunny.mp4", "totalFrames": 739, "videoPath": "/home/bt-intern2/French-Flag-Finder/res/bunny.mp4", "FPS": 25}
