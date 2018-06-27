@@ -1,1 +1,1 @@
-nohup /home/Apps/kafka/bin/kafka-server-stop.sh &
+nohup $HOME/Apps/kafka/bin/kafka-server-stop.sh &
