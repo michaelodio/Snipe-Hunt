@@ -15,12 +15,12 @@ class VideoManager(object):
         while success:
             cv2.imwrite("C:\\Users\\Matt\\Desktop\\Python\\French-Flag-Finder\\projects\\ETL\\res\\frames\\frame%d.jpg" % count, image)
             success, image = vidcap.read()
-            print('Read a new frame: ', success)
+            #print('Read a new frame: ', success)
             count += 1
 
     def display(self):
         """Prints the file path of the video to the console"""
-        print self.file_path
+        #return self.file_path
 
 def main():
     vm = VideoManager('C:\\Users\\Matt\\Desktop\\Python\\French-Flag-Finder\\projects\\ETL\\res\\bunny.mp4')
