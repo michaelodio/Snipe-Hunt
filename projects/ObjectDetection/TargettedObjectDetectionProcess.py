@@ -21,9 +21,9 @@ input_width = 224    # Neccessary input_wifth for mobilenet model
 
     
 def main():
-    print("Consuming messages from 'framefeeder'\n")
+    print("\nConsuming messages from 'framefeeder'")
     json_data_list = Consumer.pull_jsons("framefeeder")   # pull jsons from kafka topic into list for processing
-    print("Running labelImage against all frames \n")
+    print("\nRunning labelImage against all frames ")
     for i in range(len(json_data_list)):
         json_data_parsed = json.loads(json_data_list[i])   # loads json data into a parsed string (back to dict)
         frameBase64 = json_data_parsed["imageBase64"]   # extracts base64 string of image (frame)
@@ -38,6 +38,7 @@ def main():
             json_data_list[i] = json.dumps(json_data_parsed)
     Utilities.storeJson(json_data_list, "../../res/frameMetadataListTargetOBJD.txt")    # Store updated metadata Jsons locally
     Utilities.exportJson(json_data_list, "target")    # export updated Json files to kafka topic 'target'
+    
 
 if __name__ == "__main__":
     main()
