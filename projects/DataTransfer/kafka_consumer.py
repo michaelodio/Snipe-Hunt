@@ -3,6 +3,7 @@ from kafka import KafkaConsumer
 import json
 # listens on port 2181
 
+
 class Consumer(object):
 
     @staticmethod
@@ -17,8 +18,3 @@ class Consumer(object):
             data = message.value
             json_list.append(data)
         return json_list
-
-
-
-
-

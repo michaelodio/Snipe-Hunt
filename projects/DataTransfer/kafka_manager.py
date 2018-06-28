@@ -8,13 +8,13 @@ class Manager:
     def start_server():
         """ Starts kafka """
         import os
-        os.system('cd ../../bin/ && ./start_server.sh')
+        os.system('cd ../../bin/ && ./start_kafka_server.sh')
 
     @staticmethod
     def stop_server():
         """ Stops kafka """
         import os
-        os.system('cd ../../bin/ && ./stop_server.sh')
+        os.system('cd ../../bin/ && ./stop_kafka_server.sh')
 
     @staticmethod
     def clear_topic(topic_name):
@@ -22,14 +22,14 @@ class Manager:
         import os
         str = 'cd ../../bin/ && ./clear_topic.sh %s' % topic_name
         os.system(str)
-        
+
     @staticmethod
     def delete_topic(topic_name):
         """ Deletes the topic """
         import os
         str = 'cd ../../bin/ && ./delete_topic.sh %s' % topic_name
         os.system(str)
-        
+
     @staticmethod
     def describe_topic(topic_name):
         """ Describes the topic """
