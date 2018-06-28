@@ -1,3 +1,4 @@
+from __future__ import division
 import cv2
 import json
 import ntpath
@@ -37,6 +38,8 @@ class VideoETL(object):
             cv2.imencode(".jpeg", videoframe)    # convert frame to JPEG image.
             frame = cv2.resize(videoframe, (300,300))    # resize frame to 300x300
             self.extractFrameMetadata(frame, frameNum, cap)    # collect metadata on the frame
+            if x > 0:    # display percent progress for splitting video frames
+                Utilities.runProgressbar((x / self.totalFrame) * 100)
         cap.release()
 
     def extractFrameMetadata(self, frame, frameNum, cap):
