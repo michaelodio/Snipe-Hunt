@@ -33,8 +33,12 @@ def main():
         fh = open("../../res/testingB64decode.jpeg", "wb")   # used for writing decoded base64 image locally to then be tested against with label_image()
         fh.write(frame)        # writes decoded image to file in order to pass filepath to label_Image script
         fh.close()
-        labelImage(graph, labels, input_layer, output_layer, input_height, input_width, "../../res/testingB64decode.jpeg")    # tests frame for targeted object
-        print("\n")
+        print("FrameNum: " + str(i))    # display which frame is being targeted object detected against
+        confidenceStat = labelImage(graph, labels, input_layer, output_layer, input_height, input_width, "../../res/testingB64decode.jpeg")    # tests frame for targeted object
+        if confidenceStat != None:     # if the target object was found within the threshold confidence, append that information to the JSON file. 
+            json_data_parsed['foundTargetWithConfidence'] = str(confidenceStat)
+            print(json_data_parsed)
+        
 
 if __name__ == "__main__":
     main()

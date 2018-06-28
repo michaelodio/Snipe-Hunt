@@ -1,1 +1,2 @@
-../res/Apps/kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --delete --topic $1
+./delete_topic.sh $1
+./create_topic.sh $1
