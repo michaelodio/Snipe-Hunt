@@ -37,25 +37,26 @@ def load_graph(model_file):
   return graph
 
 
-def read_tensor_from_image_file(file_name,
+def read_tensor_from_image_file(frame,
                                 input_height=299,
                                 input_width=299,
                                 input_mean=0,
                                 input_std=255):
   input_name = "file_reader"
   output_name = "normalized"
-  file_reader = tf.read_file(file_name, input_name)
-  if file_name.endswith(".png"):
-    image_reader = tf.image.decode_png(
-        file_reader, channels=3, name="png_reader")
-  elif file_name.endswith(".gif"):
-    image_reader = tf.squeeze(
-        tf.image.decode_gif(file_reader, name="gif_reader"))
-  elif file_name.endswith(".bmp"):
-    image_reader = tf.image.decode_bmp(file_reader, name="bmp_reader")
-  else:
-    image_reader = tf.image.decode_jpeg(
-        file_reader, channels=3, name="jpeg_reader")
+  image_reader = frame
+  #file_reader = tf.read_file(frame, input_name)
+  #if frame.endswith(".png"):
+  #  image_reader = tf.image.decode_png(
+  #      file_reader, channels=3, name="png_reader")
+  #elif frame.endswith(".gif"):
+  #  image_reader = tf.squeeze(
+  #      tf.image.decode_gif(file_reader, name="gif_reader"))
+  #elif frame.endswith(".bmp"):
+  #  image_reader = tf.image.decode_bmp(file_reader, name="bmp_reader")
+  #else:
+  #  image_reader = tf.image.decode_jpeg(
+  #      file_reader, channels=3, name="jpeg_reader")
   float_caster = tf.cast(image_reader, tf.float32)
   dims_expander = tf.expand_dims(float_caster, 0)
   resized = tf.image.resize_bilinear(dims_expander, [input_height, input_width])
@@ -74,8 +75,8 @@ def load_labels(label_file):
   return label
 
 
-def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frame):
-  file_name = frame
+def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frameTensor):
+  frame = frameTensor
   model_file = graph
   label_file = labels
   input_height = inputHeight
@@ -101,7 +102,7 @@ def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frame)
   #if args.graph:
   #  model_file = args.graph
   #if args.image:
-  #  file_name = args.image
+  #  frame = args.image
   #if args.labels:
   #  label_file = args.labels
   #if args.input_height:
@@ -119,7 +120,7 @@ def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frame)
 
   graph = load_graph(model_file)
   t = read_tensor_from_image_file(
-      file_name,
+      frame,
       input_height=input_height,
       input_width=input_width,
       input_mean=input_mean,
