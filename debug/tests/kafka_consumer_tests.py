@@ -1,6 +1,6 @@
 
 import sys
-sys.path.insert(0, '../projects/DataTransfer/')
+sys.path.insert(0, '../../projects/DataTransfer/')
 from kafka_manager import *
     
 

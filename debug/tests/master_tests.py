@@ -6,7 +6,7 @@ import kafka_producer_tests
 import utility_tests
 
 import sys
-sys.path.insert(0, '../')
+sys.path.insert(0, '../../')
 import cleanup
 
 
@@ -14,7 +14,7 @@ def test_all():
     """ Tests everything """
     print "\n=========================\n Running Tests\n========================="
     etl_tests.test()
-    kafka_manager_tests.test()
+    #kafka_manager_tests.test()
     kafka_producer_tests.test()
     kafka_consumer_tests.test()
     #utility_tests.test()
