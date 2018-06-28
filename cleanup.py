@@ -9,18 +9,19 @@ def find_and_remove(path, pattern, maxdepth=5):
 			for files in f:
 				if files.endswith(pattern):
 					try:
-						print "Removing %s" % (os.path.join(r, files))
+						#print "Removing %s" % (os.path.join(r, files))
 						os.remove(os.path.join(r, files))
 					except Exception, e:
 						print e
 					else:
-						print "%s removed" % (os.path.join(r, files))
+						pass
+						#print "%s removed" % (os.path.join(r, files))
 
 
-def main():
+def run():
 	""" Auto run main method """
-	find_and_remove("./", ".pyc")
+	find_and_remove("../", ".pyc")
 
 
 if __name__ == "__main__":
-	main()
+	run()

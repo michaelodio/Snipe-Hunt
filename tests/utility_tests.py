@@ -1,4 +1,3 @@
-from nose.tools import *
 
 import sys
 sys.path.insert(0, '../projects/ETL/')
@@ -18,10 +17,12 @@ def test_display_file_paths():
     util.display_file_paths()
 
 
-def main():
-    """ Auto run main method """
+def test():
+    """ Runs all test methods for this class """
+    test_get_file_paths()
     test_display_file_paths()
+    print "    Utility: Passed"
 
 
 if __name__ == "__main__":
-    main()
+    test()
