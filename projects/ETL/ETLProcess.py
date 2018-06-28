@@ -52,6 +52,7 @@ class VideoETL(object):
         
 
 if __name__ == "__main__":
+    
     parser = argparse.ArgumentParser()   # Parser to parse arguments passed
     parser.add_argument('--video', type=str, help='Path to video for processing')
     FLAGS, unparsed = parser.parse_known_args()
