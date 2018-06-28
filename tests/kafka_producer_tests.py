@@ -1,5 +1,3 @@
-# Matt Stillwell
-from nose.tools import *
 
 import sys
 sys.path.insert(0, '../projects/DataTransfer/')
@@ -28,10 +26,11 @@ def test_push_jsons():
     Producer.push_jsons(topic_name, data2)
 
 
-def main():
-    """ Auto run main method """
+def test():
+    """ Runs all test methods for this class """
+    test_push_json()
     test_push_jsons()
 
 
 if __name__ == "__main__":
-    main()
+    test()

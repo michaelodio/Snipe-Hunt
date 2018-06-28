@@ -1,5 +1,3 @@
-# Matt Stillwell
-from nose.tools import *
 
 import sys
 sys.path.insert(0, '../projects/DataTransfer/')
@@ -12,10 +10,10 @@ def test_pull_jsons():
     Consumer.pull_jsons(topic_name)
 
 
-def main():
-    """ Auto run main method """
+def test():
+    """ Runs all test methods for this class """
     test_pull_jsons()
 
 
 if __name__ == "__main__":
-    main()
+    test()

@@ -1,8 +1,7 @@
-from nose.tools import *
 
 import sys
 sys.path.insert(0, '../projects/ETL/')
-from etl import * 
+from etl import *
 
 
 def test_display():
@@ -12,10 +11,10 @@ def test_display():
     #vm.split()
 
 
-def main():
-    """ Auto run main method """
+def test():
+    """ Runs all test methods for this class """
     test_display()
 
 
 if __name__ == "__main__":
-    main()
+    test()
