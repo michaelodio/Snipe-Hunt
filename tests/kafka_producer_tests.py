@@ -1,10 +1,8 @@
-# Matt Stillwell
-from nose.tools import *
 
 import sys
 sys.path.insert(0, '../projects/DataTransfer/')
-from kafka_producer import *
-
+from kafka_manager import *
+    
 
 def test_push_json():
     """ Tests the push_json method """
@@ -28,10 +26,12 @@ def test_push_jsons():
     Producer.push_jsons(topic_name, data2)
 
 
-def main():
-    """ Auto run main method """
+def test():
+    """ Runs all test methods for this class """
+    test_push_json()
     test_push_jsons()
+    print "    Kafka Producer: Passed"
 
 
 if __name__ == "__main__":
-    main()
+    test()
