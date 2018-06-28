@@ -7,6 +7,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    return render_template("user.html")
+
+
+@app.route('/method')
+def method():
     return 'Method used: %s' % request.method
 
 
