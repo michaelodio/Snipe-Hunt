@@ -7,9 +7,8 @@ import numpy as np
 import sys
 import numpy as np
 import tensorflow as tf
-import time
-sys.path.insert(0, "../DataTransfer")   # used to import files from other folder (DataTransfer) dir in project
-from kafka_manager import *
+sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
+from utilities import *
 
 
 
@@ -20,8 +19,7 @@ output_layer = "final_result"
 input_height = 224   # Neccessary input_height for mobilnet model
 input_width = 224    # Neccessary input_wifth for mobilenet model
 
-
-
+    
 def main():
     print("Consuming messages from 'framefeeder'\n")
     json_data_list = Consumer.pull_jsons("framefeeder")   # pull jsons from kafka topic into list for processing
@@ -37,8 +35,9 @@ def main():
         confidenceStat = labelImage(graph, labels, input_layer, output_layer, input_height, input_width, "../../res/testingB64decode.jpeg")    # tests frame for targeted object
         if confidenceStat != None:     # if the target object was found within the threshold confidence, append that information to the JSON file. 
             json_data_parsed['foundTargetWithConfidence'] = str(confidenceStat)
-            print(json_data_parsed)
-        
+            json_data_list[i] = json.dumps(json_data_parsed)
+    Utilities.storeJson(json_data_list, "../../res/frameMetadataListTargetOBJD.txt")    # Store updated metadata Jsons locally
+    Utilities.exportJson(json_data_list, "target")    # export updated Json files to kafka topic 'target'
 
 if __name__ == "__main__":
     main()

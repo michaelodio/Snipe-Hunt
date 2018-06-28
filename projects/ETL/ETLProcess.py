@@ -4,11 +4,12 @@ import ntpath
 import base64
 import argparse
 import sys
-from os.path import expanduser
 sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
 sys.path.insert(0, "../ObjectDetection/")   # used to import files from other folder dir in project
+sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from kafka_manager import *
 from TargettedObjectDetectionProcess import main as targetedObjDet
+from utilities import *
 
 
 class VideoETL(object):
@@ -45,31 +46,18 @@ class VideoETL(object):
         self.frameMetadataJsonList.append(json.dumps({'frameNum': frameNum, 'timeStamp': str(timeStamp) + " seconds", 'imageBase64': frameAsBase64String}))    # convert collected frame metadata to json and add it to list
         return
 
-    def storeJson(self):
-        print("Storing metadata Json files locally... \n")
-        file1 = open('../../res/videoJson.txt', 'w')   # open file handler for videoJson.txt
-        file2 = open('../../res/framesJson.txt', 'w')   # open file handler for framesJson.txt
-        file1.write(self.videoMetadataJson)     # write the metadata Json information on the video to the file
-        for i in range(len(self.frameMetadataJsonList)):     # loop through the list of the frames metadata Jsons and write them to the the file
-            file2.write(str(self.frameMetadataJsonList[i]) + "\n\n")
-        file1.close()
-        file2.close()
-        
-    def exportJsons(self):
-        print("Exporting Json files to kafka topic 'framefeeder'")
-        for i in range(len(self.frameMetadataJsonList) / 10):
-            print("Exporting frame " + str(i))
-            Producer.push_json("framefeeder", self.frameMetadataJsonList[i])
         
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser()   # Parser to parse arguments passed
     parser.add_argument('--video', type=str, help='Path to video for processing')
     FLAGS, unparsed = parser.parse_known_args()
     if FLAGS.video:
-        videoEditor = VideoETL(FLAGS.video)
+        videoEditor = VideoETL(FLAGS.video)   # create instance of VideoEditor object for processing the video with OpenCV
         videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
-        videoEditor.storeJson()    # stores the Json files locally
-        videoEditor.exportJsons()  # push json files to kafka topic 'framefeeder'
+    file1 = open('../../res/videoJson.txt', 'w')   # open file handler for videoJson.txt
+    file1.write(videoEditor.videoMetadataJson)     # write the metadata Json information on the video to the file
+    Utilities.storeJson(videoEditor.frameMetadataJsonList, "../../res/frameMetadataListETL.txt")
+    Utilities.exportJson(videoEditor.frameMetadataJsonList, "framefeeder")
     targetedObjDet()               # run targeted object detection script now that json files (frames) are pushed to kafka
           
