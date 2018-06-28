@@ -14,6 +14,7 @@ def test_display():
 def test():
     """ Runs all test methods for this class """
     test_display()
+    print "    ETL: Passed"
 
 
 if __name__ == "__main__":
