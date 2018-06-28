@@ -21,6 +21,7 @@ def test():
     """ Runs all test methods for this class """
     test_get_file_paths()
     test_display_file_paths()
+    print "    Utility: Passed"
 
 
 if __name__ == "__main__":
