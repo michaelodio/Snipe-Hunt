@@ -13,6 +13,9 @@ import sys
 sys.path.insert(0, "../DataTransfer")
 from kafka_manager import *
 from kafka_producer import *
+sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
+from utilities import *
+
 
 
 class GeneralObjectDetection(object):
@@ -27,6 +30,7 @@ class GeneralObjectDetection(object):
            "sofa", "train", "tvmonitor"]
         self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
         self.confidence = 0.3
+        self.b64 = ''
         
     def run_caffe_detection(self):       
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
@@ -48,16 +52,17 @@ class GeneralObjectDetection(object):
                 y = startY - 15 if startY - 15 > 15 else startY + 15
                 cv2.putText(img, label, (startX, y),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
-        cv2.imshow("output", img)
-        cv2.waitKey(0)
-
-             
+            self.b64 = base64.b64encode(img)
+       # cv2.imshow("output", img)
+       # cv2.waitKey(0)
+            
     
         
                     
                     
     def run_images(self):        
         json_data_list = Consumer.pull_jsons("bay")
+        #json_store data = Producer.(push_json,"ANalysis")
         for i in range(len(json_data_list)):
            json_data_parsed = json.loads(json_data_list[i])
             frameBase64 = json_data_parsed["imageBase64"]            
@@ -66,6 +71,9 @@ class GeneralObjectDetection(object):
             fh.write(frame)
             fh.close()                        
             self.run_caffe_detection()
+            #json_data_parsed['foundGeneralDetectionsWithConfidence'] = self.b64
+            #json_data_list[i] = json.dumps(json_data_parsed)
+            
            
 
     
@@ -74,7 +82,9 @@ def main():
     prototxt = "../../res/MobileNetSSD_deploy.prototxt.txt"
     model = "../../res/MobileNetSSD_deploy.caffemodel"    
     obj = GeneralObjectDetection(prototxt,model)
-    obj.run_images()  
+    obj.run_images()
+    #Utilities.storeJson(json_data_list, "../../res/frameMetadataListGeneralObjectDetection.txt")
+    #Utilities.exportJson(json_data_list," )
     
 if __name__=="__main__":
     main()
