@@ -49,13 +49,12 @@ class VideoETL(object):
         self.frameMetadataJsonList.append(json.dumps({'frameNum': frameNum, 'timeStamp': str(timeStamp) + " seconds", 'imageBase64': frameAsBase64String}))    # convert collected frame metadata to json and add it to list
         return
 
-        
-
-if __name__ == "__main__":
-    
+def main(*positional_parameters, **keyword_parameters):
     parser = argparse.ArgumentParser()   # Parser to parse arguments passed
     parser.add_argument('--video', type=str, help='Path to video for processing')
     FLAGS, unparsed = parser.parse_known_args()
+    if ('videoFromUI' in keyword_parameters):    # if a videoPath was provided from the UI use that video path instead.
+        FLAGS.video = keyword_parameters['videoFromUI']
     if FLAGS.video:
         videoEditor = VideoETL(FLAGS.video)   # create instance of VideoEditor object for processing the video with OpenCV
         videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
@@ -65,3 +64,8 @@ if __name__ == "__main__":
     Utilities.exportJson(videoEditor.frameMetadataJsonList, "framefeeder")
     targetedObjDet()               # run targeted object detection script now that json files (frames) are pushed to kafka
           
+        
+        
+if __name__ == "__main__":
+    main()
+    

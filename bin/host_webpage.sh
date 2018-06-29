@@ -1,2 +1,2 @@
-export FLASK_APP=../projects/UserInterface/main.py
+export FLASK_APP=../projects/UserInterface/run.py
 flask run
