@@ -1,9 +1,12 @@
 import os
-from flask import Flask, flash, request, render_template, redirect, url_for
+import sys
+from flask import Flask, flash, request, render_template, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
+sys.path.insert(0, "../ETL/")   # used to import files from other folder dir in project
+from ETLProcess import main as ETL
 
-UPLOAD_FOLDER = '/home/bt-intern5/Pictures/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+UPLOAD_FOLDER = '../../res/'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4'])
 
 app = Flask(__name__, static_url_path = "/res", static_folder = "res")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -14,7 +17,6 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-from flask import send_from_directory
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -35,10 +37,14 @@ def upload_file():
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        if file and allowed_file(file.filename):
+        if file and allowed_file(file.filename):   # if file's type is allowed, then secure filename and save it to the project res folder.
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            videoFilePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)   # make videos filePath for saving it and then sending it to ETL
+            file.save(videoFilePath)      # save uploaded video to the project's res folder for ETL to extract
+            ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
             return redirect(url_for('uploaded_file',
                                     filename=filename))
     return render_template("index.html")
 
+if __name__ == "__main__":
+    app.run()
