@@ -10,11 +10,19 @@ class Manager:
         import os
         os.system('cd ../../bin/ && ./start_kafka_server.sh')
 
+
     @staticmethod
     def stop_server():
         """ Stops kafka """
         import os
         os.system('cd ../../bin/ && ./stop_kafka_server.sh')
+
+    @staticmethod
+    def create_topic(topic_name):
+        """ Creates a topic """
+        import os
+        str = 'cd ../../bin/ && ./create_topic.sh %s' % topic_name
+        os.system(str)
 
     @staticmethod
     def clear_topic(topic_name):

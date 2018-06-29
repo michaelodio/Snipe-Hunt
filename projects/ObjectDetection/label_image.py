@@ -137,7 +137,7 @@ def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frameT
     })
   results = np.squeeze(results)
 
-  top_k = results.argsort()[-5:][::-1]
+  top_k = results.argsort()[-10:][::-1]
   labels = load_labels(label_file)
   foundFF = None
   for i in top_k:
