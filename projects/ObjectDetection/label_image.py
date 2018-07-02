@@ -22,7 +22,7 @@ import argparse
 import numpy as np
 import tensorflow as tf
 
-THRESHOLD = 0.5
+THRESHOLD = 0.92
 
 
 def load_graph(model_file):
@@ -137,7 +137,7 @@ def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frameT
     })
   results = np.squeeze(results)
 
-  top_k = results.argsort()[-10:][::-1]
+  top_k = results.argsort()[-1000:][::-1]
   labels = load_labels(label_file)
   foundFF = None
   for i in top_k:
