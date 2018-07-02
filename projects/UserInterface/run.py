@@ -3,7 +3,10 @@ import sys
 from flask import Flask, flash, request, render_template, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 sys.path.insert(0, "../ETL/")   # used to import files from other folder dir in project
+sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
 from ETLProcess import main as ETL
+from kafka_manager import *
+
 
 UPLOAD_FOLDER = '../../res/'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4'])
@@ -17,7 +20,20 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-
+@app.route('/analysisResults', methods=['GET', 'POST'])
+def displayAnalysisResults():
+    if request.method == 'GET':
+        json_data_list = Consumer.pull_jsons("target")   # pull jsons from target (for now until whole project is done) kafka topic
+        framesWithTargetFound = []
+        for i in range(len(json_data_list)):
+            json_data_parsed = json.loads(json_data_list[i])   # loads json data into a parsed string (back to dict)
+            print("Test if target was found in this frame\n")
+            if json_data_parsed.get('foundTargetWithConfidence') != None:
+                print("Target was found...appending to list\n")
+                framesWithTargetFound.append(json_data_list[i])
+                print(json_data_list[i])
+    return str(framesWithTargetFound)
+                
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
@@ -42,8 +58,7 @@ def upload_file():
             videoFilePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)   # make videos filePath for saving it and then sending it to ETL
             file.save(videoFilePath)      # save uploaded video to the project's res folder for ETL to extract
             ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+            return redirect(url_for('displayAnalysisResults'))
     return render_template("index.html")
 
 if __name__ == "__main__":
