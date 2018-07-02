@@ -4,14 +4,14 @@ from flask import Flask, flash, request, render_template, redirect, url_for, sen
 from werkzeug.utils import secure_filename
 sys.path.insert(0, "../ETL/")   # used to import files from other folder dir in project
 sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
-from ETLProcess import main as ETL
-from kafka_manager import *
+#from ETLProcess import main as ETL
+#from kafka_manager import *
 
 
 UPLOAD_FOLDER = '../../res/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4'])
+ALLOWED_EXTENSIONS = set(['avi', 'flv', 'wmv', 'mov', 'mp4'])
 
-app = Flask(__name__, static_url_path = "/res", static_folder = "res")
+app = Flask(__name__, static_url_path = "/static", static_folder = "static")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #limit file size to 16 mb
 
@@ -56,8 +56,8 @@ def upload_file():
             filename = secure_filename(file.filename)
             videoFilePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)   # make videos filePath for saving it and then sending it to ETL
             file.save(videoFilePath)      # save uploaded video to the project's res folder for ETL to extract
-            ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
-            return redirect(url_for('displayAnalysisResults'))
+            #ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
+            #return redirect(url_for('displayAnalysisResults'))
     return render_template("index.html")
 
 if __name__ == "__main__":
