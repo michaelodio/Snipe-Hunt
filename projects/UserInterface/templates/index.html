@@ -1,46 +1,74 @@
-
 <!doctype html>
 <html lang="en">
 	<head>
 		<title>
 			Iris
 		</title>
+        
+        <style>
+            
+            div.uploader {
+                text-align: center;
+                position: absolute;
+                left: 370px;
+                top: 110px;
+            }
+            
+            div.video {
+                text-align: center;
+                position: absolute;
+                left: 770px;
+                top: 110px;
+            }
+            
+            div.description {
+                text-align: center;
+                position: absolute;
+                left: 510px;
+                top: 410px;
+            }
+            
+        </style>
 	</head>
 
 	<body background="/res/background.jpg">
 	
 		<h1 align="center">
-			<strong>Iris</strong> Object Detector 
-		</h1>
+            <u>
+                French Flag Detector 
+            </u>
+        </h1>
 	
-		<p align="center">
+        <div class="uploader">
+            <h1 align="center">
+                Upload new File
+            </h1>
+            <form method=post enctype=multipart/form-data align="center">
+                <input type=file name=file>
+                <input type=submit value=Upload>
+            </form>
+		</div>
+        
+        <div class="video">
 			<img alt="Fluer" width="256" height="256" src="/res/fleur-de-lis.png">
 			<video width="320" height="240" controls>
 				<source src="/res/bunny.mp4" type="video/mp4">
-		    Your browser does not support the video tag
+                Your browser does not support the video tag
 			</video>
-				
-				    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-			
-			
-		</p>
-
-		</br>
+        </div>
 	
-		<p align="center">
-			Hello, our names are Kyle Clabough, Michael Odio, Kyle Barley
-			and Matt Stillwell.
-		</p>
+        <div class="description">
+            <p>
+                Hello, our names are Kyle Clabough, Michael Odio, Kyle Barley
+                and Matt Stillwell.
+            </p>
 	
-		<p align="center">
-			<a href="http://www.braintrust-us.edu">
-				<img border="0" src="/res/braintrust.jpg" width="256" height="33">
-			</a>
-		</p>
+            <p>
+                <a href="http://www.braintrust-us.edu">
+                    <img border="0" src="/res/braintrust.jpg" width="256" height="33">
+                </a>
+            </p>
+        </div>
 
 	</body>
 </html>
