@@ -23,16 +23,15 @@ def allowed_file(filename):
 @app.route('/analysisResults', methods=['GET', 'POST'])
 def displayAnalysisResults():
     if request.method == 'GET':
+        resultsString = ""
         json_data_list = Consumer.pull_jsons("target")   # pull jsons from target (for now until whole project is done) kafka topic
         framesWithTargetFound = []
         for i in range(len(json_data_list)):
             json_data_parsed = json.loads(json_data_list[i])   # loads json data into a parsed string (back to dict)
-            print("Test if target was found in this frame\n")
             if json_data_parsed.get('foundTargetWithConfidence') != None:
-                print("Target was found...appending to list\n")
-                framesWithTargetFound.append(json_data_list[i])
-                print(json_data_list[i])
-    return str(framesWithTargetFound)
+                framesWithTargetFound.append(json_data_list[i])   # if specific frame json contains the key for having found the target object confidently, append that json to a list for display on the results page.
+                resultsString = resultsString + "\n\n" + str(json_data_parsed.get('frameNum')) + ": " + str(json_data_parsed.get('foundTargetWithConfidence'))
+    return resultsString
                 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
