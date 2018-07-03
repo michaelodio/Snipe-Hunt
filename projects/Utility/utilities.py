@@ -35,5 +35,10 @@ class Utilities(object):
             Utilities.runProgressbar((i / len(frameMetadataJsonList)) * 100)
             
             
+    @staticmethod
+    def encodeImage (frameimage):
+        to_encode = cv2.imencode(".jpg",frameimage)
+        string64 = base64.b64encode(to_encode)
+        return string64
     
     
