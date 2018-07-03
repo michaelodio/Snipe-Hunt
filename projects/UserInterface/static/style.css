@@ -1,4 +1,11 @@
 
+#title {
+    text-align: center;
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 30px;
+}
+
 #uploader {
     background-color:lightseagreen;
     padding: 10px 20px 20px 30px;
