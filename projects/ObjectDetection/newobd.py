@@ -1,6 +1,3 @@
-
-
-
 #python newobd.py --
 
 # import the necessary packages
@@ -63,8 +60,8 @@ class GeneralObjectDetection(object):
                     
                     
     def run_images(self):      
-        print("\n Consuming messages from 'target'")
-        json_data_list = Consumer.pull_jsons("target")     # **Will likely need to change kafka topic name once we get general Img Classification finished**
+        print("\n Consuming messages from 'general'")
+        json_data_list = Consumer.pull_jsons("general")     # **Will likely need to change kafka topic name once we get general Img Classification finished**
         print("\n Running object detection model against the frames")
         for i in range(len(json_data_list)):
             json_data_parsed = json.loads(json_data_list[i])

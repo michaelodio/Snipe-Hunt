@@ -44,8 +44,8 @@ class GeneralImageClassification(object):
 	#print("[INFO] {}. label: {}, probability: {:.5}".format(i + 1,
 		#classes[idx], preds[0][idx]))
             print("[INFO] {}. label: {}, probability: {:.5}".format(i + 1,classes[idx], preds[0][idx]))
-        cv2.imshow("Image", image)
-        cv2.waitKey(0)
+        #cv2.imshow("Image", image)
+        #cv2.waitKey(0)
 
     def run_images(self):
         json_data_list = Consumer.pull_jsons("target")
@@ -66,7 +66,7 @@ def main():
     prototxt = "../../res/bvlc_googlenet.prototxt"
     model = "../../res/bvlc_googlenet.caffemodel"
     obj = GeneralImageClassification(prototxt,model)
-    obj.run_images()     
+    obj.run_images()
 
 
 
