@@ -20,7 +20,7 @@ def find_and_remove(path, pattern, maxdepth=5):
 
 def run():
 	""" Auto run main method """
-	find_and_remove("../../", ".pyc")
+	find_and_remove("../", ".pyc")
 
 
 if __name__ == "__main__":
