@@ -4,8 +4,8 @@ from flask import Flask, flash, request, render_template, redirect, url_for, sen
 from werkzeug.utils import secure_filename
 sys.path.insert(0, "../ETL/")   # used to import files from other folder dir in project
 sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
-#from ETLProcess import main as ETL
-#from kafka_manager import *
+from ETLProcess import main as ETL
+from kafka_manager import *
 
 
 UPLOAD_FOLDER = '../../res/'
@@ -56,8 +56,8 @@ def upload_file():
             filename = secure_filename(file.filename)
             videoFilePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)   # make videos filePath for saving it and then sending it to ETL
             file.save(videoFilePath)      # save uploaded video to the project's res folder for ETL to extract
-            #ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
-            #return redirect(url_for('displayAnalysisResults'))
+            ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
+            return redirect(url_for('displayAnalysisResults'))
     return render_template("index.html")
 
 if __name__ == "__main__":
