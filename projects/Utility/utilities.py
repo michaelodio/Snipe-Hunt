@@ -32,5 +32,5 @@ class Utilities(object):
     
     @staticmethod
     def decodeFrame(frameJson):
-        frameBase64 = json_data_parsed["imageBase64"]
+        frameBase64 = frameJson["imageBase64"]
         return base64.b64decode(frameBase64)
