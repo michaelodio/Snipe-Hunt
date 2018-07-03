@@ -1,46 +1,52 @@
-
 <!doctype html>
 <html lang="en">
 	<head>
-		<title>
+        <link rel="stylesheet" type="text/css" href="../static/style.css">
+		
+        <title>
 			Iris
 		</title>
 	</head>
 
-	<body background="/res/background.jpg">
+	<body background="../static/background.jpg">
+    	
+		<div id="title">
+            French Flag Detector 
+        </div>
 	
-		<h1 align="center">
-			<strong>Iris</strong> Object Detector 
-		</h1>
-	
-		<p align="center">
-			<img alt="Fluer" width="256" height="256" src="/res/fleur-de-lis.png">
+        <div id="uploader">
+            <h1>
+                Upload new File
+            </h1>
+            <form method=post enctype=multipart/form-data>
+                <input type=file name=file>
+                <input type=submit value=Upload>
+            </form>
+		</div>
+        
+        <div class="image" id="french-flag">
+            <img alt="Flag" width="225" height="150" src="../static/french-flag.jpg" border="3">
+        </div>
+        
+        <!--<div id="video-player">
 			<video width="320" height="240" controls>
-				<source src="/res/bunny.mp4" type="video/mp4">
-		    Your browser does not support the video tag
-			</video>
-				
-				    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-			
-			
-		</p>
-
-		</br>
+				<source src="../static/bunny.mp4" type="video/mp4">
+                Your browser does not support the video tag
+			</video> -->
+        </div>
 	
-		<p align="center">
-			Hello, our names are Kyle Clabough, Michael Odio, Kyle Barley
-			and Matt Stillwell.
-		</p>
+        <div id="footer">
+            <p>
+                Hello, our names are Kyle Clabough, Michael Odio, Kyle Barley
+                and Matt Stillwell.
+            </p>
 	
-		<p align="center">
-			<a href="http://www.braintrust-us.edu">
-				<img border="0" src="/res/braintrust.jpg" width="256" height="33">
-			</a>
-		</p>
+            <p>
+                <a href="http://www.braintrust-us.edu">
+                    <img border="0" src="../static/braintrust.jpg" width="256" height="33">
+                </a>
+            </p>
+        </div>
 
 	</body>
 </html>

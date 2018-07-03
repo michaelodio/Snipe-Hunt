@@ -1,4 +1,5 @@
 from label_image import main as labelImage
+from newobd import main as objectDetection
 import os
 import cv2
 import base64
@@ -9,6 +10,7 @@ import numpy as np
 import tensorflow as tf
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
+
 
 
 
@@ -36,6 +38,7 @@ def main():
             json_data_list[i] = json.dumps(json_data_parsed)
     Utilities.storeJson(json_data_list, "../../res/frameMetadataListTargetOBJD.txt")    # Store updated metadata Jsons locally
     Utilities.exportJson(json_data_list, "target")    # export updated Json files to kafka topic 'target'
+    objectDetection()    # continue to object detection of the frames.
     
 
 if __name__ == "__main__":
