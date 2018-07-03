@@ -38,7 +38,7 @@ class VideoETL(object):
     def extractFrameMetadata(self, frame, frameNum, cap):
         timeStamp = round(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000    # collect time stamp and convert it to seconds
         retval, frameConvertedToJPG = cv2.imencode('.jpg', frame)   # encode frame to .jpg for base64string conversion
-        frameAsBase64String = base64.b64encode(frameConvertedToJPG)    # encode frame to base64String
+        frameAsBase64String = Utilities.encodeFrame(frameConvertedToJPG)    # encode frame to base64String
         frameJson = json.dumps({'videoPath': self.videoPath, 'videoName': self.videoName, 'videoDuration': str(self.videoDuration) + " seconds", 'totalFrames': self.totalFrame, 'FPS': self.FPS, 'frameNum': frameNum, 'timeStamp': str(timeStamp) + " seconds", 'imageBase64': frameAsBase64String})     # create frame json with collected metadata
         Utilities.exportJson(frameJson, "framefeeder")    # export frame json to kafka topic
         Utilities.storeJson(frameJson, "../../res/ETLFramesMetadata.txt")  # store frame json locally
