@@ -29,7 +29,7 @@ def main():
     for i in range(len(json_data_list)):
         json_data_parsed = json.loads(json_data_list[i])   # loads json data into a parsed string (back to dict)
         frameBase64 = json_data_parsed["imageBase64"]   # extracts base64 string of image (frame)
-        frame = base64.b64decode(frameBase64)         # decodes base64 image
+        frame = utilities.decodeFrame(frameBase64)         # decodes base64 image
         frameAsTensor = tf.image.decode_jpeg(frame, channels=3)   # convert frame to Tensor as string
         print("FrameNum: " + str(i))    # display which frame is being targeted object detected against
         confidenceStat = labelImage(graph, labels, input_layer, output_layer, input_height, input_width, frameAsTensor)    # tests frame for targeted object

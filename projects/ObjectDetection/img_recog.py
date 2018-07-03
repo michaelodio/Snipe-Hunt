@@ -52,7 +52,7 @@ class GeneralImageClassification(object):
             for i in range(len(json_data_list)):
                 json_data_parsed = json.loads(json_data_list[i])
                 frameBase64 = json_data_parsed["imageBase64"]            
-                frame = base64.b64decode(frameBase64)
+                frame = utilities.decodeFrame(frameBase64)
                 fh = open(self.image, "wb")
                 fh.write(frame)
                 fh.close()                        
