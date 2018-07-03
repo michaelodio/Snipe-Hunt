@@ -7,12 +7,9 @@ import json
 class Consumer(object):
 
     @staticmethod
-    def pull_jsons(topic_name):
-        """ Listens on a topic for dictionaries """
-        
+    def initialize(topic_name):
         # Sets up the kafka consumer to listen for serialized json files on a specific topic
-        consumer = KafkaConsumer(topic_name, value_deserializer=lambda m: json.loads(m.decode('utf-8')),
+        return KafkaConsumer(topic_name, value_deserializer=lambda m: json.loads(m.decode('utf-8')),
                                  enable_auto_commit=False)
-        for message in consumer:
-            data = message.value
-            return data
+    
+

@@ -24,9 +24,9 @@ input_width = 224    # Neccessary input_wifth for mobilenet model
     
 def main():
     print("\nConsuming messages from 'framefeeder'")
-    consumer = Consumer()
-    json_data = consumer.pull_jsons("framefeeder")   # pull jsons from kafka topic into list for processing
-    while json_data != None:
+    consumer = Consumer.initialize("framefeeder")
+    for m in consumer:
+        json_data = m.value   # pull jsons from kafka topic into list for processing
         json_data_parsed = json.loads(json_data)   # loads json data into a parsed string (back to dict)
         frame = Utilities.decodeFrame(json_data_parsed)    # take parsed string and send it to utilities to decode it from base64 
         frameAsTensor = tf.image.decode_jpeg(frame, channels=3)   # convert frame to Tensor as string
@@ -39,8 +39,6 @@ def main():
         print("exporting json")
         Utilities.exportJson(json_data, "target2")    # export updated Json files to kafka topic 'target'
         print(json_data_parsed['frameNum'])   # print frame number that was just processed
-        print("grabbing new json...")
-        json_data = consumer.pull_jsons("framefeeder")   # pull jsons from kafka topic into list for processing
         
 
 if __name__ == "__main__":
