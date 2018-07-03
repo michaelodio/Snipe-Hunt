@@ -15,13 +15,16 @@ app = Flask(__name__, static_url_path = "/static", static_folder = "static")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #limit file size to 16 mb
 
+
 def allowed_file(filename):
+    """ Checks to ensure file chose is a correct type """
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/analysisResults', methods=['GET', 'POST'])
 def displayAnalysisResults():
+    """ Displays the analysis results """
     if request.method == 'GET':
         resultsString = ""
         json_data_list = Consumer.pull_jsons("target")   # pull jsons from target (for now until whole project is done) kafka topic
@@ -32,15 +35,19 @@ def displayAnalysisResults():
                 framesWithTargetFound.append(json_data_list[i])   # if specific frame json contains the key for having found the target object confidently, append that json to a list for display on the results page.
                 resultsString = resultsString + "<br />" + str(json_data_parsed.get('frameNum')) + ": " + str(json_data_parsed.get('foundTargetWithConfidence'))
     return resultsString
-                
+
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
+    """ Returns the file that has been uploaded """
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 
 @app.route('/', methods=['GET', 'POST'])
-def upload_file():
+def home():
+    """ Home page for app """
+    # Upload file button selected
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -60,5 +67,9 @@ def upload_file():
             return redirect(url_for('displayAnalysisResults'))
     return render_template("index.html")
 
+
 if __name__ == "__main__":
+    app.secret_key = 'the goose is in the hen house'
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.debug = True
     app.run()
