@@ -30,7 +30,7 @@ class Utilities(object):
     @staticmethod
     def exportJson(frameMetadataJsonList, topic):
         print("\nExporting metadata Json files to kafka topic: " + str(topic) + "... ")
-        for i in range(len(frameMetadataJsonList)):     # loop through the list of the frames metadata Jsons and push to specific kafka topic
+        for i in range(int(len(frameMetadataJsonList))):     # loop through the list of the frames metadata Jsons and push to specific kafka topic
             Producer.push_json(topic, frameMetadataJsonList[i]) 
             Utilities.runProgressbar((i / len(frameMetadataJsonList)) * 100)
             

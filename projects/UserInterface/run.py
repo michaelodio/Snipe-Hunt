@@ -3,12 +3,15 @@ import sys
 from flask import Flask, flash, request, render_template, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 sys.path.insert(0, "../ETL/")   # used to import files from other folder dir in project
+sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
 from ETLProcess import main as ETL
+from kafka_manager import *
+
 
 UPLOAD_FOLDER = '../../res/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4'])
+ALLOWED_EXTENSIONS = set(['avi', 'flv', 'wmv', 'mov', 'mp4'])
 
-app = Flask(__name__, static_url_path = "/res", static_folder = "res")
+app = Flask(__name__, static_url_path = "/static", static_folder = "static")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #limit file size to 16 mb
 
@@ -17,7 +20,19 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-
+@app.route('/analysisResults', methods=['GET', 'POST'])
+def displayAnalysisResults():
+    if request.method == 'GET':
+        resultsString = ""
+        json_data_list = Consumer.pull_jsons("target")   # pull jsons from target (for now until whole project is done) kafka topic
+        framesWithTargetFound = []
+        for i in range(len(json_data_list)):
+            json_data_parsed = json.loads(json_data_list[i])   # loads json data into a parsed string (back to dict)
+            if json_data_parsed.get('foundTargetWithConfidence') != None:
+                framesWithTargetFound.append(json_data_list[i])   # if specific frame json contains the key for having found the target object confidently, append that json to a list for display on the results page.
+                resultsString = resultsString + "<br />" + str(json_data_parsed.get('frameNum')) + ": " + str(json_data_parsed.get('foundTargetWithConfidence'))
+    return resultsString
+                
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
@@ -42,8 +57,7 @@ def upload_file():
             videoFilePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)   # make videos filePath for saving it and then sending it to ETL
             file.save(videoFilePath)      # save uploaded video to the project's res folder for ETL to extract
             ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+            return redirect(url_for('displayAnalysisResults'))
     return render_template("index.html")
 
 if __name__ == "__main__":
