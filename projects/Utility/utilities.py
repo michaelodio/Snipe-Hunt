@@ -23,6 +23,11 @@ class Utilities(object):
     def exportJson(frameJson, topic):
             Producer.push_json(topic, frameJson) # Push frame json to specified Kafka topic
             
+    @staticmethod
+    def encodeImage (frameimage):
+        to_encode = cv2.imencode(".jpg",frameimage)
+        string64 = base64.b64encode(to_encode)
+        return string64
     
     
     
