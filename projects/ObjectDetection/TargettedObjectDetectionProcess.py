@@ -1,5 +1,4 @@
 from label_image import main as labelImage
-from newobd import main as objectDetection
 import os
 import cv2
 import base64
