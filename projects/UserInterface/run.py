@@ -30,7 +30,7 @@ def displayAnalysisResults():
             json_data_parsed = json.loads(json_data_list[i])   # loads json data into a parsed string (back to dict)
             if json_data_parsed.get('foundTargetWithConfidence') != None:
                 framesWithTargetFound.append(json_data_list[i])   # if specific frame json contains the key for having found the target object confidently, append that json to a list for display on the results page.
-                resultsString = resultsString + "\n\n" + str(json_data_parsed.get('frameNum')) + ": " + str(json_data_parsed.get('foundTargetWithConfidence'))
+                resultsString = resultsString + "<br />" + str(json_data_parsed.get('frameNum')) + ": " + str(json_data_parsed.get('foundTargetWithConfidence'))
     return resultsString
                 
 @app.route('/uploads/<filename>')
