@@ -1075,3 +1075,4 @@ kafka.common.KafkaException: Failed to acquire lock on file .lock in /tmp/kafka-
 [2018-07-03 21:18:34,059] INFO [KafkaServer id=0] shut down completed (kafka.server.KafkaServer)
 [2018-07-03 21:18:34,060] FATAL Exiting Kafka. (kafka.server.KafkaServerStartable)
 [2018-07-03 21:18:34,062] INFO [KafkaServer id=0] shutting down (kafka.server.KafkaServer)
+[2018-07-03 21:28:09,469] INFO [GroupMetadataManager brokerId=0] Removed 0 expired offsets in 0 milliseconds. (kafka.coordinator.group.GroupMetadataManager)
