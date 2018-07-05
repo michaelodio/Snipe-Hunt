@@ -1,13 +1,7 @@
 from __future__ import division
-import cv2
-import json
 import ntpath
-import base64
-import argparse
 import sys
-sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
-from kafka_manager import *
 from utilities import *
 
 
