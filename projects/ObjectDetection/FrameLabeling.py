@@ -79,9 +79,14 @@ class FrameLabeling(object):
 
     
 def main():
-    
-    prototxt = "../../res/MobileNetSSD_deploy.prototxt.txt"
-    model = "../../res/MobileNetSSD_deploy.caffemodel"    
+    parser = argparse.ArgumentParser()   # Parser to parse arguments passed
+    parser.add_argument('--model', type=str, help='Path to frame labeling object detection model')
+    parser.add_argument('--model_prototxt', type=str, help='Path to model prototxt')
+    args = parser.parse_args()
+    if args.model:
+		model = args.model
+    if args.model_prototxt:
+		prototxt = args.model_prototxt
     obj = FrameLabeling(prototxt,model)
     obj.run_images()
     # ** TODO: Add database (Accumulo and Scylla) here by pushing finalized json data to database **
