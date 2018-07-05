@@ -5,7 +5,6 @@ import base64
 import json
 import numpy as np
 import sys
-import numpy as np
 import tensorflow as tf
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *

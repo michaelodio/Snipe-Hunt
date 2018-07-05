@@ -8,7 +8,7 @@ echo Kafka Server Started
 echo Topics Created
 
 cd ../projects/ObjectDetection/
-python ObjectDetection.py &
+python FrameLabeling.py &
 
 python GeneralObjDetection.py &
 
