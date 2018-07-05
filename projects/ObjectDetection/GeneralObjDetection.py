@@ -11,8 +11,11 @@ sys.path.insert(0, "../Utility/")   # used to import files from other folder dir
 from utilities import *
 
 
-class GeneralImageClassification(object):
-        
+# changed class from ImageClassification to ObjectDetection
+# usies the code for  FrameLabeling as a base
+class GeneralObjectDetection(object):
+        # added missing variables (classes, confidenceThreshold)
+		# extracted and added variables for size, mean_subtraction, and scalar
     def __init__(self, prototxt, model):
         self.image = "../../res/genimg.jpg"
         self.prototxt = prototxt
@@ -25,30 +28,31 @@ class GeneralImageClassification(object):
         self.mean_subtraction = 0.007843
         self.scalar = 127.5
         self.confidenceThreshold = 0.3
-    
+
+
+		# removed all code related to label, or creating bounding boxes
+		# added json_data_parsed to method parameters
     def run_object_detection(self, json_data_parsed):
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         img = cv2.imread(self.image)
- #       (h, w) = img.shape[:2]
+		# replaced values with variables
         blob = cv2.dnn.blobFromImage(cv2.resize(img, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)
         net.setInput(blob)
         detections = net.forward()
+		# create a list to store found labels
         label_list = list()
         for i in np.arange(0, detections.shape[2]):
             confidence = detections[0, 0, i, 2]
             if confidence > self.confidenceThreshold:
                 idx = int(detections[0, 0, i, 1])
-#                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-#                (startX, startY, endX, endY) = box.astype("int")
+
                 # display the prediction
                 if idx >= 0 and idx <= 20:
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
-#                   print("[INFO] {}".format(label))
+                    print("[INFO] {}".format(label))
+					# adds new label to label_list
                     label_list.append(label)
-#                   cv2.rectangle(img, (startX, startY), (endX, endY), self.colors[idx], 2)
-#                   y = startY - 15 if startY - 15 > 15 else startY + 15
-#                   cv2.putText(img, label, (startX, y),
-#                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
+		# appends label_list to JSON data
         json_data_parsed['ObjectsDetected'] = label_list
     
     def run_images(self):
@@ -63,9 +67,10 @@ class GeneralImageClassification(object):
             fh.write(frame)
             fh.close()                        
             self.run_object_detection(json_data_parsed)
+			# writes json_data_parsed to the JSON file
             json_data = json.dumps(json_data_parsed)
-            Utilities.exportJson(json_data, "general")    # currently exports same data read from kafka topic until we know what to add from this component
-
+			# exports JSON file with the list of labels for the identified objects
+            Utilities.exportJson(json_data, "general") 
 
 def main():
     parser = argparse.ArgumentParser()   # Parser to parse arguments passed
