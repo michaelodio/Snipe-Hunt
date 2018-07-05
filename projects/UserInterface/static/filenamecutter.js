@@ -1,6 +1,9 @@
 
 document.getElementById('file').onchange = function () {
-    var st = this.value.substr(12, 20)
-    st = st + "..."
-    document.getElementById("fname").innerHTML = st
+    var str = this.value.substr(12);
+    if(str.length > 20) {
+        str = str.substr(0, 20);
+        str = str + "...";
+    }
+    document.getElementById("fname").innerHTML = str;
 };
