@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		<link rel="stylesheet" type="text/css" href="../static/style.css">
+        <link rel="stylesheet" type="text/css" href="../static/style.css">
+		
         <title>
 			Iris
 		</title>
@@ -14,14 +15,20 @@
         </div>
 	
         <div id="uploader">
-            <h1>
+            <h2>
                 Upload new File
-            </h1>
+            </h2>
+            
             <form method=post enctype=multipart/form-data>
-                <input type=file name=file>
-                <input type=submit value=Upload>
+                <input type="file" name="file" id="file" class="inputfile" accept="video/*" />
+                <label for="file" class="button" id="browse-button"> Browse </label>
+                <p id="fname">  </p>
+                <input type=submit value=Upload class="button" id="upload-button">
             </form>
-		</div>
+            
+            <script src="../static/filenamecutter.js"></script>
+        
+        </div>
         
         <div class="image" id="french-flag">
             <img alt="Flag" width="225" height="150" src="../static/french-flag.jpg" border="3">
