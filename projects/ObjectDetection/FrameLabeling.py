@@ -1,9 +1,4 @@
 # import the necessary packages
-import numpy as np
-import argparse
-import cv2
-import base64
-import json
 import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
