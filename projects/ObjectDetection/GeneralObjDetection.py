@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-=======
-# USAGE
-# python deep_learning_with_opencv.py --image images/jemma.png --prototxt bvlc_googlenet.prototxt --model bvlc_googlenet.caffemodel --labels synset_words.txt
->>>>>>> bc2488fd5553b172258bd303edc4cbab676fa964
 # import the necessary packages
 import numpy as np
 import argparse
@@ -73,12 +68,10 @@ class GeneralObjectDetection(object):
           
 def main():
     parser = argparse.ArgumentParser()   # Parser to parse arguments passed
-    parser.add_argument('--prototxt', type=str, help='Path to prototxt file')
-    parser.add_argument('--model', type=str, help='Path to model')
-    
+    parser.add_argument('--model', type=str, help='Path to prototxt file')
+    parser.add_argument('--model_prototxt', type=str, help='Path to model')
     args = parser.parse_args()
-    
-    obj = GeneralImageClassification(args.prototxt, args.model)
+    obj = GeneralObjectDetection(args.model_prototxt, args.model)
     obj.run_images()
 
 
