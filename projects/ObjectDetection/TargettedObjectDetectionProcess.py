@@ -10,17 +10,30 @@ sys.path.insert(0, "../Utility/")   # used to import files from other folder dir
 from utilities import *
 
 
-
-
-graph = "../../res/TfModel/output_graph.pb"
-labels = "../../res/TfModel/output_labels.txt"
-input_layer = "Placeholder"
-output_layer = "final_result"
-input_height = 224   # Neccessary input_height for mobilnet model
-input_width = 224    # Neccessary input_wifth for mobilenet model
-
     
 def main():
+    parser = argparse.ArgumentParser()   # Parser to parse arguments passed
+    parser.add_argument('--graph', type=str, help='Path to video for processing')
+    parser.add_argument('--labels', type=str, help='Path to model labels')
+    parser.add_argument('--input_layer', type=str, help='Input layer name')
+    parser.add_argument('--output_layer', type=str, help='Output layer name')
+    parser.add_argument('--input_height', type=int, help='Input height neccessary for type of model')
+    parser.add_argument('--input_width', type=int, help='Input width neccessary for type of model')
+    
+    args = parser.parse_args()
+    if args.graph:
+		graph = args.graph
+    if args.labels:
+		labels = args.labels
+    if args.input_layer:
+		input_layer = args.input_layer
+    if args.output_layer:
+		output_layer = args.output_layer
+    if args.input_height:
+		input_height = args.input_height
+    if args.input_width:
+		input_width = args.input_width	
+	
     print("\nConsuming messages from 'framefeeder'")
     consumer = Consumer.initialize("framefeeder")
     for m in consumer:
