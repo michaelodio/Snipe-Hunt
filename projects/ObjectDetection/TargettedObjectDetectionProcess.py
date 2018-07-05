@@ -1,11 +1,6 @@
 from label_image import main as labelImage
-import os
-import cv2
-import base64
-import json
-import numpy as np
+
 import sys
-import tensorflow as tf
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
 

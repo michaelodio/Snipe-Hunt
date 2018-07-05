@@ -17,10 +17,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import argparse
-
-import numpy as np
-import tensorflow as tf
+import sys
+sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
+from utilities import *
 
 THRESHOLD = 0.92
 

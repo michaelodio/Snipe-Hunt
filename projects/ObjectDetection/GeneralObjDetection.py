@@ -1,14 +1,6 @@
-<<<<<<< HEAD
-=======
 # USAGE
 # python deep_learning_with_opencv.py --image images/jemma.png --prototxt bvlc_googlenet.prototxt --model bvlc_googlenet.caffemodel --labels synset_words.txt
->>>>>>> bc2488fd5553b172258bd303edc4cbab676fa964
 # import the necessary packages
-import numpy as np
-import argparse
-import cv2
-import base64
-import json
 import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
