@@ -35,8 +35,7 @@ class FrameLabeling(object):
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         img = cv2.imread(self.imagePath)
         (h, w) = img.shape[:2]
-		# replaced hard  coded values for variables
-        blob = cv2.dnn.blobFromImage(cv2.resize(img, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)
+        blob = cv2.dnn.blobFromImage(cv2.resize(img, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)  # replaced hard  coded values for variables
         net.setInput(blob)
         detections = net.forward()
         for i in np.arange(0, detections.shape[2]):
@@ -72,12 +71,9 @@ class FrameLabeling(object):
             fh.write(frame)
             fh.close()
             self.run_frame_labeling()
-			# adds base64 string to json data
-            json_data_parsed['LabeledImage'] = self.b64
-			# saves JSON file to drive for debugging purposes
-            Utilities.storeJson(json_data_parsed, "../../res/FrameJsonsAfterAllComponents.txt")
-            # writes json_data to the JSON file
-			json_data = json.dumps(json_data_parsed)
+            json_data_parsed['LabeledImage'] = self.b64   # adds base64 string to json data
+            Utilities.storeJson(json_data_parsed, "../../res/FrameJsonsAfterAllComponents.txt")    # saves JSON file to drive for debugging purposes
+			json_data = json.dumps(json_data_parsed)      # writes json_data to the JSON file
             
            
 
