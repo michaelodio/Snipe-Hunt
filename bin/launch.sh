@@ -1,4 +1,5 @@
 ./start_kafka_server.sh
+wait
 echo Kafka Server Started
 
 ./create_topic.sh general
@@ -10,4 +11,8 @@ cd ../projects/ObjectDetection/
 python TargettedObjectDetectionProcess.py &
 
 cd ../ETL/
-python ETLProcess.py --video "/home/bt-intern2/Iris/res/vid.mp4"
+python ETLProcess.py --video "../../res/vid.mp4"
+
+cd ../
+./cleanup.py
+echo Cleaned up files
