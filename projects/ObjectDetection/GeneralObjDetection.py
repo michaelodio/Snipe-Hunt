@@ -1,6 +1,3 @@
-# USAGE
-# python deep_learning_with_opencv.py --image images/jemma.png --prototxt bvlc_googlenet.prototxt --model bvlc_googlenet.caffemodel --labels synset_words.txt
-
 # import the necessary packages
 import numpy as np
 import argparse
@@ -12,7 +9,7 @@ sys.path.insert(0, "../Utility/")   # used to import files from other folder dir
 from utilities import *
 
 # changed class from ImageClassification to ObjectDetection
-# usies the code for  FrameLabeling as a base
+# uses the code for  FrameLabeling as a base
 class GeneralObjectDetection(object):
         # added missing variables (classes, confidenceThreshold)
 		# extracted and added variables for size, mean_subtraction, and scalar
@@ -44,15 +41,11 @@ class GeneralObjectDetection(object):
             confidence = detections[0, 0, i, 2]
             if confidence > self.confidenceThreshold:
                 idx = int(detections[0, 0, i, 1])
-
-                # display the prediction
-                if idx >= 0 and idx <= 20:
+                if idx >= 0 and idx <= 20:      # display the prediction
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
                     print("[INFO] {}".format(label))
-					# adds new label to label_list
-                    label_list.append(label)
-		# appends label_list to JSON data
-        json_data_parsed['ObjectsDetected'] = label_list
+                    label_list.append(label)    # adds new label to label_list
+        json_data_parsed['ObjectsDetected'] = label_list  # appends label_list to JSON data
 
     def run_images(self):
         print("Consuming messages from 'target2'\n")
@@ -66,10 +59,8 @@ class GeneralObjectDetection(object):
             fh.write(frame)
             fh.close()                        
             self.run_object_detection(json_data_parsed)
-			# writes json_data_parsed to the JSON file
-            json_data = json.dumps(json_data_parsed)
-			# exports JSON file with the list of labels for the identified objects
-            Utilities.exportJson(json_data, "general")    
+            json_data = json.dumps(json_data_parsed)  # writes json_data_parsed to the JSON file
+            Utilities.exportJson(json_data, "general")   # exports JSON file with the list of labels for the identified objects
          
             
             
