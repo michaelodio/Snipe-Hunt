@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+# USAGE
+# python deep_learning_with_opencv.py --image images/jemma.png --prototxt bvlc_googlenet.prototxt --model bvlc_googlenet.caffemodel --labels synset_words.txt
+>>>>>>> bc2488fd5553b172258bd303edc4cbab676fa964
 # import the necessary packages
 import numpy as np
 import argparse
@@ -7,6 +12,7 @@ import json
 import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
+
 
 # changed class from ImageClassification to ObjectDetection
 # uses the code for  FrameLabeling as a base
@@ -25,6 +31,7 @@ class GeneralObjectDetection(object):
         self.mean_subtraction = 0.007843
         self.scalar = 127.5
         self.confidenceThreshold = 0.3
+
 
 		# removed all code related to label, or creating bounding boxes
 		# added json_data_parsed to method parameters
@@ -46,7 +53,7 @@ class GeneralObjectDetection(object):
                     print("[INFO] {}".format(label))
                     label_list.append(label)    # adds new label to label_list
         json_data_parsed['ObjectsDetected'] = label_list  # appends label_list to JSON data
-
+            
     def run_images(self):
         print("Consuming messages from 'target2'\n")
         consumer = Consumer.initialize("target2")
@@ -63,14 +70,16 @@ class GeneralObjectDetection(object):
             Utilities.exportJson(json_data, "general")   # exports JSON file with the list of labels for the identified objects
          
             
-            
-    
+          
 def main():
-    prototxt = "../../res/MobileNetSSD_deploy.prototxt.txt"
-    model = "../../res/MobileNetSSD_deploy.caffemodel"    
-    obj = GeneralObjectDetection(prototxt,model)
+    parser = argparse.ArgumentParser()   # Parser to parse arguments passed
+    parser.add_argument('--prototxt', type=str, help='Path to prototxt file')
+    parser.add_argument('--model', type=str, help='Path to model')
+    
+    args = parser.parse_args()
+    
+    obj = GeneralImageClassification(args.prototxt, args.model)
     obj.run_images()
-
 
 
 if __name__=="__main__":

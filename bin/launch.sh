@@ -14,9 +14,15 @@ echo Topics Cleared
 cd ../projects/ObjectDetection/
 python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" &
 
-python GeneralObjDetection.py &
+python GeneralObjDetection.py --prototxt "../../res/MobileNetSSD_deploy.prototxt.txt"
+                              --model "../../res/MobileNetSSD_deploy.caffemodel" &
 
-python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_graph.pb" --labels "../../res/TfModel/output_labels.txt" --input_layer "Placeholder" --output_layer "final_result" --input_height 224 --input_width 224 &
+python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_graph.pb" 
+                                          --labels "../../res/TfModel/output_labels.txt" 
+                                          --input_layer "Placeholder" 
+                                          --output_layer "final_result" 
+                                          --input_height 224 
+                                          --input_width 224 &
 
 cd ../ETL/
 python ETLProcess.py --video "../../res/vid.mp4"
