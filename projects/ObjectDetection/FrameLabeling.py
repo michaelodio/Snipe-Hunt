@@ -30,7 +30,7 @@ class FrameLabeling(object):
         self.scalar = 127.5
         
 
-    def run_frame_labeling(self, json_data_parsed):
+    def run_frame_labeling(self):
 
 		
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
@@ -54,7 +54,6 @@ class FrameLabeling(object):
                     cv2.putText(img, label, (startX, y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
         self.b64 = base64.b64encode(img)
-		json_data_parsed['LabeledImage'] = self.b64
         #cv2.imshow("output", img)
         #cv2.waitKey(0)
             
@@ -72,9 +71,11 @@ class FrameLabeling(object):
             frame = Utilities.decodeFrame(json_data_parsed)
             fh = open(self.imagePath, "wb")
             fh.write(frame)
-            fh.close()                        
-            self.run_frame_labeling(json_data_parsed)
-			json_data = json.dumps(json_data_parsed)
+            fh.close()
+            self.run_frame_labeling()
+            json_data_parsed['LabeledImage'] = self.b64
+            Utilities.storeJson(json_data_parsed, "../../res/FrameJsonsAfterAllComponents.txt")
+            json_data = json.dumps(json_data_parsed)
             
            
 

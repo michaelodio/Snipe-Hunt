@@ -17,20 +17,24 @@ class GeneralImageClassification(object):
         self.image = "../../res/genimg.jpg"
         self.prototxt = prototxt
         self.model = model
-        self.labels = "../../res/synset_words.txt"
-		self.size = 300
-		self.mean_subtraction = 0.007843
-		self.scalar = 127.5
+        self.classes = ["background", "aeroplane", "bicycle", "bird", "boat",
+           "bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
+           "dog", "horse", "motorbike", "person", "pottedplant", "sheep",
+           "sofa", "train", "tvmonitor"]
+        self.size = 300
+        self.mean_subtraction = 0.007843
+        self.scalar = 127.5
+        self.confidenceThreshold = 0.3
 
 
     def run_object_detection(self, json_data_parsed):
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
-        img = cv2.imread(self.imagePath)
+        img = cv2.imread(self.image)
  #       (h, w) = img.shape[:2]
         blob = cv2.dnn.blobFromImage(cv2.resize(img, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)
         net.setInput(blob)
         detections = net.forward()
-		label_list = list()
+        label_list = list()
         for i in np.arange(0, detections.shape[2]):
             confidence = detections[0, 0, i, 2]
             if confidence > self.confidenceThreshold:
@@ -38,16 +42,15 @@ class GeneralImageClassification(object):
 #                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
 #                (startX, startY, endX, endY) = box.astype("int")
                 # display the prediction
-                print("idx = " + str(idx))
-#               if idx >= 0 and idx <= 20:
-                label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
-#               print("[INFO] {}".format(label))
-				label_list.append(label)
-#                    cv2.rectangle(img, (startX, startY), (endX, endY), self.colors[idx], 2)
-#                    y = startY - 15 if startY - 15 > 15 else startY + 15
-#                    cv2.putText(img, label, (startX, y),
-#                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
-        json_data_parsed ['ObjectsDetected'] = label_list
+                if idx >= 0 and idx <= 20:
+                    label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
+#                   print("[INFO] {}".format(label))
+                    label_list.append(label)
+#                   cv2.rectangle(img, (startX, startY), (endX, endY), self.colors[idx], 2)
+#                   y = startY - 15 if startY - 15 > 15 else startY + 15
+#                   cv2.putText(img, label, (startX, y),
+#                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
+        json_data_parsed['ObjectsDetected'] = label_list
 
     def run_images(self):
         print("Consuming messages from 'target2'\n")
@@ -61,7 +64,7 @@ class GeneralImageClassification(object):
             fh.write(frame)
             fh.close()                        
             self.run_object_detection(json_data_parsed)
-			json_data = json.dumps(json_data_parsed)
+            json_data = json.dumps(json_data_parsed)
             Utilities.exportJson(json_data, "general")    # currently exports same data read from kafka topic until we know what to add from this component
          
             
