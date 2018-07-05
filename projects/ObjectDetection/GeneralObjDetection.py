@@ -1,6 +1,5 @@
 # USAGE
 # python deep_learning_with_opencv.py --image images/jemma.png --prototxt bvlc_googlenet.prototxt --model bvlc_googlenet.caffemodel --labels synset_words.txt
-
 # import the necessary packages
 import numpy as np
 import argparse
@@ -10,6 +9,7 @@ import json
 import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
+
 
 class GeneralImageClassification(object):
         
@@ -25,8 +25,7 @@ class GeneralImageClassification(object):
         self.mean_subtraction = 0.007843
         self.scalar = 127.5
         self.confidenceThreshold = 0.3
-
-
+    
     def run_object_detection(self, json_data_parsed):
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         img = cv2.imread(self.image)
@@ -51,7 +50,7 @@ class GeneralImageClassification(object):
 #                   cv2.putText(img, label, (startX, y),
 #                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
         json_data_parsed['ObjectsDetected'] = label_list
-
+    
     def run_images(self):
         print("Consuming messages from 'target2'\n")
         consumer = Consumer.initialize("target2")
@@ -66,16 +65,17 @@ class GeneralImageClassification(object):
             self.run_object_detection(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
             Utilities.exportJson(json_data, "general")    # currently exports same data read from kafka topic until we know what to add from this component
-         
-            
-            
-    
-def main():
-    prototxt = "../../res/MobileNetSSD_deploy.prototxt.txt"
-    model = "../../res/MobileNetSSD_deploy.caffemodel"    
-    obj = GeneralImageClassification(prototxt,model)
-    obj.run_images()
 
+
+def main():
+    parser = argparse.ArgumentParser()   # Parser to parse arguments passed
+    parser.add_argument('--prototxt', type=str, help='Path to prototxt file')
+    parser.add_argument('--model', type=str, help='Path to model')
+    
+    args = parser.parse_args()
+    
+    obj = GeneralImageClassification(args.prototxt, args.model)
+    obj.run_images()
 
 
 if __name__=="__main__":

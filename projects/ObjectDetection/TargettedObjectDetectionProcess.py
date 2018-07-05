@@ -9,7 +9,6 @@ import tensorflow as tf
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
 
-
     
 def main():
     parser = argparse.ArgumentParser()   # Parser to parse arguments passed
@@ -22,18 +21,18 @@ def main():
     
     args = parser.parse_args()
     if args.graph:
-		graph = args.graph
+        graph = args.graph
     if args.labels:
-		labels = args.labels
+        labels = args.labels
     if args.input_layer:
-		input_layer = args.input_layer
+        input_layer = args.input_layer
     if args.output_layer:
-		output_layer = args.output_layer
+        output_layer = args.output_layer
     if args.input_height:
-		input_height = args.input_height
+        input_height = args.input_height
     if args.input_width:
-		input_width = args.input_width	
-	
+        input_width = args.input_width	
+    
     print("\nConsuming messages from 'framefeeder'")
     consumer = Consumer.initialize("framefeeder")
     for m in consumer:
