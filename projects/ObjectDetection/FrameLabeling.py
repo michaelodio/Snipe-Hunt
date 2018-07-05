@@ -30,8 +30,6 @@ class FrameLabeling(object):
         
 
     def run_frame_labeling(self):
-
-		
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         img = cv2.imread(self.imagePath)
         (h, w) = img.shape[:2]
@@ -54,11 +52,7 @@ class FrameLabeling(object):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
         self.b64 = base64.b64encode(img)
 
-            
-    
-        
-                    
-                    
+                       
     def run_images(self):      
         print("\n Consuming messages from 'general'\n")
         consumer = Consumer.initialize("general")
@@ -73,7 +67,7 @@ class FrameLabeling(object):
             self.run_frame_labeling()
             json_data_parsed['LabeledImage'] = self.b64   # adds base64 string to json data
             Utilities.storeJson(json_data_parsed, "../../res/FrameJsonsAfterAllComponents.txt")    # saves JSON file to drive for debugging purposes
-			json_data = json.dumps(json_data_parsed)      # writes json_data to the JSON file
+            json_data = json.dumps(json_data_parsed)      # writes json_data to the JSON file
             
            
 
@@ -83,11 +77,7 @@ def main():
     parser.add_argument('--model', type=str, help='Path to frame labeling object detection model')
     parser.add_argument('--model_prototxt', type=str, help='Path to model prototxt')
     args = parser.parse_args()
-    if args.model:
-		model = args.model
-    if args.model_prototxt:
-		prototxt = args.model_prototxt
-    obj = FrameLabeling(prototxt,model)
+    obj = FrameLabeling(args.model_prototxt, args.model)
     obj.run_images()
     # ** TODO: Add database (Accumulo and Scylla) here by pushing finalized json data to database **
     
