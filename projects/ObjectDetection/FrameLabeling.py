@@ -11,7 +11,7 @@ sys.path.insert(0, "../Utility/")   # used to import files from other folder dir
 from utilities import *
 
 
-
+# renamed class and file to FrameLabeling
 class FrameLabeling(object):
 
     def __init__(self, prototxt, model):
@@ -25,6 +25,7 @@ class FrameLabeling(object):
         self.colors = np.random.uniform(-255, 255, size=(len(self.classes), 3))
         self.confidenceThreshold = 0.3
         self.b64 = ''
+		# added variables for size, mean_subtraction, and scalar values for easy of change
         self.size = 300
         self.mean_subtraction = 0.007843
         self.scalar = 127.5
@@ -36,6 +37,7 @@ class FrameLabeling(object):
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         img = cv2.imread(self.imagePath)
         (h, w) = img.shape[:2]
+		# replaced hard  coded values for variables
         blob = cv2.dnn.blobFromImage(cv2.resize(img, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)
         net.setInput(blob)
         detections = net.forward()
@@ -54,8 +56,7 @@ class FrameLabeling(object):
                     cv2.putText(img, label, (startX, y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
         self.b64 = base64.b64encode(img)
-        #cv2.imshow("output", img)
-        #cv2.waitKey(0)
+
             
     
         
@@ -73,9 +74,12 @@ class FrameLabeling(object):
             fh.write(frame)
             fh.close()
             self.run_frame_labeling()
+			# adds base64 string to json data
             json_data_parsed['LabeledImage'] = self.b64
+			# saves JSON file to drive for debugging purposes
             Utilities.storeJson(json_data_parsed, "../../res/FrameJsonsAfterAllComponents.txt")
-            json_data = json.dumps(json_data_parsed)
+            # writes json_data to the JSON file
+			json_data = json.dumps(json_data_parsed)
             
            
 
