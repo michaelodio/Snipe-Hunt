@@ -12,7 +12,7 @@ echo Topics Created
 echo Topics Cleared
 
 cd ../projects/ObjectDetection/
-python FrameLabeling.py &
+python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" &
 
 python GeneralObjDetection.py --prototxt "../../res/MobileNetSSD_deploy.prototxt.txt"
                               --model "../../res/MobileNetSSD_deploy.caffemodel" &
