@@ -18,31 +18,36 @@ class GeneralImageClassification(object):
         self.prototxt = prototxt
         self.model = model
         self.labels = "../../res/synset_words.txt"
+		self.size = 300
+		self.mean_subtraction = 0.007843
+		self.scalar = 127.5
 
 
-    def run_classification(self):
+    def run_object_detection(self, json_data_parsed):
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
-        image = cv2.imread(self.image)
-        rows = open(self.labels).read().strip().split("\n")
-        classes = [r[r.find(" ") + 1:].split(",")[0] for r in rows]
-        newimg = cv2.resize(image,(224,224))
-        blob = cv2.dnn.blobFromImage(newimg, 1, (224, 224), (104, 117, 123))      
+        img = cv2.imread(self.imagePath)
+ #       (h, w) = img.shape[:2]
+        blob = cv2.dnn.blobFromImage(cv2.resize(img, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)
         net.setInput(blob)
-        preds = net.forward()
-        idxs = np.argsort(preds[0])[::-1][:5]
-        for (i, idx) in enumerate(idxs):	
-	    if i == 0:
-	        output = "Label: {}, {:.2f}%".format(classes[idx],
-		    preds[0][idx] * 100)
-		cv2.putText(image, output, (5, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-       # print("[INFO] {}. label: {}, probability: {:.5}".format(i + 1,classes[idx], preds[0][idx]))        
-	       # cv2.imshow("Image", image)
-               #cv2.waitKey(0)
-	#print("[INFO] {}. label: {}, probability: {:.5}".format(i + 1,
-		#classes[idx], preds[0][idx]))
-            print("[INFO] {}. label: {}, probability: {:.5}".format(i + 1,classes[idx], preds[0][idx]))
-        #cv2.imshow("Image", image)
-        #cv2.waitKey(0)
+        detections = net.forward()
+		label_list = list()
+        for i in np.arange(0, detections.shape[2]):
+            confidence = detections[0, 0, i, 2]
+            if confidence > self.confidenceThreshold:
+                idx = int(detections[0, 0, i, 1])
+#                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+#                (startX, startY, endX, endY) = box.astype("int")
+                # display the prediction
+                print("idx = " + str(idx))
+#               if idx >= 0 and idx <= 20:
+                label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
+#               print("[INFO] {}".format(label))
+				label_list.append(label)
+#                    cv2.rectangle(img, (startX, startY), (endX, endY), self.colors[idx], 2)
+#                    y = startY - 15 if startY - 15 > 15 else startY + 15
+#                    cv2.putText(img, label, (startX, y),
+#                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
+        json_data_parsed ['ObjectsDetected'] = label_list
 
     def run_images(self):
         print("Consuming messages form 'target2'\n")
@@ -55,15 +60,16 @@ class GeneralImageClassification(object):
             fh = open(self.image, "wb")
             fh.write(frame)
             fh.close()                        
-            self.run_classification()
+            self.run_object_detection(json_data_parsed)
+			json_data = json.dumps(json_data_parsed)
             Utilities.exportJson(json_data, "general")    # currently exports same data read from kafka topic until we know what to add from this component
          
             
             
     
 def main():
-    prototxt = "../../res/bvlc_googlenet.prototxt"
-    model = "../../res/bvlc_googlenet.caffemodel"
+    prototxt = "../../res/MobileNetSSD_deploy.prototxt.txt"
+    model = "../../res/MobileNetSSD_deploy.caffemodel"    
     obj = GeneralImageClassification(prototxt,model)
     obj.run_images()
 
