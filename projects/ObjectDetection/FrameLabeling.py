@@ -25,13 +25,11 @@ class FrameLabeling(object):
         self.colors = np.random.uniform(-255, 255, size=(len(self.classes), 3))
         self.confidenceThreshold = 0.3
         self.b64 = ''
-		self.size = 300
-		self.mean_subtraction = 0.007843
-		self.scalar = 127.5
+        self.size = 300
+        self.mean_subtraction = 0.007843
+        self.scalar = 127.5
         
     def run_frame_labeling(self):
-
-		
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         img = cv2.imread(self.imagePath)
         (h, w) = img.shape[:2]
@@ -45,7 +43,6 @@ class FrameLabeling(object):
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 (startX, startY, endX, endY) = box.astype("int")
                 # display the prediction
-                print("idx = " + str(idx))
                 if idx >= 0 and idx <= 20:
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
                     print("[INFO] {}".format(label))
@@ -62,17 +59,17 @@ class FrameLabeling(object):
                     
                     
     def run_images(self):      
-        print("\n Consuming messages from 'general'")
+        print("\n Consuming messages from 'general'\n")
         consumer = Consumer.initialize("general")
         for m in consumer:
             json_data = m.value     
-            print("\n Running object detection model against the frames")
             json_data_parsed = json.loads(json_data)
+            print("\n Running frame labeling against frame: " + str(json_data_parsed['frameNum']) + "\n")
             frame = Utilities.decodeFrame(json_data_parsed)
             fh = open(self.imagePath, "wb")
             fh.write(frame)
             fh.close()                        
-            self.run_FrameLabeling()
+            self.run_frame_labeling()
             
            
 

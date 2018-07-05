@@ -17,6 +17,4 @@ python TargettedObjectDetectionProcess.py &
 cd ../ETL/
 python ETLProcess.py --video "../../res/vid.mp4"
 
-cd ../
-./cleanup.py
-echo Cleaned up files
+

@@ -45,7 +45,7 @@ class GeneralImageClassification(object):
         #cv2.waitKey(0)
 
     def run_images(self):
-        print("Consuming messages form 'target2'\n")
+        print("Consuming messages from 'target2'\n")
         consumer = Consumer.initialize("target2")
         for m in consumer:
             json_data = m.value     
