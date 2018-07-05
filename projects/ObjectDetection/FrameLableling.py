@@ -12,7 +12,7 @@ from utilities import *
 
 
 
-class GeneralObjectDetection(object):
+class FrameLabeling(object):
 
     def __init__(self, prototxt, model):
         self.imagePath = "../../res/image1.jpg"
@@ -25,12 +25,17 @@ class GeneralObjectDetection(object):
         self.colors = np.random.uniform(-255, 255, size=(len(self.classes), 3))
         self.confidenceThreshold = 0.3
         self.b64 = ''
+		self.size = 300
+		self.mean_subtraction = 0.007843
+		self.scalar = 127.5
         
-    def run_caffe_detection(self):       
+    def run_frame_labeling(self):
+
+		
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         img = cv2.imread(self.imagePath)
         (h, w) = img.shape[:2]
-        blob = cv2.dnn.blobFromImage(cv2.resize(img, (300, 300)), 0.007843, (300, 300), 127.5)
+        blob = cv2.dnn.blobFromImage(cv2.resize(img, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)
         net.setInput(blob)
         detections = net.forward()
         for i in np.arange(0, detections.shape[2]):
@@ -67,7 +72,7 @@ class GeneralObjectDetection(object):
             fh = open(self.imagePath, "wb")
             fh.write(frame)
             fh.close()                        
-            self.run_caffe_detection()
+            self.run_FrameLabeling()
             
            
 
@@ -76,7 +81,7 @@ def main():
     
     prototxt = "../../res/MobileNetSSD_deploy.prototxt.txt"
     model = "../../res/MobileNetSSD_deploy.caffemodel"    
-    obj = GeneralObjectDetection(prototxt,model)
+    obj = FrameLabeling(prototxt,model)
     obj.run_images()
     # ** TODO: Add database (Accumulo and Scylla) here by pushing finalized json data to database **
     
