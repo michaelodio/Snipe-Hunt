@@ -1,23 +1,61 @@
 <!doctype html>
 <html lang="en">
 	<head>
+        <!-- <link rel="icon" href="coffee.gif" type="image/gif" sizes="128x128"> -->
+                <link rel="icon" href="france.png" type="image/png" >
+    
         <link rel="stylesheet" type="text/css" href="../static/style.css">
-		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        
         <title>
-			Iris
+			French Flag Detector
 		</title>
 	</head>
 
-	<body background="../static/background.jpg">
+	<body> <!-- background="../static/back.jpg" -->
     	
+        
+        <div class="topnav">
+            <a class="active" href="#home">
+                Home
+            </a>
+            <a href="#about">
+                About
+            </a>
+            <a href="#contact">
+                Contact
+            </a>
+            
+            <div class="search-container">
+                <form action="/action_page.php">
+                    <input type="text" placeholder="Search.." name="search">
+                    <button type="submit">
+                        <i class="fa fa-search">
+                        </i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div id="topblackbar"></div>
+        
+        <div id="bodypop"></div>
 		<div id="title">
             French Flag Detector 
         </div>
+        
+        <div id="para">
+	        <p>
+                Hello, our names are Kyle Clabough, Michael Odio, Kyle Barley
+                and Matt Stillwell.
+            </p>
+        </div>
+        
 	
         <div id="uploader">
-            <h2>
+            <h3>
                 Upload new File
-            </h2>
+            </h3>
             
             <form method=post enctype=multipart/form-data>
                 <input type="file" name="file" id="file" class="inputfile" accept="video/*" />
@@ -34,24 +72,23 @@
             <img alt="Flag" width="225" height="150" src="../static/french-flag.jpg" border="3">
         </div>
         
+        <!--
         <div id="video-player">
 			<video width="320" height="240" controls>
 				<source src="../static/bunny.mp4" type="video/mp4">
                 Your browser does not support the video tag
 			</video>
         </div>
-	
+        -->
+        
+            
+        <div id="bottomblackbar"></div>
+                <div id="whitefooter"></div>
+            
         <div id="footer">
-            <p>
-                Hello, our names are Kyle Clabough, Michael Odio, Kyle Barley
-                and Matt Stillwell.
-            </p>
-	
-            <p>
                 <a href="http://www.braintrust-us.com">
-                    <img border="0" src="../static/braintrust.jpg" width="256" height="33">
+                    <img border="0" src="../static/braintrust.jpg" width="128" height="17">
                 </a>
-            </p>
         </div>
 
 	</body>
