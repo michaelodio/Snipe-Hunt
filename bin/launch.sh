@@ -8,6 +8,10 @@ echo Kafka Server Started
 echo Topics Created
 
 cd ../projects/ObjectDetection/
+python ObjectDetection.py &
+
+python GeneralObjDetection.py &
+
 python TargettedObjectDetectionProcess.py &
 
 cd ../ETL/
