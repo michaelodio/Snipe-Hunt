@@ -63,7 +63,8 @@ def home():
             filename = secure_filename(file.filename)
             videoFilePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)   # make videos filePath for saving it and then sending it to ETL
             file.save(videoFilePath)      # save uploaded video to the project's res folder for ETL to extract
-            ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
+            #ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
+            os.system('cd ../../../bin/ && ./launch.sh)
             return redirect(url_for('displayAnalysisResults'))
     return render_template("index.html")
 
