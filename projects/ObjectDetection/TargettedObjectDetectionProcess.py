@@ -40,7 +40,7 @@ def main():
         if confidenceStat != None:     # if the target object was found within the threshold confidence, append that information to the JSON file. 
             json_data_parsed['foundTargetWithConfidence'] = str(confidenceStat)
             json_data = json.dumps(json_data_parsed)
-        Utilities.storeJson(json_data, "../../res/frameMetadataListTargetOBJD.txt")    # Store updated metadata Jsons locally
+        Utilities.storeJson(json_data, "../../res/FramesMetadataTargetImgClassification/frameMetadata.txt")    # Store updated metadata Jsons locally
         Utilities.exportJson(json_data, "target2")    # export updated Json files to kafka topic 'target'
         print(json_data_parsed['frameNum'])   # print frame number that was just processed
     consumer.close()
