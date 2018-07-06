@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+	<head>
+        <!-- <link rel="icon" href="../static/coffee.gif" type="image/gif" sizes="128x128"> -->
+        <link rel="icon" href="../static/france.png" type="image/png" >
+    
+        <link rel="stylesheet" type="text/css" href="../static/style2.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        <title>
+			French Flag Detector
+		</title>
+	</head>
+
+	<body>
+        
+        <div class="topnav">
+            <a class="active" id="tab" href="#home">
+                Home
+            </a>
+            <a id="abouttab" href="#about">
+                About
+            </a>
+            <a id="contacttab" href="#contact">
+                Contact
+            </a>
+            
+            <div class="search-container">
+                <form action="/action_page.php">
+                    <input type="text" placeholder="Search.." name="search">
+                    <button type="submit">
+                        <i class="fa fa-search">
+                        </i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        
+        <div id="bodypop"></div>
+        <div id="bodypop2"></div>
+                <div id="topbar"></div>
+
+
+        <div id="video-player">
+			<video width="900" height="400" controls>
+				<source src="../static/{{ messages['filename'] }}" type="video/mp4">
+                Your browser does not support the video tag
+			</video>
+        </div>
+        
+        <div id="para">
+            {{ messages['filename'] }}
+            {{ messages['data'] }}
+        </div>
+        
+        
+        <div id="bottombar"></div>
+        <div id="bottombox"></div>
+            
+        <div id="footer">
+                <a href="http://www.braintrust-us.com">
+                    <img border="0" src="../static/braintrust.jpg" width="128" height="17">
+                </a>
+        </div>
+
+	</body>
+</html>
