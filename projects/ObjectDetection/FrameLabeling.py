@@ -42,7 +42,7 @@ class FrameLabeling(object):
                     print("[INFO] {}".format(label))
                     cv2.rectangle(self.image, (startX, startY), (endX, endY), self.colors[idx], 2)
                     y = startY - 15 if startY - 15 > 15 else startY + 15
-                    cv2.putText(img, label, (startX, y),
+                    cv2.putText(self.image, label, (startX, y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
         self.b64 = base64.b64encode(self.image)
 
@@ -59,7 +59,9 @@ class FrameLabeling(object):
             self.run_frame_labeling()
             json_data_parsed['LabeledImage'] = self.b64   # adds base64 string to json data
             Utilities.storeJson(json_data_parsed, "../../res/FrameJsonsAfterAllComponents.txt")    # saves JSON file to drive for debugging purposes
-            json_data = json.dumps(json_data_parsed)      # writes json_data to the JSON file
+            json_data = json.dumps(json_data_parsed)     
+        consumer.close()
+        print("\nFrame labeling consumer closed!")
             
            
 
