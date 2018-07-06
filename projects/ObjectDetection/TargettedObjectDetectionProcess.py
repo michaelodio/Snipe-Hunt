@@ -41,10 +41,12 @@ def main():
             json_data_parsed['foundTargetWithConfidence'] = str(confidenceStat)
             json_data = json.dumps(json_data_parsed)
         Utilities.storeJson(json_data, "../../res/frameMetadataListTargetOBJD.txt")    # Store updated metadata Jsons locally
-        print("exporting json")
         Utilities.exportJson(json_data, "target2")    # export updated Json files to kafka topic 'target'
         print(json_data_parsed['frameNum'])   # print frame number that was just processed
+    consumer.close()
+    print("\nTargetted Object Detection consumer closed!")
         
 
 if __name__ == "__main__":
     main()
+    
