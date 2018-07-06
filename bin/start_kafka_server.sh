@@ -1,2 +1,7 @@
-nohup ../res/Apps/kafka/bin/kafka-server-start.sh \
-../res/Apps/kafka/config/server.properties > ../res/Apps/kafka/kafka.log 2>&1 
+cd ../res/Apps/kafka/
+
+sudo bin/zookeeper-server-start.sh config/zookeeper.properties > bin/zookeeper-log.txt &
+echo Zookeeper started
+
+sudo bin/kafka-server-start.sh config/server.properties > bin/kafka-log.txt &
+echo Kafka Server started
