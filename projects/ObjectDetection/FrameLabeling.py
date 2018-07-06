@@ -8,7 +8,7 @@ from utilities import *
 class FrameLabeling(object):
 
     def __init__(self, prototxt, model):
-        self.imagePath = "../../res/image1.jpg"
+        self.image = None
         self.prototxt = prototxt
         self.model = model
         self.classes = ["background", "aeroplane", "bicycle", "bird", "boat",
@@ -26,9 +26,8 @@ class FrameLabeling(object):
 
     def run_frame_labeling(self):
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
-        img = cv2.imread(self.imagePath)
-        (h, w) = img.shape[:2]
-        blob = cv2.dnn.blobFromImage(cv2.resize(img, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)  # replaced hard  coded values for variables
+        (h, w) = self.image.shape[:2]
+        blob = cv2.dnn.blobFromImage(cv2.resize(self.image, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)  # replaced hard  coded values for variables
         net.setInput(blob)
         detections = net.forward()
         for i in np.arange(0, detections.shape[2]):
@@ -41,11 +40,11 @@ class FrameLabeling(object):
                 if idx >= 0 and idx <= 20:
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
                     print("[INFO] {}".format(label))
-                    cv2.rectangle(img, (startX, startY), (endX, endY), self.colors[idx], 2)
+                    cv2.rectangle(self.image, (startX, startY), (endX, endY), self.colors[idx], 2)
                     y = startY - 15 if startY - 15 > 15 else startY + 15
                     cv2.putText(img, label, (startX, y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
-        self.b64 = base64.b64encode(img)
+        self.b64 = base64.b64encode(self.image)
 
                        
     def run_images(self):      
@@ -55,10 +54,8 @@ class FrameLabeling(object):
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
             print("\n Running frame labeling against frame: " + str(json_data_parsed['frameNum']) + "\n")
-            frame = Utilities.decodeFrame(json_data_parsed)
-            fh = open(self.imagePath, "wb")
-            fh.write(frame)
-            fh.close()
+            frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
+            self.image = frame
             self.run_frame_labeling()
             json_data_parsed['LabeledImage'] = self.b64   # adds base64 string to json data
             Utilities.storeJson(json_data_parsed, "../../res/FrameJsonsAfterAllComponents.txt")    # saves JSON file to drive for debugging purposes
