@@ -58,8 +58,8 @@ class FrameLabeling(object):
             self.image = frame
             self.run_frame_labeling()
             json_data_parsed['LabeledImage'] = self.b64   # adds base64 string to json data
-            Utilities.storeJson(json_data_parsed, "../../res/FrameJsonsAfterAllComponents.txt")    # saves JSON file to drive for debugging purposes
-            json_data = json.dumps(json_data_parsed)     
+            json_data = json.dumps(json_data_parsed)
+            Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/frameMetadata.txt")     
         consumer.close()
         print("\nFrame labeling consumer closed!")
             
