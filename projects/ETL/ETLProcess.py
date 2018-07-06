@@ -4,6 +4,7 @@ import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
 
+extensions = [".mp4", ".mpg", ".mov", ".wmv"]  # global variables for movie extensions
 
 class VideoETL(object):
     def __init__(self, videoPath):
@@ -40,13 +41,19 @@ class VideoETL(object):
 
 def main(*positional_parameters, **keyword_parameters):
     parser = argparse.ArgumentParser()   # Parser to parse arguments passed
-    parser.add_argument('--video', type=str, help='Path to video for processing')
+    parser.add_argument('--video', type=str, help='Path to video or folder of videos for processing')
     FLAGS, unparsed = parser.parse_known_args()
     if ('videoFromUI' in keyword_parameters):    # if a videoPath was provided from the UI use that video path instead.
         FLAGS.video = keyword_parameters['videoFromUI']
-    if FLAGS.video:
+    if FLAGS.video.endswith("/"):
+        videosPath = Utilities.get_file_paths(FLAGS.video)
+        for video in videosPath:
+            videoEditor = VideoETL(video)   # create instance of VideoEditor object for processing the video with OpenCV
+            videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
+    if FLAGS.video.endswith(tuple(extensions)):
         videoEditor = VideoETL(FLAGS.video)   # create instance of VideoEditor object for processing the video with OpenCV
         videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
+
           
         
         

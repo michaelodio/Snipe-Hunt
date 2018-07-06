@@ -48,3 +48,13 @@ class Utilities(object):
         nparr = np.fromstring(img.decode('base64'), np.uint8)
         newImage = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         return newImage
+
+    @staticmethod
+    def get_file_paths(directory):
+        storePaths = []
+        extensions = [".mp4", ".mpg", ".mov", ".wmv"]
+        for root, dirs, files in os.walk(directory):
+            for f in files:
+                if f.endswith(tuple(extensions)):
+                    storePaths.append(os.path.join(root, f))
+        return storePaths
