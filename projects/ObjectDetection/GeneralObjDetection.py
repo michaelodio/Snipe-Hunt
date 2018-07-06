@@ -53,6 +53,7 @@ class GeneralObjectDetection(object):
             self.image = frame
             self.run_object_detection(json_data_parsed)
             json_data = json.dumps(json_data_parsed)  # writes json_data_parsed to the JSON file
+            Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetection/frameMetadata.txt")
             Utilities.exportJson(json_data, "general")   # exports JSON file with the list of labels for the identified objects
         consumer.close()
         print("\nGeneral Object Detection consumer closed!")

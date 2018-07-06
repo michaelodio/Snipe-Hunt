@@ -35,7 +35,7 @@ class VideoETL(object):
         frameAsBase64String = Utilities.encodeFrame(frameConvertedToJPG)    # encode frame to base64String
         frameJson = json.dumps({'videoPath': self.videoPath, 'videoName': self.videoName, 'videoDuration': str(self.videoDuration) + " seconds", 'totalFrames': self.totalFrame, 'FPS': self.FPS, 'frameNum': frameNum, 'timeStamp': str(timeStamp) + " seconds", 'imageBase64': frameAsBase64String})     # create frame json with collected metadata
         Utilities.exportJson(frameJson, "framefeeder")    # export frame json to kafka topic
-        Utilities.storeJson(frameJson, "../../res/ETLFramesMetadata.txt")  # store frame json locally
+        Utilities.storeJson(frameJson, "../../res/FramesMetadataETL/FramesMetadata.txt")  # store frame json locally
         return
 
 def main(*positional_parameters, **keyword_parameters):
