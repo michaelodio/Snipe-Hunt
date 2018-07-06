@@ -10,7 +10,7 @@ class GeneralObjectDetection(object):
         # added missing variables (classes, confidenceThreshold)
 		# extracted and added variables for size, mean_subtraction, and scalar
     def __init__(self, prototxt, model):
-        self.image = "../../res/genimg.jpg"
+        self.image = None
         self.prototxt = prototxt
         self.model = model
         self.classes = ["background", "aeroplane", "bicycle", "bird", "boat",
@@ -27,13 +27,12 @@ class GeneralObjectDetection(object):
 		# added json_data_parsed to method parameters
     def run_object_detection(self, json_data_parsed):
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
-        img = cv2.imread(self.image)
 		# replaced values with variables
-        blob = cv2.dnn.blobFromImage(cv2.resize(img, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)
+        blob = cv2.dnn.blobFromImage(cv2.resize(self.image, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)
         net.setInput(blob)
         detections = net.forward()
 		# create a list to store found labels
-        label_list = list()
+        label_list = []
         for i in np.arange(0, detections.shape[2]):
             confidence = detections[0, 0, i, 2]
             if confidence > self.confidenceThreshold:
@@ -51,10 +50,8 @@ class GeneralObjectDetection(object):
             json_data = m.value     
             print("\n Running object detection model against the frames")
             json_data_parsed = json.loads(json_data)
-            frame = Utilities.decodeFrame(json_data_parsed)     # TODO: change this so that we dont have to write a file. 
-            fh = open(self.image, "wb")
-            fh.write(frame)
-            fh.close()                        
+            frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)   # this utility method will not only decode the b64 string, but also prepare the image to be compatible with opencv
+            self.image = frame
             self.run_object_detection(json_data_parsed)
             json_data = json.dumps(json_data_parsed)  # writes json_data_parsed to the JSON file
             Utilities.exportJson(json_data, "general")   # exports JSON file with the list of labels for the identified objects
