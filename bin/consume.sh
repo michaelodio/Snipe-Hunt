@@ -1,2 +1,5 @@
-../res/Apps/kafka/bin/kafka-console-consumer.sh \
---zookeeper localhost:2181 --from-beginning --topic $1
+cd ../res/Apps/kafka/bin/
+
+./kafka-console-consumer.sh --bootstrap-server localhost:9092 \
+                            --from-beginning \
+                            --topic $1

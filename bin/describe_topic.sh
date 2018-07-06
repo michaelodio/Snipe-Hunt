@@ -1,1 +1,5 @@
-../res/Apps/kafka/bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic $1
+cd ../res/Apps/kafka/bin/
+
+./kafka-topics.sh --zookeeper localhost:2181 \
+                  --describe \
+                  --topic $1
