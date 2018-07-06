@@ -48,13 +48,14 @@ class GeneralObjectDetection(object):
         consumer = Consumer.initialize("target2")
         for m in consumer:
             json_data = m.value     
-            print("\n Running object detection model against the frames")
             json_data_parsed = json.loads(json_data)
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)   # this utility method will not only decode the b64 string, but also prepare the image to be compatible with opencv
             self.image = frame
             self.run_object_detection(json_data_parsed)
             json_data = json.dumps(json_data_parsed)  # writes json_data_parsed to the JSON file
             Utilities.exportJson(json_data, "general")   # exports JSON file with the list of labels for the identified objects
+        consumer.close()
+        print("\nGeneral Object Detection consumer closed!")
          
             
           

@@ -1,6 +1,5 @@
 ./start_kafka_server.sh
 wait
-echo Kafka Server Started
 
 ./create_topic.sh general
 ./create_topic.sh target2
@@ -14,9 +13,11 @@ echo Topics Cleared
 cd ../projects/ObjectDetection/
 python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                         --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" &
+pids[0]=$!
 
 python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                               --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" &
+pids[1]=$!
 
 python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_graph.pb" \
                                           --labels "../../res/TfModel/output_labels.txt" \
@@ -24,8 +25,12 @@ python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_grap
                                           --output_layer "final_result" \
                                           --input_height 224 \
                                           --input_width 224 &
+pids[2]=$!
 
 cd ../ETL/
 python ETLProcess.py --video "../../res/vid.mp4"
+for pid in ${pids[*]}; do
+    wait $pid
+done
 
 
