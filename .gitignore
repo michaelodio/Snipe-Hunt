@@ -1,2 +1,8 @@
 
 res/Apps/kafka/logs/
+
+res/Apps/kafka/bin/kafka-log\.txt
+
+res/Apps/kafka/bin/zookeeper-log\.txt
+
+*.pyc
