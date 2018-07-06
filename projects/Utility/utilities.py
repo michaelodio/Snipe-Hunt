@@ -40,3 +40,11 @@ class Utilities(object):
         """ Decodes the image using base 64 """
         frameBase64 = frameJson["imageBase64"]
         return base64.b64decode(frameBase64)
+
+    @staticmethod
+    def decodeFrameForObjectDetection(frameJson):
+        """ Decodes the image using base 64 """
+        img = frameJson["imageBase64"]
+        nparr = np.fromstring(img.decode('base64'), np.uint8)
+        newImage = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        return newImage
