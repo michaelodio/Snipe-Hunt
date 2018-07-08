@@ -5,6 +5,7 @@ wait
 ./create_topic.sh target2
 ./create_topic.sh framefeeder
 echo Topics Created
+
 ./clear_topic.sh general
 ./clear_topic.sh target2
 ./clear_topic.sh framefeeder
@@ -29,6 +30,7 @@ pids[2]=$!
 
 cd ../ETL/
 python ETLProcess.py --video "../../res/vid.mp4"
+
 for pid in ${pids[*]}; do
     wait $pid
 done
