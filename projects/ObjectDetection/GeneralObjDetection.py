@@ -18,27 +18,33 @@ class GeneralObjectDetection(object):
         self.prototxt = prototxt
         self.model = model
         self.labels = labels
+        self.size = 224
+        self.scalar = 1
+        
 
-
-    def run_classification(self):
+    def run_classification(self, json_data_parsed):
+        label_list = list()
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         rows = open(self.labels).read().strip().split("\n")
         classes = [r[r.find(" ") + 1:].split(",")[0] for r in rows]
         newimg = cv2.resize(self.image,(224,224))
-        blob = cv2.dnn.blobFromImage(newimg, 1, (224, 224), (104, 117, 123))      
+        blob = cv2.dnn.blobFromImage(newimg, self.scalar, (self.size, self.size), (104, 117, 123))      
         net.setInput(blob)
         preds = net.forward()
         idxs = np.argsort(preds[0])[::-1][:1]
         for (i, idx) in enumerate(idxs):
             if i == 0:
                 output = "Label: {}, {:.2f}%".format(classes[idx], preds[0][idx] * 100)
-                cv2.putText(self.image, output, (5, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                #cv2.putText(self.image, output, (5, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                label_list.append(output)    # adds new label to label_list
        # print("[INFO] {}. label: {}, probability: {:.5}".format(i + 1,classes[idx], preds[0][idx]))        
            # cv2.imshow("Image", image)
                #cv2.waitKey(0)
-    #print("[INFO] {}. label: {}, probability: {:.5}".format(i + 1,
-        #classes[idx], preds[0][idx]))
+        #print("[INFO] {}. label: {}, probability: {:.5}".format(i + 1,
+            #classes[idx], preds[0][idx]))
             print("[INFO] {}. label: {}, probability: {:.5}".format(i + 1,classes[idx], preds[0][idx] * 100))
+        
+        json_data_parsed['ObjectsDetected'] = label_list  # appends label_list to JSON data
         #cv2.imshow("Image", self.image)  
         #cv2.waitKey(0)
         
@@ -52,7 +58,7 @@ class GeneralObjectDetection(object):
             json_data_parsed = json.loads(json_data)
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
             self.image = frame
-            self.run_classification()
+            self.run_classification(json_data_parsed)
             Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/framesMetadata.txt") 
             Utilities.exportJson(json_data, "general")
         consumer.close()
