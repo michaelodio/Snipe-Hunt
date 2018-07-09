@@ -7,6 +7,13 @@
         <link rel="stylesheet" type="text/css" href="../static/style2.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         
+        
+        <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
         <title>
 			French Flag Detector
 		</title>
@@ -49,9 +56,37 @@
 			</video>
         </div>
         
-        <div id="para">
+        <div id="filename">
             {{ messages['filename'] }}
-            {{ messages['data'] }}
+        </div>
+  
+        <div id="jsons">
+			<table class="table">
+                <thead>
+                    <tr>
+                        {% for key in messages['data'][0] %}
+                        <th> {{ key }} </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for json in messages['data'] %}
+                    <tr>
+                        {% for key in messages['data'][0] %}
+                        <td> {{ json[key] }} </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!--
+            <ul>
+                {% for j in messages['data'] %}
+                <li>
+                    name: {{ j['name'] }}
+                </li>
+                {% endfor %}
+            </ul> -->
         </div>
         
         
