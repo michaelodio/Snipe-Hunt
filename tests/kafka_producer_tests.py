@@ -1,7 +1,7 @@
 
 import sys
 sys.path.insert(0, '../projects/DataTransfer/')
-from kafka_manager import *
+from kafka_producer import *
     
 
 def test_push_json():
@@ -30,7 +30,6 @@ def test():
     """ Runs all test methods for this class """
     test_push_json()
     test_push_jsons()
-    print "    Kafka Producer: Passed"
 
 
 if __name__ == "__main__":
