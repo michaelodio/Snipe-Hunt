@@ -18,10 +18,11 @@ def find_and_remove(path, pattern, maxdepth=5):
 						#print "%s removed" % (os.path.join(r, files))
 
 
-def run():
+def main():
 	""" Auto run main method """
 	find_and_remove("../", ".pyc")
+	print ".pyc files removed"
 
 
 if __name__ == "__main__":
-	run()
+	main()

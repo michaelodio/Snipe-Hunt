@@ -94,6 +94,10 @@
     top: 500px;
 }
 
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: rgb(40, 40, 40);
+}
+
 #jsons {
     color: lightgray;
     text-align: left;
