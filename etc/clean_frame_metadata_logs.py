@@ -8,6 +8,7 @@ def remove(file):
     ## If file exists, delete it ##
     if os.path.isfile(file):
         os.remove(file)
+        print("Removed %s" % file)
     else:    ## Show an error ##
         print("Error: %s file not found" % file)
 
