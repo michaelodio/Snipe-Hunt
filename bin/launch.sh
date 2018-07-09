@@ -1,3 +1,5 @@
+#!/bin/sh
+
 ./start_kafka_server.sh
 wait
 
