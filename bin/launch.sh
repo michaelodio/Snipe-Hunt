@@ -13,6 +13,10 @@ echo Topics Created
 ./clear_topic.sh framefeeder
 echo Topics Cleared
 
+cd ../etc/
+python clean_frame_metadata_logs.py
+
+
 cd ../projects/ObjectDetection/
 python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                         --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" &
@@ -37,5 +41,8 @@ python ETLProcess.py --video "../../res/vid.mp4"
 for pid in ${pids[*]}; do
     wait $pid
 done
+
+cd ../../etc/
+python clean-pyc.py
 
 
