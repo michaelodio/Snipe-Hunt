@@ -16,7 +16,8 @@ python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
 pids[0]=$!
 
 python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
-                              --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" &
+                              --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
+                              --labels "../../res/synset_words.txt" &
 pids[1]=$!
 
 python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_graph.pb" \
