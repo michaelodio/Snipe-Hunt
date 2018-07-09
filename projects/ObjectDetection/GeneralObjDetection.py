@@ -14,9 +14,14 @@ from kafka_producer import *
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
 
-class GeneralImageClassification(object):
-        
+
+# changed class from ImageClassification to ObjectDetection
+# uses the code for  FrameLabeling as a base
+class GeneralObjectDetection(object):
+    # added missing variables (classes, confidenceThreshold)
+    # extracted and added variables for size, mean_subtraction, and scalar
     def __init__(self, prototxt, model):
+        """ Constructor - Initalizes prototxt and model """
         self.image = "../../res/genimg.jpg"
         self.prototxt = prototxt
         self.model = model
@@ -45,10 +50,12 @@ class GeneralImageClassification(object):
             print("[INFO] {}. label: {}, probability: {:.5}".format(i + 1,classes[idx], preds[0][idx]))
         #cv2.imshow("Image", image)
         #cv2.waitKey(0)
+        
 
-    def run_images(self):      
+    def run_images(self):
+        """ Runs each image through the general object detection """
         consumer = Consumer.initialize("target2")
-        print("Consuming messages from target2")
+        print("Consuming messages from 'target2'\n")
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
@@ -60,16 +67,15 @@ class GeneralImageClassification(object):
             self.run_classification()
             Utilities.exportJson(json_data, "general")
         consumer.close()
+        print("\nGeneral Object Detection consumer closed!")
         
-            
-            
+                      
     
 def main():
     prototxt = "../../res/bvlc_googlenet.prototxt"
     model = "../../res/bvlc_googlenet.caffemodel"
     obj = GeneralImageClassification(prototxt,model)
     obj.run_images()     
-
 
 
 if __name__=="__main__":
