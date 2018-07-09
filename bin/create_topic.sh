@@ -1,3 +1,5 @@
+#!/bin/sh
+
 cd ../res/Apps/kafka/bin/
 
 ./kafka-topics.sh --create \
