@@ -36,15 +36,14 @@ class FrameLabeling(object):
                 idx = int(detections[0, 0, i, 1])
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 (startX, startY, endX, endY) = box.astype("int")
-                # display the prediction
-                if idx >= 0 and idx <= 20:
+                if idx >= 1 and idx <= 20:     # display the prediction and avoids index 0 which is 'background'
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
                     print("[INFO] {}".format(label))
                     cv2.rectangle(self.image, (startX, startY), (endX, endY), self.colors[idx], 2)
                     y = startY - 15 if startY - 15 > 15 else startY + 15
                     cv2.putText(self.image, label, (startX, y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
-        self.b64 = base64.b64encode(self.image)
+        self.b64 = base64.b64encode(self.image)    # may need to write some logic here in order to avoid adding to the json if no labeling occurred.
 
                        
     def run_images(self):      
