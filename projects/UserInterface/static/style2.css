@@ -64,7 +64,19 @@
     top: 110px;
 }
 
-#para {
+#filename {
+    color: black;
+    text-align: left;
+    text-decoration: normal;
+    font-weight: normal;
+    font-size: 18px;
+    
+    position: absolute;
+    left: 100px;
+    top: 500px;
+}
+
+#jsons {
     color: black;
     text-align: left;
     text-decoration: normal;
@@ -73,7 +85,7 @@
     
     position: absolute;
     left: 100px;
-    top: 500px;
+    top: 550px;
 }
 
 .inputfile {
