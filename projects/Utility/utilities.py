@@ -10,7 +10,8 @@ import os
 import sys
 import time
 sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
-from kafka_manager import *
+from kafka_consumer import *
+from kafka_producer import *
 
 class Utilities(object):
 
