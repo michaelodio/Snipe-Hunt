@@ -6,6 +6,7 @@ from utilities import *
 
     
 def main():
+    """ Constructor """
     parser = argparse.ArgumentParser()   # Parser to parse arguments passed
     parser.add_argument('--graph', type=str, help='Path to video for processing')
     parser.add_argument('--labels', type=str, help='Path to model labels')
@@ -26,7 +27,7 @@ def main():
     if args.input_height:
         input_height = args.input_height
     if args.input_width:
-        input_width = args.input_width	
+        input_width = args.input_width
     
     print("\nConsuming messages from 'framefeeder'")
     consumer = Consumer.initialize("framefeeder")
