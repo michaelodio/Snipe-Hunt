@@ -7,9 +7,10 @@ from utilities import *
 # changed class from ImageClassification to ObjectDetection
 # uses the code for  FrameLabeling as a base
 class GeneralObjectDetection(object):
-        # added missing variables (classes, confidenceThreshold)
-		# extracted and added variables for size, mean_subtraction, and scalar
+    # added missing variables (classes, confidenceThreshold)
+    # extracted and added variables for size, mean_subtraction, and scalar
     def __init__(self, prototxt, model):
+        """ Constructor - Initalizes prototxt and model """
         self.image = None
         self.prototxt = prototxt
         self.model = model
@@ -23,15 +24,16 @@ class GeneralObjectDetection(object):
         self.confidenceThreshold = 0.3
 
 
-		# removed all code related to label, or creating bounding boxes
-		# added json_data_parsed to method parameters
+    # removed all code related to label, or creating bounding boxes
+    # added json_data_parsed to method parameters
     def run_object_detection(self, json_data_parsed):
+        """ Runs the general object detection on a frame """
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
-		# replaced values with variables
+        # replaced values with variables
         blob = cv2.dnn.blobFromImage(cv2.resize(self.image, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)
         net.setInput(blob)
         detections = net.forward()
-		# create a list to store found labels
+        # create a list to store found labels
         label_list = []
         for i in np.arange(0, detections.shape[2]):
             confidence = detections[0, 0, i, 2]
@@ -42,8 +44,9 @@ class GeneralObjectDetection(object):
                     print("[INFO] {}".format(label))
                     label_list.append(label)    # adds new label to label_list
         json_data_parsed['ObjectsDetected'] = label_list  # appends label_list to JSON data
-            
+
     def run_images(self):
+        """ Runs each image through the general object detection """
         print("Consuming messages from 'target2'\n")
         consumer = Consumer.initialize("target2")
         for m in consumer:
@@ -57,10 +60,10 @@ class GeneralObjectDetection(object):
             Utilities.exportJson(json_data, "general")   # exports JSON file with the list of labels for the identified objects
         consumer.close()
         print("\nGeneral Object Detection consumer closed!")
-         
-            
-          
+
+
 def main():
+    """ Auto run main method """
     parser = argparse.ArgumentParser()   # Parser to parse arguments passed
     parser.add_argument('--model', type=str, help='Path to prototxt file')
     parser.add_argument('--model_prototxt', type=str, help='Path to model')
