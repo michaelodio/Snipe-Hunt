@@ -18,7 +18,7 @@ class FrameLabeling(object):
         self.colors = np.random.uniform(-255, 255, size=(len(self.classes), 3))
         self.confidenceThreshold = 0.3
         self.b64 = ''
-		# added variables for size, mean_subtraction, and scalar values for easy of change
+        # added variables for size, mean_subtraction, and scalar values for easy of change
         self.size = 300
         self.mean_subtraction = 0.007843
         self.scalar = 127.5
