@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division  # used to avoid integer divsion truncation and adds '//' to force it
 import numpy as np
 import tensorflow as tf
 import cv2
