@@ -1,3 +1,5 @@
+#!/bin/sh
+
 cd ../res/Apps/kafka/
 
 sudo bin/zookeeper-server-start.sh config/zookeeper.properties > bin/zookeeper-log.txt &

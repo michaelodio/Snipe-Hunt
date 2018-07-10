@@ -1,3 +1,5 @@
+#!/bin/sh
+
 ./start_kafka_server.sh
 wait
 
@@ -10,6 +12,10 @@ echo Topics Created
 ./clear_topic.sh target2
 ./clear_topic.sh framefeeder
 echo Topics Cleared
+
+cd ../etc/
+python clean_frame_metadata_logs.py
+
 
 cd ../projects/ObjectDetection/
 python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
@@ -36,5 +42,8 @@ python ETLProcess.py --video "../../res/Nature Beautiful short video 720p HD.mp4
 for pid in ${pids[*]}; do
     wait $pid
 done
+
+cd ../../etc/
+python clean-pyc.py
 
 

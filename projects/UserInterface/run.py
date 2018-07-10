@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 sys.path.insert(0, "../ETL/")   # used to import files from other folder dir in project
 sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
 from ETLProcess import main as ETL
-from kafka_manager import *
+from kafka_consumer import *
 
 
 UPLOAD_FOLDER = '../'
@@ -28,43 +28,20 @@ def displayAnalysisResults():
         
         messages = session['messages']  # pull messages from session!
         messages_json = json.loads(messages) # convert str back to json
-        
-        #==================================================================
-        stri = ""
-        # Consuming messages from general
+        messages_json['data'] = [] # blank array for storing jsons
+        all_jsons = []
+
+        # Consuming all messages from general
         consumer = Consumer.initialize("general")
         for m in consumer:
             json_data = m.value
-            # Running object detection model against the frames
-            #json_data_parsed = json.loads(json_data)
-            messages_json['data'] = json_data
-            break
-            #return json_data
-            '''frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)   # this utility method will not only decode the b64 string, but also prepare the image to be compatible with opencv
-            self.image = frame
-            self.run_object_detection(json_data_parsed)
-            json_data = json.dumps(json_data_parsed)  # writes json_data_parsed to the JSON file
-            Utilities.exportJson(json_data, "general")   # exports JSON file with the list of labels for the identified objects'''
-
-        '''json_data_list = Consumer.pull_jsons("target")   # pull jsons from target (for now until whole project is done) kafka topic
-        framesWithTargetFound = []
-        for i in range(len(json_data_list)):
-            json_data_parsed = json.loads(json_data_list[i])   # loads json data into a parsed string (back to dict)
-            if json_data_parsed.get('foundTargetWithConfidence') != None:
-                framesWithTargetFound.append(json_data_list[i])   # if specific frame json contains the key for having found the target object confidently, append that json to a list for display on the results page.
-                resultsString = resultsString + "<br />" + str(json_data_parsed.get('frameNum')) + ": " + str(json_data_parsed.get('foundTargetWithConfidence'))
-        '''
-        #return stri
-        #================================================================
+            all_jsons.append(json.loads(json_data))
         
-        
-        #"{\"name\": \"matt\"}"
-        
-       
-        #messages_json['data'].append
+        for j in all_jsons:
+            if 'foundTargetWithConfidence' in j:
+                messages_json['data'].append(j)
         
     return render_template("analyze.html", messages=messages_json)
-    '''return resultsString'''
 
 
 @app.route('/uploads/<filename>')
@@ -94,14 +71,14 @@ def home():
             file.save(videoFilePath)      # save uploaded video to the project's res folder for ETL to extract
             #ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
             
-            #os.system('cd ../../bin/ && ./launch.sh &')
+            os.system('cd ../../bin/ && ./launch.sh &')
             
             
-            messages = json.dumps({"filename":file.filename, "data":""}) #messages is string of json
+            messages = json.dumps({"filename":file.filename}) #messages is string of json
             session['messages'] = messages #store messages in session
 
             return redirect(url_for('displayAnalysisResults'))
-    return render_template("upload.html")
+    return render_template("home.html")
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
     --top-bar-color: black;
     --body-color: rgb(80, 80, 80);
     --body-pop-color: rgb(150, 150, 150);
-        --body-pop2-color: rgb(190, 190, 190);
+    --body-pop2-color: rgb(190, 190, 190);
 
     --bottom-bar-color: rgb(102, 102, 255);
     --footer-color: white;
@@ -17,13 +17,22 @@
     height: 5px;
 }
 
+#bodytop {
+    background-color: var(--body-color);
+    position: absolute;
+    left: 0px;
+    top: 53px;
+    width: 100%;
+    height: 40%;
+}
+
 #bodypop {
     background-color: var(--body-pop-color);
     position: absolute;
     left: 0px;
     top: 275px;
     width: 100%;
-    height: 65%;
+    height: 55%;
 }
 
 #bodypop2 {
@@ -32,7 +41,7 @@
     left: 0px;
     top: 375px;
     width: 100%;
-    height: 65%;
+    height: 60%;
 }
 
 #bottombar {
@@ -74,7 +83,7 @@
     
     position: absolute;
     left: 150px;
-    top: 150px;
+    top: 155px;
 }
 
 .inputfile {
@@ -133,8 +142,8 @@
     text-align: center;
     color: #333333;
     position: absolute;
-    left: 340px;
-    top: 290px;
+    left: 342px;
+    top: 302px;
 }
 
 #uploader {
@@ -166,6 +175,15 @@
 #french-flag {
     right: 250px;
     top: 90px;
+}
+
+#blackimgbox {
+    background-color:black;
+    position: absolute;
+    right: 247px;
+    top: 87px;
+    width: 235px;
+    height: 160px;
 }
             
 #footer {

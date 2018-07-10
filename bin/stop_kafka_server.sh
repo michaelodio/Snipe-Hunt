@@ -1,3 +1,5 @@
+#!/bin/sh
+
 cd ../res/Apps/kafka/
 
 sudo bin/zookeeper-server-stop.sh > bin/zookeeper-log.txt &
