@@ -59,6 +59,7 @@ class GeneralObjectDetection(object):
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
             self.image = frame
             self.run_classification(json_data_parsed)
+            json_data = json.dumps(json_data_parsed)
             Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/framesMetadata.txt") 
             Utilities.exportJson(json_data, "general")
         consumer.close()
