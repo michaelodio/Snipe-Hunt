@@ -19,6 +19,7 @@ pids[0]=$!
 python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                               --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
                               --labels "../../res/synset_words.txt" &
+#python GeneralObjDetectionYOLO.py &
 pids[1]=$!
 
 python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_graph.pb" \
@@ -30,7 +31,7 @@ python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_grap
 pids[2]=$!
 
 cd ../ETL/
-python ETLProcess.py --video "../../res/vid.mp4"
+python ETLProcess.py --video "../../res/Nature Beautiful short video 720p HD.mp4"
 
 for pid in ${pids[*]}; do
     wait $pid
