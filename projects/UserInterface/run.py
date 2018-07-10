@@ -71,7 +71,7 @@ def home():
             file.save(videoFilePath)      # save uploaded video to the project's res folder for ETL to extract
             #ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
             
-            os.system('cd ../../bin/ && ./launch.sh &')
+            #os.system('cd ../../bin/ && ./launch.sh | tee launch_output.txt &')   # run launch command and save results to text file
             
             
             messages = json.dumps({"filename":file.filename}) #messages is string of json
