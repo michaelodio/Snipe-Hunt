@@ -71,28 +71,31 @@
         </div>
         
             
-            <form method=post enctype=multipart/form-data>
-                <input type="file" name="file" id="file" class="inputfile" accept="video/*" />
-                <label for="file" class="button" id="browse-button"> Browse </label>
-                <p id="fname">  </p>
-                <input type=submit value=Upload class="button" id="upload-button">
-            </form>
+        <form method=post enctype=multipart/form-data>
+            <input type="file" name="file" id="file" class="inputfile" accept="video/*" />
+            <label for="file" class="button" id="browse-button"> Browse </label>
+            <p id="fname">  </p>
+            <input type=submit value=Upload class="button" id="upload-button">
+        </form>
             
-            <script src="../static/filenamecutter.js"></script>
+        <script src="../static/filenamecutter.js"></script>
 
+		
         <div id="blackimgbox"></div>
         <div class="image" id="french-flag">
             <img alt="Flag" src="../static/french-flag.jpg" width="229" height="154">
         </div>
 		
 		
+		<script src="../static/moveprogress.js"></script>
+		
 		<div id="progressbox">
 		    <div class="progress">
-                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="{{ messages['progress'] }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ messages['progress'] }}%">
-                    {{ messages['progress'] }}
-                 </div>
-            </div> 
-		</div>
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+				    <span class="progress-text"></span>
+				</div>
+			</div>
+        </div>
 		
         
         <div id="bottombar"></div>
