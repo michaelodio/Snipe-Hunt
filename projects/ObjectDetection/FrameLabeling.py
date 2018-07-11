@@ -7,12 +7,12 @@ from utilities import *
 # renamed class and file to FrameLabeling
 class FrameLabeling(object):
 
-    def __init__(self, prototxt, model, label):
+    def __init__(self, prototxt, model, labels):
         self.image = None
         self.prototxt = prototxt
         self.model = model
-        self.classes = open(label).read().strip().split('\n')
-        self.colors = np.random.uniform(-255, 255, size=(len(self.classes), 3))
+        self.classes = open(labels).read().strip().split('\n')
+        self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
         self.confidenceThreshold = 0.3
         self.b64 = ''
         # added variables for size, mean_subtraction, and scalar values for easy of change
@@ -36,6 +36,9 @@ class FrameLabeling(object):
                 if idx >= 1 and idx <= 20:     # display the prediction and avoids index 0 which is 'background'
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
                     print("[INFO] {}".format(label))
+                    print((startX, startY))
+                    print((endX, endY))
+                    print(self.colors[idx])
                     cv2.rectangle(self.image, (startX, startY), (endX, endY), self.colors[idx], 2)
                     y = startY - 15 if startY - 15 > 15 else startY + 15
                     cv2.putText(self.image, label, (startX, y),
@@ -55,7 +58,7 @@ class FrameLabeling(object):
             self.run_frame_labeling()
             json_data_parsed['LabeledImage'] = self.b64   # adds base64 string to json data
             json_data = json.dumps(json_data_parsed)
-            Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/frameMetadata.txt")     
+            Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoName'] + "_Metadata.txt")     
         consumer.close()
         print("\nFrame labeling consumer closed!")
             
@@ -66,9 +69,9 @@ def main():
     parser = argparse.ArgumentParser()   # Parser to parse arguments passed
     parser.add_argument('--model', type=str, help='Path to frame labeling object detection model')
     parser.add_argument('--model_prototxt', type=str, help='Path to model prototxt')
-    parser.add_argument("--label", type=str, help="path to list of class labels")
+    parser.add_argument("--labels", type=str, help="path to list of class labels")
     args = parser.parse_args()
-    obj = FrameLabeling(args.model_prototxt, args.model, args.label)
+    obj = FrameLabeling(args.model_prototxt, args.model, args.labels)
     obj.run_images()
     # ** TODO: Add database (Accumulo and Scylla) here by pushing finalized json data to database **
     

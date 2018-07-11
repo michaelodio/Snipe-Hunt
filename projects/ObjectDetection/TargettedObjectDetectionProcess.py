@@ -36,14 +36,13 @@ def main():
         json_data_parsed = json.loads(json_data)   # loads json data into a parsed string (back to dict)
         frame = Utilities.decodeFrame(json_data_parsed)    # take parsed string and send it to utilities to decode it from base64 
         frameAsTensor = tf.image.decode_jpeg(frame, channels=3)   # convert frame to Tensor as string
-        print("running labelImage against a frame\n")
+        print("\n Running labelImage against frame: " + str(json_data_parsed['frameNum']) + "\n")        
         confidenceStat = labelImage(graph, labels, input_layer, output_layer, input_height, input_width, frameAsTensor)    # tests frame for targeted object
         if confidenceStat != None:     # if the target object was found within the threshold confidence, append that information to the JSON file. 
             json_data_parsed['foundTargetWithConfidence'] = str(confidenceStat)
             json_data = json.dumps(json_data_parsed)
-        Utilities.storeJson(json_data, "../../res/FramesMetadataTargetImgClassification/frameMetadata.txt")    # Store updated metadata Jsons locally
+        Utilities.storeJson(json_data, "../../res/FramesMetadataTargetImgClassification/" + json_data_parsed['videoName'] + "_Metadata.txt")    # Store updated metadata Jsons locally
         Utilities.exportJson(json_data, "target2")    # export updated Json files to kafka topic 'target'
-        print(json_data_parsed['frameNum'])   # print frame number that was just processed
     consumer.close()
     print("\nTargetted Object Detection consumer closed!")
         
