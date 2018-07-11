@@ -36,8 +36,6 @@
             <div id="question">
                 <img class="img-circle" alt="Question" src="../static/question.png" width="30" height="30">
             </div>
-            
-
            
         </div>
         
@@ -46,7 +44,6 @@
         <div id="middlebox"></div>
         <div id="rightbox"></div>
         
-        <div id="topbar"></div>
         <div id="videoback"></div>
 
 
@@ -61,41 +58,67 @@
         <div id="filename">
             {{ messages['filename'] }}
         </div>
-  
-
-        <div id="jsons">
-			<table class="table table-hover">
-                <thead>
-                    <tr>
-                        {% for key in messages['data'][0] %}
-                        {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
-                        <th> {{ key }} </th>
-                        {% endif %}
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for json in messages['data'] %}
-                    <tr>
-                        {% for key in messages['data'][0] %}
-                        {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
-                        <td> {{ json[key] }} </td>
-                        {% endif %}
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <!--
-            <ul>
-                {% for j in messages['data'] %}
-                <li>
-                    name: {{ j['name'] }}
-                </li>
-                {% endfor %}
-            </ul> -->
-        </div>
         
+        
+        <div id="rightbox">
+  
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#insight" class="tabby"> Insights </a>
+                </li>
+                <li>
+                    <a href="#transcript" class="tabby"> Transcript </a>
+                </li>
+                <li>
+                    <a href="#data" class="tabby"> Data </a>
+                </li>
+            </ul>
+            
+            <div id="insight" class="tab-pane fade in active">
+                <p>
+                    wolfcola
+                </p>
+            </div>
+            
+            <div id="transcript" class="tab-pane fade">
+                <p>
+                    Goose
+                </p>
+            </div>
+            
+            <div id="data" class="tab-pane fade">
+                <div id="jsons">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                {% for key in messages['data'][0] %}
+                                {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
+                                <th> {{ key }} </th>
+                                {% endif %}
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for json in messages['data'] %}
+                            <tr>
+                                {% for key in messages['data'][0] %}
+                                {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
+                                <td> {{ json[key] }} </td>
+                                {% endif %}
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>  
+                </div>
+            </div>
+            
+            
+            
+        </div>
+               
+        <div id="topbar"></div>
+
         
         <div id="bottombar"></div>
         <div id="bottombox"></div>
@@ -105,6 +128,8 @@
                     <img border="0" src="../static/braintrust.jpg" width="128" height="17">
                 </a>
         </div>
+        
+        <script src="../static/tabclicker.js"></script>
 
 	</body>
 </html>
