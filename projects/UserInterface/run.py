@@ -31,15 +31,26 @@ def displayAnalysisResults():
         messages_json['data'] = [] # blank array for storing jsons
         all_jsons = []
 
+        '''
         # Consuming all messages from general
         consumer = Consumer.initialize("general")
         for m in consumer:
             json_data = m.value
             all_jsons.append(json.loads(json_data))
+        '''
+        
+        label_json_data = {"videoDuration": "8.0 seconds", "videoName": "vid.mp4", "totalFrames": 206, "videoPath": "../../res/vid.mp4", "FPS": 29, 
+         "frameNum": 2.0, "timeStamp": "0.099 seconds", "foundTargetWithConfidence": "0.99655003", "ObjectsDetected": ["Label: hook, 9.33%"], 
+         "imageBase64": "/2fjifds="}
+
+        jj = json.dumps(label_json_data)
+        all_jsons.append(json.loads(jj))
+        
         
         for j in all_jsons:
             if 'foundTargetWithConfidence' in j:
                 messages_json['data'].append(j)
+
         
     return render_template("analyze.html", messages=messages_json)
 
