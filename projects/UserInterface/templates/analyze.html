@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en">
-	<head>
+    <head>
         <link rel="icon" href="../static/all.png" type="image/png" >
     
         <link rel="stylesheet" type="text/css" href="../static/navagation.css">
         <link rel="stylesheet" type="text/css" href="../static/analyze.css">
         <link rel="stylesheet" type="text/css" href="../static/foot.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         
         
         <meta charset="utf-8">
@@ -16,19 +16,19 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         
         <title>
-			Iris: Object Detection
-		</title>
-	</head>
+            Azure Video Analyzer
+        </title>
+    </head>
 
-	<body>
+    <body>
         
         <div class="topnav">
             <div class="icon">
-                <img alt="Iris" src="../static/all.png" width="50" height="50">
+                <img alt="Ava" src="../static/all.png" width="50" height="50">
             </div>
         
             <a href="home">
-                Object Detector
+                Azure Video Analyzer
             </a>
             
             <div id="profile">
@@ -49,16 +49,15 @@
         <div id="videoback"></div>
 
 
-
         <div id="video-player">
-			<video width="900" height="400" controls>
-				<source src="../static/{{ messages['filename'] }}" type="video/mp4">
+            <video width="900" height="480" controls autoplay>
+                <source src="../static/{{ messages['filename'] }}" type="video/mp4">
                 Your browser does not support the video tag
-			</video>
+            </video>
         </div>
         
         <div id="filename">
-            {{ messages['filename'] }}
+            {{ messages['filename'].split('.')[0] }}
         </div>
         
         
@@ -77,9 +76,28 @@
             </ul>
             
             <div id="insight" class="tab-pane fade in active">
-                <p>
-                    wolfcola
-                </p>
+                <div id="labels">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th> Objects Detected </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for json in messages['data'] %}
+                            <tr>
+                                {% for key in messages['data'][0] %}
+                                {% if key == 'ObjectsDetected'%}
+                                {% for obj in json[key] %}
+                                <td> {{ obj }} </td>
+                                {% endfor %}
+                                {% endif %}
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>  
+                </div>
             </div>
             
             <div id="transcript" class="tab-pane fade">
@@ -133,5 +151,5 @@
         
         <script src="../static/tabclicker.js"></script>
 
-	</body>
+    </body>
 </html>

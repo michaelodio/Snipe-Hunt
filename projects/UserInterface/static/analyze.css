@@ -3,13 +3,20 @@
     --body-pop2-color: rgb(190, 190, 190);
 }
 
+#video-player {
+    text-align: center;
+    position: absolute;
+    left: 50px;
+    top: 85px;
+}
+
 #videoback {
     background-color: black;
     position: absolute;
     left: 50px;
     top: 85px;
     width: 900px;
-    height: 400px;
+    height: 480px;
 }
 
 #leftbox {
@@ -57,11 +64,11 @@
     text-align: left;
     text-decoration: normal;
     font-weight: normal;
-    font-size: 20px;
+    font-size: 21px;
     
     position: absolute;
     left: 50px;
-    top: 500px;
+    top: 580px;
 }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th  {
@@ -110,33 +117,41 @@
     padding:10px;
 }
 
-#jsons {
+#labels {
     text-align: left;
     text-decoration: normal;
     font-weight: normal;
-    //font-size: 16px;
     
     position: absolute;
-    left: 20px;
-    top: 80px;
+    left: 0px;
+    top: 0px;
     
     
     width:90%;
     height:90%;
     overflow:auto;
-    //background-color:rgb(130,130,130);
     color:black;
     scrollbar-base-color:gold;
     font-family:sans-serif;
     padding:10px;
 }
 
-
-#video-player {
-    text-align: center;
+#jsons {
+    text-align: left;
+    text-decoration: normal;
+    font-weight: normal;    
+    
     position: absolute;
-    left: 50px;
-    top: 85px;
+    left: 20px;
+    top: 80px;
+   
+    width:90%;
+    height:90%;
+    overflow:auto;
+    color:black;
+    scrollbar-base-color:gold;
+    font-family:sans-serif;
+    padding:10px;
 }
 
 
