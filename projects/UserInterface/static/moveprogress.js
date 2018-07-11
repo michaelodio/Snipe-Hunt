@@ -1,5 +1,4 @@
-
-document.getElementById('file').onchange = function () {
+function startProgress() {
     $(document).ready(function() {
         var progression = 0,
         progress = setInterval(function() 
@@ -12,6 +11,6 @@ document.getElementById('file').onchange = function () {
             } else
                 progression += 1;
 
-        }, 2000);
+        }, 430);
     });
 };

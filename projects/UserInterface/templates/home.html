@@ -75,7 +75,7 @@
             <input type="file" name="file" id="file" class="inputfile" accept="video/*" />
             <label for="file" class="button" id="browse-button"> Browse </label>
             <p id="fname">  </p>
-            <input type=submit value=Upload class="button" id="upload-button">
+            <input type=submit value=Upload class="button" name="upload-button" id="upload-button" onclick="startProgress()">
         </form>
             
         <script src="../static/filenamecutter.js"></script>
@@ -87,7 +87,7 @@
         </div>
 		
 		
-		<script src="../static/moveprogress.js"></script>
+		
 		
 		<div id="progressbox">
 		    <div class="progress">
@@ -96,6 +96,8 @@
 				</div>
 			</div>
         </div>
+        
+        <script src="../static/moveprogress.js"></script>
 		
         
         <div id="bottombar"></div>
