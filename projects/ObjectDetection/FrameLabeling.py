@@ -14,19 +14,20 @@ class FrameLabeling(object):
         self.classes = open(labels).read().strip().split('\n')
         self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
         self.confidenceThreshold = 0.3
-        self.b64 = ''
+        self.b64 = None
         # added variables for size, mean_subtraction, and scalar values for easy of change
         self.size = 300
         self.mean_subtraction = 0.007843
         self.scalar = 127.5
         
 
-    def run_frame_labeling(self):
+    def run_frame_labeling(self, json_data_parsed):
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         (h, w) = self.image.shape[:2]
         blob = cv2.dnn.blobFromImage(cv2.resize(self.image, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)  # replaced hard  coded values for variables
         net.setInput(blob)
         detections = net.forward()
+        labelingOccurred = False
         for i in np.arange(0, detections.shape[2]):
             confidence = detections[0, 0, i, 2]
             if confidence > self.confidenceThreshold:
@@ -34,6 +35,7 @@ class FrameLabeling(object):
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 (startX, startY, endX, endY) = box.astype("int")
                 if idx >= 1 and idx <= 20:     # display the prediction and avoids index 0 which is 'background'
+                    labelingOccurred = True
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
                     print("[INFO] {}".format(label))
                     print((startX, startY))
@@ -43,7 +45,9 @@ class FrameLabeling(object):
                     y = startY - 15 if startY - 15 > 15 else startY + 15
                     cv2.putText(self.image, label, (startX, y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
-        self.b64 = base64.b64encode(self.image)    # may need to write some logic here in order to avoid adding to the json if no labeling occurred.
+        if labelingOccurred:
+            labeledb64 = base64.b64encode(self.image)    # may need to write some logic here in order to avoid adding to the json if no labeling occurred.
+            json_data_parsed['LabeledImage'] = labeledb64   # adds base64 string to json data
 
                        
     def run_images(self):      
@@ -55,8 +59,7 @@ class FrameLabeling(object):
             print("\n Running frame labeling against frame: " + str(json_data_parsed['frameNum']) + "\n")
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
             self.image = frame
-            self.run_frame_labeling()
-            json_data_parsed['LabeledImage'] = self.b64   # adds base64 string to json data
+            self.run_frame_labeling(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
             Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoName'] + "_Metadata.txt")     
         consumer.close()
