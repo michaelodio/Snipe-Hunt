@@ -71,6 +71,7 @@ def contact():
     return render_template("contact.html")
 
 
+@app.route('/analysisResults/home', methods=['GET', 'POST'])
 @app.route('/home', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
 def home():

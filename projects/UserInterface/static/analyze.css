@@ -1,0 +1,157 @@
+:root {
+    --body-color: rgb(150, 150, 150);
+    --body-pop2-color: rgb(190, 190, 190);
+}
+
+#videoback {
+    background-color: black;
+    position: absolute;
+    left: 50px;
+    top: 85px;
+    width: 900px;
+    height: 400px;
+}
+
+#leftbox {
+    background-color: rgb(80, 80, 80);
+    position: absolute;
+    left: 0;
+    top: 50px;
+    width: 53%;
+    height: 93%;
+}
+
+#middlebox {
+    background-color: rgb(150, 150, 150);
+    position: absolute;
+    left: 53%;
+    top: 50px;
+    width: 2%;
+    height: 93%;
+}
+
+#rightbox {
+    background-color: var(--body-pop2-color);
+    position: absolute;
+    padding: 15px 15px;
+    left: 55%;
+    top: 50px;
+    width: 45%;
+    height: 93%;
+}
+
+#title {
+    color: rgb(0, 195, 195);
+    text-align: center;
+    text-decoration: normal;
+    font-weight: normal;
+    font-size: 30px;
+    
+    position: absolute;
+    left: 150px;
+    top: 110px;
+}
+
+#filename {
+    color: rgb(0, 195, 195);
+    text-align: left;
+    text-decoration: normal;
+    font-weight: normal;
+    font-size: 20px;
+    
+    position: absolute;
+    left: 50px;
+    top: 500px;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th  {
+    background-color: rgb(140, 140, 140);   
+}
+
+#insight {
+    text-align: left;
+    text-decoration: normal;
+    font-weight: normal;
+    //font-size: 16px;
+    
+    position: absolute;
+    left: 20px;
+    top: 80px;
+    
+    
+    width:90%;
+    height:90%;
+    overflow:auto;
+    //background-color:rgb(130,130,130);
+    color:black;
+    scrollbar-base-color:gold;
+    font-family:sans-serif;
+    padding:10px;
+}
+
+#transcript {
+    text-align: left;
+    text-decoration: normal;
+    font-weight: normal;
+    //font-size: 16px;
+    
+    position: absolute;
+    left: 20px;
+    top: 80px;
+    
+    
+    width:90%;
+    height:90%;
+    overflow:auto;
+    //background-color:rgb(130,130,130);
+    color:black;
+    scrollbar-base-color:gold;
+    font-family:sans-serif;
+    padding:10px;
+}
+
+#jsons {
+    text-align: left;
+    text-decoration: normal;
+    font-weight: normal;
+    //font-size: 16px;
+    
+    position: absolute;
+    left: 20px;
+    top: 80px;
+    
+    
+    width:90%;
+    height:90%;
+    overflow:auto;
+    //background-color:rgb(130,130,130);
+    color:black;
+    scrollbar-base-color:gold;
+    font-family:sans-serif;
+    padding:10px;
+}
+
+
+#video-player {
+    text-align: center;
+    position: absolute;
+    left: 50px;
+    top: 85px;
+}
+
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--body-color)
+}
+    
+
+
+.nav-tabs {
+      background-color:rgb(210, 210, 210);
+}
+
+a.tabby {
+  color: rgb(120, 120, 120);
+}

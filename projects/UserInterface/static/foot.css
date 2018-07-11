@@ -1,0 +1,29 @@
+:root {
+    --bottom-bar-color: rgb(102, 102, 255);
+    --footer-color: white;
+}
+
+#bottombar {
+    background-color: var(--bottom-bar-color);
+    position: absolute;
+    left: 0px;
+    bottom: 35px;
+    width: 100%;
+    height: 5px;
+}
+
+#bottombox {
+    background-color: var(--footer-color);
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    height: 35px;
+}
+
+#footer {
+    text-align: center;
+    position: absolute;
+    left: 45%;
+    bottom: 8px;
+}
