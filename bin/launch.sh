@@ -1,30 +1,24 @@
 #!/bin/sh
 
-./start_kafka_server.sh
-wait
-
-./create_topic.sh general
-./create_topic.sh target2
-./create_topic.sh framefeeder
-echo Topics Created
-
-./clear_topic.sh general
-./clear_topic.sh target2
-./clear_topic.sh framefeeder
-echo Topics Cleared
-
 cd ../etc/
 python clean_frame_metadata_logs.py
 
+cd ../bin
+./start_kafka_server.sh
+wait
+
+cd ../etc/
+python clean_and_clear_topics.py
 
 cd ../projects/ObjectDetection/
 python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
-                        --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" &
+                        --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
+                        --labels "../../res/labels.txt" &
 pids[0]=$!
 
 python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                               --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
-                              --labels "../../res/synset_words.txt" &
+                              --labels "../../res/labels.txt" &
 #python GeneralObjDetectionYOLO.py &
 pids[1]=$!
 

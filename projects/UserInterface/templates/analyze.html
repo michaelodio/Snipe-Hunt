@@ -22,13 +22,13 @@
 	<body>
         
         <div class="topnav">
-            <a class="active" id="tab" href="#home">
+            <a class="active" id="tab" href="home">
                 Home
             </a>
-            <a id="abouttab" href="#about">
+            <a href="about">
                 About
             </a>
-            <a id="contacttab" href="#contact">
+            <a href="contact">
                 Contact
             </a>
             
@@ -64,12 +64,13 @@
             {{ messages['filename'] }}
         </div>
   
+
         <div id="jsons">
 			<table class="table table-hover">
                 <thead>
                     <tr>
                         {% for key in messages['data'][0] %}
-                        {% if key == 'frameNum' or key == 'foundTargetWithConfidence' %}
+                        {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
                         <th> {{ key }} </th>
                         {% endif %}
                         {% endfor %}
@@ -79,7 +80,7 @@
                     {% for json in messages['data'] %}
                     <tr>
                         {% for key in messages['data'][0] %}
-                        {% if key == 'frameNum' or key == 'foundTargetWithConfidence' %}
+                        {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
                         <td> {{ json[key] }} </td>
                         {% endif %}
                         {% endfor %}

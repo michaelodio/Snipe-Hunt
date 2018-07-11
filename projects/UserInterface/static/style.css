@@ -44,6 +44,14 @@
     height: 60%;
 }
 
+#progressbox {
+    position: absolute;
+    left: 150px;
+    top: 420px;
+    width: 80%;
+    height: 10%;
+}
+
 #bottombar {
     background-color: var(--bottom-bar-color);
     position: absolute;

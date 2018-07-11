@@ -50,6 +50,17 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
+@app.route('/about')
+def about():
+    return render_template("about.html")
+
+
+@app.route('/contact')
+def contact():
+    return render_template("contact.html")
+
+
+@app.route('/home', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
 def home():
     """ Home page for app """
@@ -71,7 +82,7 @@ def home():
             file.save(videoFilePath)      # save uploaded video to the project's res folder for ETL to extract
             #ETL(videoFromUI=videoFilePath)   # send uploaded video's file path to ETL to begin processing.
             
-            os.system('cd ../../bin/ && ./launch.sh &')
+            #os.system('cd ../../bin/ && ./launch.sh | tee launch_output.txt &')   # run launch command and save results to text file
             
             
             messages = json.dumps({"filename":file.filename}) #messages is string of json
