@@ -84,6 +84,16 @@
         <div class="image" id="french-flag">
             <img alt="Flag" src="../static/french-flag.jpg" width="229" height="154">
         </div>
+		
+		
+		<div id="progressbox">
+		    <div class="progress">
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="{{ messages['progress'] }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ messages['progress'] }}%">
+                    {{ messages['progress'] }}
+                 </div>
+            </div> 
+		</div>
+		
         
         <div id="bottombar"></div>
         <div id="bottombox"></div>
