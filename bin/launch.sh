@@ -12,12 +12,13 @@ python clean_and_clear_topics.py
 
 cd ../projects/ObjectDetection/
 python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
-                        --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" &
+                        --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
+                        --labels "../../res/labels.txt" &
 pids[0]=$!
 
 python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                               --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
-                              --labels "../../res/synset_words.txt" &
+                              --labels "../../res/labels.txt" &
 #python GeneralObjDetectionYOLO.py &
 pids[1]=$!
 

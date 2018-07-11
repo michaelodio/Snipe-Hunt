@@ -11,10 +11,7 @@ class FrameLabeling(object):
         self.image = None
         self.prototxt = prototxt
         self.model = model
-        self.classes = ["background", "aeroplane", "bicycle", "bird", "boat",
-           "bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
-           "dog", "horse", "motorbike", "person", "pottedplant", "sheep",
-           "sofa", "train", "tvmonitor"]
+        self.classes = open(args["label"]).read().strip().split('\n')
         self.colors = np.random.uniform(-255, 255, size=(len(self.classes), 3))
         self.confidenceThreshold = 0.3
         self.b64 = ''
@@ -69,6 +66,7 @@ def main():
     parser = argparse.ArgumentParser()   # Parser to parse arguments passed
     parser.add_argument('--model', type=str, help='Path to frame labeling object detection model')
     parser.add_argument('--model_prototxt', type=str, help='Path to model prototxt')
+    parser.add_argument("--label", type=str, help="path to list of class labels")
     args = parser.parse_args()
     obj = FrameLabeling(args.model_prototxt, args.model)
     obj.run_images()
