@@ -63,7 +63,7 @@ class GeneralObjectDetection(object):
             fh.close()
             self.run_objectDetection(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
-            Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetection/framesMetadata.txt") 
+            Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/framesMetadata.txt") 
             Utilities.exportJson(json_data, "general")
         consumer.close()
         print("\nGeneral Object Detection consumer closed!")
