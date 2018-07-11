@@ -12,12 +12,12 @@ from utilities import *
 class GeneralObjectDetection(object):
     # added missing variables (classes, confidenceThreshold)
     # extracted and added variables for size, mean_subtraction, and scalar
-    def __init__(self, prototxt, model):
+    def __init__(self, prototxt, model, label):
         """ Constructor - Initalizes prototxt and model """
         self.image = None
         self.prototxt = prototxt
         self.model = model
-        self.classes = open(args["label"]).read().strip().split('\n')
+        self.classes = open(labels).read().strip().split('\n')
         self.size = 300
         self.mean_subtraction = 0.007843
         self.scalar = 127.5
@@ -69,7 +69,7 @@ def main():
     parser.add_argument('--model_prototxt', type=str, help='Path to model')
     parser.add_argument("--label", type=str, help="path to list of class labels")
     args = parser.parse_args()
-    obj = GeneralObjectDetection(args.model_prototxt, args.model)
+    obj = GeneralObjectDetection(args.model_prototxt, args.model, args.label)
     obj.run_images()
  
  

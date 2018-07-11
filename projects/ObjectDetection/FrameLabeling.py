@@ -7,11 +7,11 @@ from utilities import *
 # renamed class and file to FrameLabeling
 class FrameLabeling(object):
 
-    def __init__(self, prototxt, model):
+    def __init__(self, prototxt, model, label):
         self.image = None
         self.prototxt = prototxt
         self.model = model
-        self.classes = open(args["label"]).read().strip().split('\n')
+        self.classes = open(label).read().strip().split('\n')
         self.colors = np.random.uniform(-255, 255, size=(len(self.classes), 3))
         self.confidenceThreshold = 0.3
         self.b64 = ''
@@ -68,7 +68,7 @@ def main():
     parser.add_argument('--model_prototxt', type=str, help='Path to model prototxt')
     parser.add_argument("--label", type=str, help="path to list of class labels")
     args = parser.parse_args()
-    obj = FrameLabeling(args.model_prototxt, args.model)
+    obj = FrameLabeling(args.model_prototxt, args.model, args.label)
     obj.run_images()
     # ** TODO: Add database (Accumulo and Scylla) here by pushing finalized json data to database **
     
