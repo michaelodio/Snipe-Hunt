@@ -75,7 +75,27 @@
             </ul>
             
             <div id="insight" class="tab-pane fade in active">
-                <div id="labels">
+                <h4> Objects Detected </h4>
+                <div style="position: absolute; z-index: 10; width: 100%;" class="list-group list-group-root well">
+                        {% for topic in messages['topics'] %}
+                            <a href="#{{ topic }}" class="list-group-item" data-toggle="collapse">
+                                <i class="glyphicon glyphicon-chevron-right"></i> {{ topic }}
+                            </a>
+                            
+                                <div class="list-group collapse" id="{{ topic }}">
+                                {% for t in messages['topicframeconfidence'][topic] %}
+                                        <a href="#" class="list-group-item" style="background-color: rgb(230, 230, 230);">
+                                            Frame: {{ t['frame'] }} &emsp; &emsp; &emsp; Confidence: {{ t['confidence'] }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+
+                        {% endfor %}
+                    </div>  
+            </div>
+            
+            <div id="transcript" class="tab-pane fade">
+                    <div style="position: absolute; z-index: 10; width: 100%;" id="labels">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -88,7 +108,7 @@
                                     {% for key in messages['data'][0] %}
                                         {% if key == 'GeneralObjectsDetected'%}
                                             {% for obj in json[key] %}
-                                                <td> {{ obj }} </td>
+                                                <td> {{ obj.split(",")[0] }} </td>
                                             {% endfor %}
                                         {% endif %}
                                     {% endfor %}
@@ -97,31 +117,6 @@
                         </tbody>
                     </table>  
                 </div>
-            </div>
-            
-            <div id="transcript" class="tab-pane fade">
-
-                    <div style="position: absolute; z-index: 10;" class="list-group list-group-root well">
-  
-                        <a href="#item-1" class="list-group-item" data-toggle="collapse">
-                            <i class="glyphicon glyphicon-chevron-right"></i> goose
-                        </a>
-  
-                        <div class="list-group collapse" id="item-1">
-                            <a href="#" class="list-group-item"> frame 1: 90% </a>
-                            <a href="#" class="list-group-item"> frame 2: 80% </a>
-                        </div>
-                        
-                        
-                        <a href="#item-2" class="list-group-item" data-toggle="collapse">
-                            <i class="glyphicon glyphicon-chevron-right"></i> duck
-                        </a>
-  
-                        <div class="list-group collapse" id="item-2">
-                            <a href="#" class="list-group-item"> frame 1: 20% </a>
-                            <a href="#" class="list-group-item"> frame 2: 40% </a>
-                        </div>
-                    </div>  
             </div>
             
             <div id="data" class="tab-pane fade">
