@@ -41,7 +41,7 @@ class GeneralObjectDetection(object):
        results = yoloObjDetection(self.net, self.meta, self.image)
        for i in results:
                label_list.append({i[0]:i[1]})
-       if len(label_list) > 0:
+       if label_list:
            json_data_parsed['GeneralObjectsDetected'] = label_list
               
        
@@ -51,13 +51,15 @@ class GeneralObjectDetection(object):
         """ Runs each image through the general object detection """
         consumer = Consumer.initialize("target2")
         print("Consuming messages from 'target2'\n")
-        self.net = load_net("cfg/yolov3-tiny.cfg", "yolov3-tiny.weights", 0)
-        self.meta = load_meta("cfg/coco.data")
+        self.net = load_net("cfg/yolov3-tiny.cfg", "yolov3-tiny.weights", 0)  #load net initially to avoid loading net over and over again
+        self.meta = load_meta("cfg/coco.data")      #load meta initially to avoid loading meta over and over again
         print("Finished loading net and meta for YOLO\n")
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
+            print("\n Running General Object Det against frame: " + str(json_data_parsed['frameNum']) + "\n")
             frame = Utilities.decodeFrame(json_data_parsed)
+            print(type(frame))
             fh = open(self.image, "wb")
             fh.write(frame)
             fh.close()
