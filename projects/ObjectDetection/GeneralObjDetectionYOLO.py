@@ -31,7 +31,7 @@ class GeneralObjectDetection(object):
     # extracted and added variables for size, mean_subtraction, and scalar
     def __init__(self):
         """ Constructor - Initalizes prototxt and model """
-        self.image = "../../res/genImg.jpg"
+        self.image = None
         self.net = None
         self.meta = None
 
@@ -41,7 +41,7 @@ class GeneralObjectDetection(object):
        results = yoloObjDetection(self.net, self.meta, self.image)
        for i in results:
                label_list.append({i[0]:i[1]})
-       if len(label_list) > 0:
+       if label_list:
            json_data_parsed['GeneralObjectsDetected'] = label_list
               
        
@@ -51,19 +51,18 @@ class GeneralObjectDetection(object):
         """ Runs each image through the general object detection """
         consumer = Consumer.initialize("target2")
         print("Consuming messages from 'target2'\n")
-        self.net = load_net("cfg/yolov3-tiny.cfg", "yolov3-tiny.weights", 0)
-        self.meta = load_meta("cfg/coco.data")
+        self.net = load_net("cfg/yolov3-tiny.cfg", "yolov3-tiny.weights", 0)  #load net initially to avoid loading net over and over again
+        self.meta = load_meta("cfg/coco.data")      #load meta initially to avoid loading meta over and over again
         print("Finished loading net and meta for YOLO\n")
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
-            frame = Utilities.decodeFrame(json_data_parsed)
-            fh = open(self.image, "wb")
-            fh.write(frame)
-            fh.close()
+            print("\n Running General Object Det against frame: " + str(json_data_parsed['frameNum']) + "\n")
+            frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
+            self.image = frame
             self.run_objectDetection(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
-            Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/framesMetadata.txt") 
+            Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/" + json_data_parsed['videoName'] + "_Metadata.txt") 
             Utilities.exportJson(json_data, "general")
         consumer.close()
         print("\nGeneral Object Detection consumer closed!")

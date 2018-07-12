@@ -45,7 +45,7 @@ class METADATA(Structure):
     
 
 #lib = CDLL("/home/pjreddie/documents/darknet/libdarknet.so", RTLD_GLOBAL)
-lib = CDLL("../ObjectDetection/libdarknet.so", RTLD_GLOBAL)
+lib = CDLL("/home/bt-intern2/yoloMP/darknet/libdarknet.so", RTLD_GLOBAL)
 lib.network_width.argtypes = [c_void_p]
 lib.network_width.restype = c_int
 lib.network_height.argtypes = [c_void_p]
@@ -114,6 +114,16 @@ predict_image = lib.network_predict_image
 predict_image.argtypes = [c_void_p, IMAGE]
 predict_image.restype = POINTER(c_float)
 
+def array_to_image(arr):
+	arr = arr.transpose(2, 0, 1)
+	c = arr.shape[0]
+	h = arr.shape[1]
+	w = arr.shape[2]
+	arr = (arr / 255.0).flatten()
+	data = c_array(c_float, arr)
+	im = IMAGE(w, h, c, data)
+	return im
+
 def classify(net, meta, im):
     out = predict_image(net, im)
     res = []
@@ -123,7 +133,14 @@ def classify(net, meta, im):
     return res
 
 def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
-    im = load_image(image, 0, 0)
+    im = None
+    if isinstance(image, bytes):
+        #image is a filename
+        im = load_image(image, 0, 0)
+    else:
+        #image is a numpy array
+        im = array_to_image(image)
+        rgbgr_image(im)
     num = c_int(0)
     pnum = pointer(num)
     predict_image(net, im)
@@ -139,7 +156,7 @@ def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
                 #res.append((meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
                 res.append((meta.names[i], dets[j].prob[i]))        
     res = sorted(res, key=lambda x: -x[1])
-    free_image(im)
+    if isinstance(image, bytes): free_image(im)
     free_detections(dets, num)
     return res
     

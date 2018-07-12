@@ -38,9 +38,6 @@ class FrameLabeling(object):
                     labelingOccurred = True
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
                     print("[INFO] {}".format(label))
-                    print((startX, startY))
-                    print((endX, endY))
-                    print(self.colors[idx])
                     cv2.rectangle(self.image, (startX, startY), (endX, endY), self.colors[idx], 2)
                     y = startY - 15 if startY - 15 > 15 else startY + 15
                     cv2.putText(self.image, label, (startX, y),
@@ -48,6 +45,7 @@ class FrameLabeling(object):
         if labelingOccurred:
             labeledb64 = base64.b64encode(self.image)    # may need to write some logic here in order to avoid adding to the json if no labeling occurred.
             json_data_parsed['LabeledImage'] = labeledb64   # adds base64 string to json data
+            
 
                        
     def run_images(self):      
