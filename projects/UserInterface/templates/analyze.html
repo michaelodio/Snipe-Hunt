@@ -85,15 +85,16 @@
                         </thead>
                         <tbody>
                             {% for json in messages['data'] %}
-                            <tr>
-                                {% for key in messages['data'][0] %}
-                                {% if key == 'ObjectsDetected'%}
-                                {% for obj in json[key] %}
-                                <td> {{ obj }} </td>
-                                {% endfor %}
-                                {% endif %}
-                                {% endfor %}
-                            </tr>
+                                <tr>
+                                    {% for key in messages['data'][0] %}
+                                        {% if key == 'ObjectsDetected'%}
+                                            {% for obj in json[key] %}
+                                                <td> {{ obj.split(' ')[1] }} </td>
+                                                <td> {{ obj }} </td>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>  
@@ -112,21 +113,21 @@
                         <thead>
                             <tr>
                                 {% for key in messages['data'][0] %}
-                                {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
-                                <th> {{ key }} </th>
-                                {% endif %}
+                                    {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
+                                        <th> {{ key }} </th>
+                                    {% endif %}
                                 {% endfor %}
                             </tr>
                         </thead>
                         <tbody>
                             {% for json in messages['data'] %}
-                            <tr>
-                                {% for key in messages['data'][0] %}
-                                {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
-                                <td> {{ json[key] }} </td>
-                                {% endif %}
-                                {% endfor %}
-                            </tr>
+                                <tr>
+                                    {% for key in messages['data'][0] %}
+                                        {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
+                                            <td> {{ json[key] }} </td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>  
