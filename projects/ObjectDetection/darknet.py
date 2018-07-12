@@ -154,8 +154,10 @@ def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
             if dets[j].prob[i] > 0:
                 b = dets[j].bbox
                 #res.append((meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
-                res.append((meta.names[i], dets[j].prob[i]))        
-    res = sorted(res, key=lambda x: -x[1])
+                confidence = "%.2f" % (dets[j].prob[i] *100)
+                metadataString = meta.names[i] + ": " + confidence + "%"
+                res.append(metadataString)        
+    #res = sorted(res, key=lambda x: -x[1])
     if isinstance(image, bytes): free_image(im)
     free_detections(dets, num)
     return res

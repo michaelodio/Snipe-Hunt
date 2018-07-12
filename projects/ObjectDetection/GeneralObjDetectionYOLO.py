@@ -39,10 +39,8 @@ class GeneralObjectDetection(object):
     def run_objectDetection(self, json_data_parsed):
        label_list = []
        results = yoloObjDetection(self.net, self.meta, self.image)
-       for i in results:
-               label_list.append({i[0]:i[1]})
-       if label_list:
-           json_data_parsed['GeneralObjectsDetected'] = label_list
+       if results:
+           json_data_parsed['GeneralObjectsDetected'] = results
               
        
         
