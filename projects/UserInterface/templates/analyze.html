@@ -51,7 +51,7 @@
 
         <div id="video-player">
             <video width="900" height="480" controls autoplay>
-                <source src="../static/{{ messages['filename'] }}" type="video/mp4">
+                <source src="../static/{{ messages['filename'].replace(" ", "_") }}" type="video/{{ messages['filename'].split('.')[1] }}">
                 Your browser does not support the video tag
             </video>
         </div>
