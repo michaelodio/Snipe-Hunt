@@ -40,7 +40,7 @@ def displayAnalysisResults():
         '''
         
         label_json_data = {"videoDuration": "8.0 seconds", "videoName": "vid.mp4", "totalFrames": 206, "videoPath": "../../res/vid.mp4", "FPS": 29, 
-         "frameNum": 2.0, "timeStamp": "0.099 seconds", "foundTargetWithConfidence": "0.99655003", "ObjectsDetected": ["Label: hook, 9.33%"], 
+         "frameNum": 2.0, "timeStamp": "0.099 seconds", "foundTargetWithConfidence": "0.99655003", "GeneralObjectsDetected": ["person, 99.2%", "goose, 20%"], 
          "imageBase64": "/2fjifds="}
 
         jj = json.dumps(label_json_data)
