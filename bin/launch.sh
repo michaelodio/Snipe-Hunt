@@ -31,7 +31,7 @@ python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_grap
 pids[2]=$!
 
 cd ../ETL/
-python ETLProcess.py --video "../../res/Video/vid.mp4"
+python ETLProcess.py --video "../../res/Videos/vid.mp4"
 
 for pid in ${pids[*]}; do
     wait $pid

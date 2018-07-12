@@ -27,7 +27,7 @@ class VideoETL(object):
             frameNum = cap.get(cv2.CAP_PROP_POS_FRAMES)
             retval, videoframe = cap.read()     # grab the next frame
             cv2.imencode(".jpeg", videoframe)    # convert frame to JPEG image.
-            frame = cv2.resize(videoframe, (300,300))    # resize frame to 300x300
+            frame = videoframe
             self.extractFrameMetadata(frame, frameNum, cap)    # collect metadata on the frame
         cap.release()
 
