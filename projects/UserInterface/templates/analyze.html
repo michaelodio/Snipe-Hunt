@@ -7,6 +7,7 @@
         
         <link rel="icon" href="../static/all.png" type="image/png" >
     
+        <link rel="stylesheet" type="text/css" href="../static/sublist.css">
         <link rel="stylesheet" type="text/css" href="../static/navagation.css">
         <link rel="stylesheet" type="text/css" href="../static/analyze.css">
         <link rel="stylesheet" type="text/css" href="../static/foot.css">
@@ -50,7 +51,7 @@
 
         <div id="video-player">
             <video width="900" height="480" controls autoplay>
-                <source src="../static/{{ messages['filename'] }}" type="video/mp4">
+                <source src="../static/{{ messages['filename'].replace(" ", "_") }}" type="video/{{ messages['filename'].split('.')[1] }}">
                 Your browser does not support the video tag
             </video>
         </div>
@@ -61,7 +62,6 @@
         
         
         <div id="rightbox">
-  
             <ul class="nav nav-tabs">
                 <li class="active">
                     <a href="#insight" class="tabby"> Insights </a>
@@ -100,59 +100,57 @@
             </div>
             
             <div id="transcript" class="tab-pane fade">
-                <div class="just-padding">
 
-<div class="list-group list-group-root well">
+                    <div id="pop" class="list-group list-group-root well">
   
-  <a href="#item-1" class="list-group-item" data-toggle="collapse">
-    <i class="glyphicon glyphicon-chevron-right"></i>Item 1
-  </a>
-  <div class="list-group collapse" id="item-1">
-    
-    <a href="#item-1-1" class="list-group-item" data-toggle="collapse">
-      <i class="glyphicon glyphicon-chevron-right"></i>Item 1.1
-    </a>
-    <div class="list-group collapse" id="item-1-1">
-      <a href="#" class="list-group-item">Item 1.1.1</a>
-      <a href="#" class="list-group-item">Item 1.1.2</a>
-    </div>
-    
-    <a href="#item-1-2" class="list-group-item" data-toggle="collapse">
-      <i class="glyphicon glyphicon-chevron-right"></i>Item 1.2
-    </a>
-    <div class="list-group collapse" id="item-1-2">
-      <a href="#" class="list-group-item">Item 1.2.1</a>
-      <a href="#" class="list-group-item">Item 1.2.2</a>
-    </div>
-    
-  </div>
+                        <a href="#item-1" class="list-group-item" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-chevron-right"></i>Item 1
+                        </a>
   
-  <a href="#item-2" class="list-group-item" data-toggle="collapse">
-    <i class="glyphicon glyphicon-chevron-right"></i>Item 2
-  </a>
-  <div class="list-group collapse" id="item-2">
+                        <div class="list-group collapse" id="item-1">
     
-    <a href="#item-2-1" class="list-group-item" data-toggle="collapse">
-      <i class="glyphicon glyphicon-chevron-right"></i>Item 2.1
-    </a>
-    <div class="list-group collapse" id="item-2-1">
-      <a href="#" class="list-group-item">Item 2.1.1</a>
-      <a href="#" class="list-group-item">Item 2.1.2</a>
-    </div>
+                            <a href="#item-1-1" class="list-group-item" data-toggle="collapse">
+                                <i class="glyphicon glyphicon-chevron-right"></i>Item 1.1
+                            </a>
+                            <div class="list-group collapse" id="item-1-1">
+                                <a href="#" class="list-group-item">Item 1.1.1</a>
+                                <a href="#" class="list-group-item">Item 1.1.2</a>
+                            </div>
     
-    <a href="#item-2-2" class="list-group-item" data-toggle="collapse">
-      <i class="glyphicon glyphicon-chevron-right"></i>Item 2.2
-    </a>
-    <div class="list-group collapse" id="item-2-2">
-      <a href="#" class="list-group-item">Item 2.2.1</a>
-      <a href="#" class="list-group-item">Item 2.2.2</a>
-    </div>
+                            <a href="#item-1-2" class="list-group-item" data-toggle="collapse">
+                                <i class="glyphicon glyphicon-chevron-right"></i>Item 1.2
+                            </a>
+                            <div class="list-group collapse" id="item-1-2">
+                                <a href="#" class="list-group-item">Item 1.2.1</a>
+                                <a href="#" class="list-group-item">Item 1.2.2</a>
+                            </div>
     
-  </div>
+                        </div>
+                        
+                        <a href="#item-2" class="list-group-item" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-chevron-right"></i>Item 2
+                        </a>
   
-</div>
-  
-</div>
+                        <div class="list-group collapse" id="item-2">
+    
+                            <a href="#item-2-1" class="list-group-item" data-toggle="collapse">
+                                <i class="glyphicon glyphicon-chevron-right"></i>Item 2.1
+                            </a>
+                            <div class="list-group collapse" id="item-2-1">
+                                <a href="#" class="list-group-item">Item 2.1.1</a>
+                                <a href="#" class="list-group-item">Item 2.1.2</a>
+                            </div>
+    
+                            <a href="#item-2-2" class="list-group-item" data-toggle="collapse">
+                                <i class="glyphicon glyphicon-chevron-right"></i>Item 1.2
+                            </a>
+                            <div class="list-group collapse" id="item-1-2">
+                                <a href="#" class="list-group-item">Item 2.2.1</a>
+                                <a href="#" class="list-group-item">Item 2.2.2</a>
+                            </div>
+    
+                        </div>
+                    </div>  
             </div>
             
             <div id="data" class="tab-pane fade">
@@ -199,6 +197,7 @@
         </div>
         
         
+        <script src="../static/sublist.js"></script>
         <script src="../static/tabclicker.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
