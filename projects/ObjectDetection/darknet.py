@@ -1,9 +1,6 @@
 from ctypes import *
 import math
 import random
-import sys
-sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
-from utilities import *
 
 def sample(probs):
     s = sum(probs)
