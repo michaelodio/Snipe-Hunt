@@ -75,11 +75,6 @@
     background-color: rgb(140, 140, 140);   
 }
 
-#pop {
-    position: absolute;
-    z-index: 10;
-}
-
 #insight {
     text-align: left;
     text-decoration: normal;
