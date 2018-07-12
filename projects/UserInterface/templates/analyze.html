@@ -87,9 +87,8 @@
                             {% for json in messages['data'] %}
                                 <tr>
                                     {% for key in messages['data'][0] %}
-                                        {% if key == 'ObjectsDetected'%}
+                                        {% if key == 'GeneralObjectsDetected'%}
                                             {% for obj in json[key] %}
-                                                <td> {{ obj.split(' ')[1] }} </td>
                                                 <td> {{ obj }} </td>
                                             {% endfor %}
                                         {% endif %}
@@ -113,7 +112,7 @@
                         <thead>
                             <tr>
                                 {% for key in messages['data'][0] %}
-                                    {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
+                                    {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'GeneralObjectsDetected'%}
                                         <th> {{ key }} </th>
                                     {% endif %}
                                 {% endfor %}
@@ -123,7 +122,7 @@
                             {% for json in messages['data'] %}
                                 <tr>
                                     {% for key in messages['data'][0] %}
-                                        {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'ObjectsDetected'%}
+                                        {% if key == 'frameNum' or key == 'foundTargetWithConfidence' or key == 'GeneralObjectsDetected'%}
                                             <td> {{ json[key] }} </td>
                                         {% endif %}
                                     {% endfor %}
