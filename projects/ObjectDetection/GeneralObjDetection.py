@@ -44,7 +44,7 @@ class GeneralObjectDetection(object):
                     print("[INFO] {}".format(label))
                     label_list.append(label)    # adds new label to label_list
         if label_list:   # if label_list is not empty (meaning gen objects wer found), then add to json
-            json_data_parsed['ObjectsDetected'] = label_list  # appends label_list to JSON data
+            json_data_parsed['GeneralObjectsDetected'] = label_list  # appends label_list to JSON data
  
     def run_images(self):
         """ Runs each image through the general object detection """
