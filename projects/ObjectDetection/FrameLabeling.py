@@ -59,7 +59,7 @@ class FrameLabeling(object):
             self.image = frame
             self.run_frame_labeling(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
-            Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoName'] + "_Metadata.txt")     
+            Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoName'] + "_Metadata.txt") 
         consumer.close()
         print("\nFrame labeling consumer closed!")
             

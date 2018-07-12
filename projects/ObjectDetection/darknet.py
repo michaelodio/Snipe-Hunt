@@ -1,6 +1,9 @@
 from ctypes import *
 import math
 import random
+import sys
+sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
+from utilities import *
 
 def sample(probs):
     s = sum(probs)
@@ -156,7 +159,7 @@ def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
                 #res.append((meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
                 confidence = "%.2f" % (dets[j].prob[i] *100)
                 metadataString = meta.names[i] + ": " + confidence + "%"
-                res.append(metadataString)        
+                res.append(metadataString) 
     #res = sorted(res, key=lambda x: -x[1])
     if isinstance(image, bytes): free_image(im)
     free_detections(dets, num)
