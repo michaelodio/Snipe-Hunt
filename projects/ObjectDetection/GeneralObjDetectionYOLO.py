@@ -31,7 +31,7 @@ class GeneralObjectDetection(object):
     # extracted and added variables for size, mean_subtraction, and scalar
     def __init__(self):
         """ Constructor - Initalizes prototxt and model """
-        self.image = "../../res/genImg.jpg"
+        self.image = None
         self.net = None
         self.meta = None
 
@@ -58,14 +58,11 @@ class GeneralObjectDetection(object):
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
             print("\n Running General Object Det against frame: " + str(json_data_parsed['frameNum']) + "\n")
-            frame = Utilities.decodeFrame(json_data_parsed)
-            print(type(frame))
-            fh = open(self.image, "wb")
-            fh.write(frame)
-            fh.close()
+            frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
+            self.image = frame
             self.run_objectDetection(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
-            Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/framesMetadata.txt") 
+            Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/" + json_data_parsed['videoName'] + "_Metadata.txt") 
             Utilities.exportJson(json_data, "general")
         consumer.close()
         print("\nGeneral Object Detection consumer closed!")
