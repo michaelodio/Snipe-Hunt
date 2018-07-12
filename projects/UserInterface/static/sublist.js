@@ -4,7 +4,6 @@ $(function() {
     $('.glyphicon', this)
       .toggleClass('glyphicon-chevron-right')
       .toggleClass('glyphicon-chevron-down');
-      alert("goose");
   });
 
 });
