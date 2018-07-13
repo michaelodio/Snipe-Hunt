@@ -24,7 +24,7 @@ class VideoETL(object):
 
     def extractFrameMetadata(self, videoframe, totalFrame, cap):
         """ Extracts the metadata from the frame """
-        frameNum = cap.get(cv2.CAP_PROP_POS_FRAMES)
+        frameNum = cap.get(cv2.CAP_PROP_POS_FRAMES)   # collect the current frame number
         FPS = int(cap.get(cv2.CAP_PROP_FPS))     # grab the frames per second of the video
         videoDuration = round(totalFrame / FPS)   # calculate the video's duration
         relativePosition = frameNum / totalFrame   # calculate this frames relative position in the video
