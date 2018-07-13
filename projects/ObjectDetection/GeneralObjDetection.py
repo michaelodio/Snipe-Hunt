@@ -12,26 +12,48 @@ from utilities import *
 class GeneralObjectDetection(object):
     # added missing variables (classes, confidenceThreshold)
     # extracted and added variables for size, mean_subtraction, and scalar
-    def __init__(self, prototxt, model, labels):
+    def __init__(self):
         """ Constructor - Initalizes prototxt and model """
+        parser = argparse.ArgumentParser()   # Parser to parse arguments passed
+        parser.add_argument('--model', required= True, type=str, 
+            help='Path to prototxt file')
+        parser.add_argument('--model_prototxt',required= True type=str,
+            help='Path to model')
+        parser.add_argument('--labels', required= True type=str,
+            help="path to list of class labels")
+        parser.add_argument('--size', type=int, default= 300,
+            help="size of image after resize for normalization")
+        parser.add_argument('--scalar', default= 0.007843,
+            help="scalar adjustment for image normalization")
+        parser.add_argument('--mean_subtraction', default= 127.5,
+            help="mean color channel subtraction for image normalization")
+        parser.add_argument('--condfidence', default= .3,
+            help="minimum confidence for detections")
+        args = parser.parse_args()
         self.image = None
-        self.prototxt = prototxt
-        self.model = model
-        self.classes = open(labels).read().strip().split('\n')
-        self.size = 300
-        self.mean_subtraction = 0.007843
-        self.scalar = 127.5
-        self.confidenceThreshold = 0.3
+        if args.model_prototxt:
+            self.prototxt = args.model_prototxt
+        if args.model:
+            self.model = args.model
+        if self.labels:
+            self.classes = open(args.labels).read().strip().split('\n')
+        self.size = args.size
+        self.scalar = args.scalar
+        self.mean_subtraction = args.scalar
+        self.confidenceThreshold = args.
+        self.net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
+
  
  
     # removed all code related to label, or creating bounding boxes
     # added json_data_parsed to method parameters
     def run_object_detection(self, json_data_parsed):
         """ Runs the general object detection on a frame """
-        net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         # replaced values with variables
-        blob = cv2.dnn.blobFromImage(cv2.resize(self.image, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)
-        net.setInput(blob)
+        blob = cv2.dnn.blobFromImage(cv2.resize(self.image, 
+            (self.size, self.size)), self.scalar, (self.size, self.size),
+            self.mean_subtraction)
+        self.net.setInput(blob)
         detections = net.forward()
         # create a list to store found labels
         label_list = []
@@ -66,12 +88,7 @@ class GeneralObjectDetection(object):
  
 def main():
     """ Auto run main method """
-    parser = argparse.ArgumentParser()   # Parser to parse arguments passed
-    parser.add_argument('--model', type=str, help='Path to prototxt file')
-    parser.add_argument('--model_prototxt', type=str, help='Path to model')
-    parser.add_argument("--labels", type=str, help="path to list of class labels")
-    args = parser.parse_args()
-    obj = GeneralObjectDetection(args.model_prototxt, args.model, args.labels)
+    obj = GeneralObjectDetection()
     obj.run_images()
  
  
