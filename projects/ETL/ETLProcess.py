@@ -9,36 +9,31 @@ class VideoETL(object):
     def __init__(self, videoPath):
         """ Constructor """
         self.videoPath = videoPath
-        self.videoName = os.path.basename(self.videoPath)
-        self.totalFrame = None
-        self.FPS = None
-        self.videoDuration = None
 
     def splitFrames(self):
         """ Splits up the frames """
         print("Splitting Frames and extracting metadata...\n")
         cap = cv2.VideoCapture(self.videoPath)    # open video in openCV
-        self.totalFrame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))    # grab total frames in the video
-        self.FPS = int(cap.get(cv2.CAP_PROP_FPS))     # grab the frames per second of the video
-        self.videoDuration = round(self.totalFrame / self.FPS)   # calculate the video's duration
+        totalFrame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))    # grab total frames in the video
         if cap.isOpened is False:
             print("Error opening video stream or file")
-        for x in range(self.totalFrame):     # loop through all of the frames and extract meta data on each frame
+        for x in range(totalFrame):     # loop through all of the frames and extract meta data on each frame
             frameNum = cap.get(cv2.CAP_PROP_POS_FRAMES)
             retval, videoframe = cap.read()     # grab the next frame
-            cv2.imencode(".jpeg", videoframe)    # convert frame to JPEG image.
-            frame = videoframe
-            self.extractFrameMetadata(frame, frameNum, cap)    # collect metadata on the frame
+            self.extractFrameMetadata(videoframe, frameNum, totalFrame, cap)    # collect metadata on the frame
         cap.release()
 
-    def extractFrameMetadata(self, frame, frameNum, cap):
+    def extractFrameMetadata(self, videoframe, frameNum, totalFrame, cap):
         """ Extracts the metadata from the frame """
+        FPS = int(cap.get(cv2.CAP_PROP_FPS))     # grab the frames per second of the video
+        videoDuration = round(totalFrame / FPS)   # calculate the video's duration
+        videoName = os.path.basename(self.videoPath) # collect the videos name
         timeStamp = round(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000    # collect time stamp and convert it to seconds
-        retval, frameConvertedToJPG = cv2.imencode('.jpg', frame)   # encode frame to .jpg for base64string conversion
+        retval, frameConvertedToJPG = cv2.imencode('.jpg', videoframe)   # encode frame to .jpg for base64string conversion
         frameAsBase64String = Utilities.encodeFrame(frameConvertedToJPG)    # encode frame to base64String
-        frameJson = json.dumps({'videoPath': self.videoPath, 'videoName': self.videoName, 'videoDuration': str(self.videoDuration) + " seconds", 'totalFrames': self.totalFrame, 'FPS': self.FPS, 'frameNum': frameNum, 'timeStamp': str(timeStamp) + " seconds", 'imageBase64': frameAsBase64String})     # create frame json with collected metadata
+        frameJson = json.dumps({'videoPath': self.videoPath, 'videoName': videoName, 'videoDuration': str(videoDuration) + " seconds", 'totalFrames': totalFrame, 'FPS': FPS, 'frameNum': frameNum, 'timeStamp': str(timeStamp) + " seconds", 'imageBase64': frameAsBase64String})     # create frame json with collected metadata
         Utilities.exportJson(frameJson, "framefeeder")    # export frame json to kafka topic
-        Utilities.storeJson(frameJson, "../../res/FramesMetadataETL/" + self.videoName + "_Metadata.txt")  # store frame json locally
+        Utilities.storeJson(frameJson, "../../res/FramesMetadataETL/" + videoName + "_Metadata.txt")  # store frame json locally
         return
 
 
