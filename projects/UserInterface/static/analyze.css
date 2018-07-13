@@ -79,17 +79,14 @@
     text-align: left;
     text-decoration: normal;
     font-weight: normal;
-    //font-size: 16px;
     
     position: absolute;
     left: 20px;
-    top: 80px;
-    
+    top: 80px;    
     
     width:90%;
-    height:90%;
+    height:80%;
     overflow:auto;
-    //background-color:rgb(130,130,130);
     color:black;
     scrollbar-base-color:gold;
     font-family:sans-serif;
@@ -100,17 +97,14 @@
     text-align: left;
     text-decoration: normal;
     font-weight: normal;
-    //font-size: 16px;
     
     position: absolute;
     left: 20px;
     top: 80px;
     
-    
     width:90%;
     height:90%;
     overflow:auto;
-    //background-color:rgb(130,130,130);
     color:black;
     scrollbar-base-color:gold;
     font-family:sans-serif;
@@ -147,7 +141,7 @@
    
     width:90%;
     height:90%;
-    overflow:auto;
+    overflow-x:scroll;
     color:black;
     scrollbar-base-color:gold;
     font-family:sans-serif;

@@ -29,6 +29,7 @@ def displayAnalysisResults():
         messages = session['messages']  # pull messages from session!
         messages_json = json.loads(messages) # convert str back to json
         messages_json['data'] = [] # blank array for storing jsons
+        messages_json['topics'] = [] # blank array for storing topics
         all_jsons = []
 
         '''
@@ -39,36 +40,84 @@ def displayAnalysisResults():
             all_jsons.append(json.loads(json_data))
         '''
         
-        label_json_data = {"videoDuration": "8.0 seconds", "videoName": "vid.mp4", "totalFrames": 206, "videoPath": "../../res/vid.mp4", "FPS": 29, 
-         "frameNum": 2.0, "timeStamp": "0.099 seconds", "foundTargetWithConfidence": "0.99655003", "GeneralObjectsDetected": ["person, 99.2%", "goose, 20%"], 
-         "imageBase64": "/2fjifds="}
+        json_data = {"videoDuration": "8.0 seconds", "videoName": "vid.mp4", "totalFrames": 206, "videoPath": "../../res/vid.mp4", "FPS": 29, 
+         "frameNum": 2.0, "timeStamp": "0.099 seconds", "foundTargetWithConfidence": "0.99655003", 
+         "GeneralObjectsDetected": ["person: 99.2%", "goose: 20%", "hippo: 10%", "monkey: 34%"], "imageBase64": "/2fjifds="}
+         
+        json_data2 = {"videoDuration": "8.0 seconds", "videoName": "vid.mp4", "totalFrames": 206, "videoPath": "../../res/vid.mp4", "FPS": 29, 
+         "frameNum": 4.0, "timeStamp": "0.399 seconds", "foundTargetWithConfidence": "0.2655003", "GeneralObjectsDetected": ["person: 78.2%", "rhino: 31%"], 
+         "imageBase64": "/4fjifds="}
+         
+        json_data3 = {"videoDuration": "8.0 seconds", "videoName": "vid.mp4", "totalFrames": 206, "videoPath": "../../res/vid.mp4", "FPS": 29, 
+         "frameNum": 6.0, "timeStamp": "0.699 seconds", "foundTargetWithConfidence": "0.4555003", 
+         "GeneralObjectsDetected": ["person: 99.2%", "goose: 20%", "hippo: 10%", "monkey: 34%"], "imageBase64": "/2fjifds="}
+         
+        json_data4 = {"videoDuration": "8.0 seconds", "videoName": "vid.mp4", "totalFrames": 206, "videoPath": "../../res/vid.mp4", "FPS": 29, 
+         "frameNum": 8.0, "timeStamp": "0.999 seconds", "foundTargetWithConfidence": "0.6755003", 
+         "GeneralObjectsDetected": ["person: 99.2%", "goose: 20%", "hippo: 10%", "monkey: 34%"], "imageBase64": "/2fjifds="}
 
-        jj = json.dumps(label_json_data)
+
+        jj = json.dumps(json_data)
+        jj2 = json.dumps(json_data2)
+        jj3 = json.dumps(json_data3)
+        jj4 = json.dumps(json_data4)
+
+         
         all_jsons.append(json.loads(jj))
+        all_jsons.append(json.loads(jj2))
+        all_jsons.append(json.loads(jj3))
+        all_jsons.append(json.loads(jj4))
         
-        
-        for j in all_jsons:
-            if 'foundTargetWithConfidence' in j:
-                messages_json['data'].append(j)
 
+        for j in get_targeted_jsons(all_jsons):
+            messages_json['data'].append(j)
+            
+        for t in get_topics(all_jsons):
+            messages_json['topics'].append(t)
+            
+        messages_json['topicframeconfidence'] = get_topic_frame_confidence(all_jsons)
         
     return render_template("analyze.html", messages=messages_json)
+
+
+def get_topic_frame_confidence(all_jsons):
+    """ Returns a json list of each frame and confidence by topic """
+    tfc = {}
+    for j in all_jsons:
+        if 'GeneralObjectsDetected' in j:
+            for obj in j['GeneralObjectsDetected']:
+                topic = obj.split(':')[0]
+                confidence = obj.split(' ')[1]
+                if topic in tfc:
+                    tfc[topic].append({'frame': j['frameNum'], 'confidence': confidence})
+                else:
+                    tfc[topic] = [{'frame': j['frameNum'], 'confidence': confidence}]
+    return tfc
+
+
+def get_targeted_jsons(all_jsons):
+    """ Returns a json list of all frames where the target has been found """
+    found_jsons = []
+    for j in all_jsons:
+        if 'foundTargetWithConfidence' in j:
+            found_jsons.append(j)
+    return found_jsons
+
+
+def get_topics(all_jsons):
+    """ Returns a json list of all the topics found non repeating """
+    topics = []
+    for j in all_jsons:
+        if 'GeneralObjectsDetected' in j:
+            for obj in j['GeneralObjectsDetected']:
+                topics.append(obj.split(':')[0])
+    return list(set(topics))
 
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     """ Returns the file that has been uploaded """
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-
-@app.route('/about')
-def about():
-    return render_template("about.html")
-
-
-@app.route('/contact')
-def contact():
-    return render_template("contact.html")
 
 
 @app.route('/analysisResults/home', methods=['GET', 'POST'])
