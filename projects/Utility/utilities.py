@@ -24,7 +24,7 @@ class Utilities(object):
     def storeJson(frameJson, filePath):
         """ Stores the json to a filepath """
         file1 = open(filePath, 'a+')   # open file handler for specific filePath
-        file1.write(str(frameJson) + "\n\n")
+        file1.write(str(frameJson) + "\n")
         file1.close()
 
 
