@@ -18,20 +18,21 @@ class VideoETL(object):
         if cap.isOpened is False:
             print("Error opening video stream or file")
         for x in range(totalFrame):     # loop through all of the frames and extract meta data on each frame
-            frameNum = cap.get(cv2.CAP_PROP_POS_FRAMES)
             retval, videoframe = cap.read()     # grab the next frame
-            self.extractFrameMetadata(videoframe, frameNum, totalFrame, cap)    # collect metadata on the frame
+            self.extractFrameMetadata(videoframe, totalFrame, cap)    # collect metadata on the frame
         cap.release()
 
-    def extractFrameMetadata(self, videoframe, frameNum, totalFrame, cap):
+    def extractFrameMetadata(self, videoframe, totalFrame, cap):
         """ Extracts the metadata from the frame """
+        frameNum = cap.get(cv2.CAP_PROP_POS_FRAMES)
         FPS = int(cap.get(cv2.CAP_PROP_FPS))     # grab the frames per second of the video
         videoDuration = round(totalFrame / FPS)   # calculate the video's duration
+        relativePosition = frameNum / totalFrame   # calculate this frames relative position in the video
         videoName = os.path.basename(self.videoPath) # collect the videos name
         timeStamp = round(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000    # collect time stamp and convert it to seconds
         retval, frameConvertedToJPG = cv2.imencode('.jpg', videoframe)   # encode frame to .jpg for base64string conversion
         frameAsBase64String = Utilities.encodeFrame(frameConvertedToJPG)    # encode frame to base64String
-        frameJson = json.dumps({'videoPath': self.videoPath, 'videoName': videoName, 'videoDuration': str(videoDuration) + " seconds", 'totalFrames': totalFrame, 'FPS': FPS, 'frameNum': frameNum, 'timeStamp': str(timeStamp) + " seconds", 'imageBase64': frameAsBase64String})     # create frame json with collected metadata
+        frameJson = json.dumps({'videoPath': self.videoPath, 'videoName': videoName, 'videoDuration': str(videoDuration) + " seconds", 'totalFrames': totalFrame, 'FPS': FPS, 'frameNum': frameNum, 'timeStamp': str(timeStamp) + " seconds", 'relativePostition': relativePosition, 'imageBase64': frameAsBase64String})     # create frame json with collected metadata
         Utilities.exportJson(frameJson, "framefeeder")    # export frame json to kafka topic
         Utilities.storeJson(frameJson, "../../res/FramesMetadataETL/" + videoName + "_Metadata.txt")  # store frame json locally
         return
