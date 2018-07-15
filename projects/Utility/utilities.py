@@ -31,7 +31,7 @@ class Utilities(object):
     @staticmethod
     def exportJson(frameJson, topic):
         """ Exports the json to a topic """
-        Producer.push_json(topic, frameJson) # Push frame json to specified Kafka topic
+        push_json(Producer.initialize(), topic, frameJson) # Push frame json to specified Kafka topic
 
 
     @staticmethod
