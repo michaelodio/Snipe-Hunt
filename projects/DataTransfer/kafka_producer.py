@@ -6,17 +6,20 @@ import json
 class Producer(object):
 
     @staticmethod
-    def push_json(topic_name, data):
-        """ Pushes JSON to topic within time interval """
+    def initialize():
+        """ Initializes the producer """
         # Sets up the kafka producer to serialized json output on localhost port 9092
-        producer = KafkaProducer(bootstrap_servers='localhost:9092',
+        return KafkaProducer(bootstrap_servers='localhost:9092',
                                       value_serializer=lambda v: json.dumps(v).encode('utf-8'))
-        # blocks for syncronized sends: ensures message sent within 30 seconds
-        timeout = 30
-        producer.send(topic_name, data).get(timeout=timeout)
+    
 
-    @staticmethod
-    def push_jsons(topic_name, json_array):
-        """ Pushes array of JSONs to topic within time interval"""
-        for json in json_array:
-            Producer.push_json(topic_name, json)
+def push_json(producer, topic_name, data):
+    """ Pushes JSON to topic within time interval """
+    # blocks for syncronized sends: ensures message sent within 30 seconds
+    producer.send(topic_name, data).get(timeout=30)
+
+
+def push_jsons(producer, topic_name, json_array):
+    """ Pushes array of JSONs to topic within time interval"""
+    for json in json_array:
+        push_json(producer, topic_name, json)

@@ -1,7 +1,6 @@
 # USAGE
 # python deep_learning_with_opencv.py --image images/jemma.png --prototxt bvlc_googlenet.prototxt --model bvlc_googlenet.caffemodel --labels synset_words.txt
 
-# import the necessary packages
 import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
@@ -10,28 +9,104 @@ from utilities import *
 # changed class from ImageClassification to ObjectDetection
 # uses the code for  FrameLabeling as a base
 class GeneralObjectDetection(object):
+
     # added missing variables (classes, confidenceThreshold)
     # extracted and added variables for size, mean_subtraction, and scalar
-    def __init__(self, prototxt, model, labels):
-        """ Constructor - Initalizes prototxt and model """
-        self.image = None
-        self.prototxt = prototxt
-        self.model = model
-        self.classes = open(labels).read().strip().split('\n')
-        self.size = 300
-        self.mean_subtraction = 0.007843
-        self.scalar = 127.5
-        self.confidenceThreshold = 0.3
+    def __init__(self):
+        """ Constructor """
+        self.validate_arg_parse()
+        
+    def validate_arg_parse():
+        """ Validates arg parser """
+        # Parser to parse arguments passed
+        parser = argparse.ArgumentParser()   
+        
+        parser.add_argument('--model',
+            help = 'Path to model', 
+            type = str,
+            required = True)
+        
+        parser.add_argument('--model_prototxt',
+            help = 'Path to prototxt file',
+            type = str,
+            required = True)
  
+        parser.add_argument('--labels', 
+            help = "path to list of class labels",
+            type = str,
+            required = True)
+        
+        parser.add_argument('--size', 
+            help = "size of image after resize for normalization",
+            type = int,
+            required = False, 
+            default = 300)
+        
+        parser.add_argument('--scalar', 
+            help = "scalar adjustment for image normalization",
+            type = float, 
+            required = False, 
+            default = 0.007843)
+        
+        parser.add_argument('--mean_subtraction', 
+            help = "mean color channel subtraction for image normalization",
+            type = float, 
+            required = False, 
+            default = 127.5)
+        
+        parser.add_argument('--condfidence',
+            help = "minimum confidence for detections",
+            type = float,
+            required = False,
+            default = .3)
+        
+        parser.add_argument('--topic_name_in',
+            help = "topic that it is pulling from",
+            type = str,
+            required = False,
+            default = "target2")
+        
+        parser.add_argument('--topic_name_out',
+            help = "topic that it is pushing to",
+            type = str, 
+            required = False,
+            default = "general")
+            
+        args = parser.parse_args()
+        self.image = None
+        
+        if args.model:
+            self.model = args.model
+        if args.model_prototxt:
+            self.prototxt = args.model_prototxt
+        if args.labels:
+            self.classes = open(args.labels).read().strip().split('\n')
+        if args.size:
+            self.size = args.size
+        if args.scalar:
+            self.scalar = args.scalar
+        if args.mean_subtraction:
+            self.mean_subtraction = args.mean_subtraction
+        if args.scalar:
+            self.scalar = args.scalar
+        if args.condidence:
+            self.confidenceThreshold = args.condfidence
+        if args.model && args.model_prototxt:
+            self.net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
+        if args.topic_name_in:
+            self.topic_name_in = args.topic_name_in
+        if args.topic_name_out:
+            self.topic_name_out = args.topic_name_out
  
     # removed all code related to label, or creating bounding boxes
     # added json_data_parsed to method parameters
     def run_object_detection(self, json_data_parsed):
         """ Runs the general object detection on a frame """
-        net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         # replaced values with variables
-        blob = cv2.dnn.blobFromImage(cv2.resize(self.image, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)
-        net.setInput(blob)
+        blob = cv2.dnn.blobFromImage(cv2.resize(self.image, 
+            (self.size, self.size)), self.scalar, (self.size, self.size),
+            self.mean_subtraction)
+        self.net.setInput(blob)
         detections = net.forward()
         # create a list to store found labels
         label_list = []
@@ -48,8 +123,8 @@ class GeneralObjectDetection(object):
  
     def run_images(self):
         """ Runs each image through the general object detection """
-        print("Consuming messages from 'target2'\n")
-        consumer = Consumer.initialize("target2")
+        print("Consuming messages from '%s'\n" % topic_name_in)
+        consumer = Consumer.initialize(self.topic_name_in)
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
@@ -59,22 +134,16 @@ class GeneralObjectDetection(object):
             self.run_object_detection(json_data_parsed)
             json_data = json.dumps(json_data_parsed)  # writes json_data_parsed to the JSON file
             Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/" + json_data_parsed['videoName'] + "_Metadata.txt")
-            Utilities.exportJson(json_data, "general")   # exports JSON file with the list of labels for the identified objects
+            Utilities.exportJson(json_data, self.topic_name_out)   # exports JSON file with the list of labels for the identified objects
         consumer.close()
         print("\nGeneral Object Detection consumer closed!")
  
  
 def main():
     """ Auto run main method """
-    parser = argparse.ArgumentParser()   # Parser to parse arguments passed
-    parser.add_argument('--model', type=str, help='Path to prototxt file')
-    parser.add_argument('--model_prototxt', type=str, help='Path to model')
-    parser.add_argument("--labels", type=str, help="path to list of class labels")
-    args = parser.parse_args()
-    obj = GeneralObjectDetection(args.model_prototxt, args.model, args.labels)
-    obj.run_images()
- 
- 
+    obj = GeneralObjectDetection()
+    obj.run_images() 
+
+
 if __name__=="__main__":
         main()
- 

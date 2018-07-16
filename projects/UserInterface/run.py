@@ -40,34 +40,8 @@ def displayAnalysisResults():
             all_jsons.append(json.loads(json_data))
         '''
         
-        json_data = {"videoDuration": "8.0 seconds", "videoName": "vid.mp4", "totalFrames": 206, "videoPath": "../../res/vid.mp4", "FPS": 29, 
-         "frameNum": 2.0, "timeStamp": "0.099 seconds", "foundTargetWithConfidence": "0.99655003", 
-         "GeneralObjectsDetected": ["person: 99.2%", "goose: 20%", "hippo: 10%", "monkey: 34%"], "imageBase64": "/2fjifds="}
-         
-        json_data2 = {"videoDuration": "8.0 seconds", "videoName": "vid.mp4", "totalFrames": 206, "videoPath": "../../res/vid.mp4", "FPS": 29, 
-         "frameNum": 4.0, "timeStamp": "0.399 seconds", "foundTargetWithConfidence": "0.2655003", "GeneralObjectsDetected": ["person: 78.2%", "rhino: 31%"], 
-         "imageBase64": "/4fjifds="}
-         
-        json_data3 = {"videoDuration": "8.0 seconds", "videoName": "vid.mp4", "totalFrames": 206, "videoPath": "../../res/vid.mp4", "FPS": 29, 
-         "frameNum": 6.0, "timeStamp": "0.699 seconds", "foundTargetWithConfidence": "0.4555003", 
-         "GeneralObjectsDetected": ["person: 99.2%", "goose: 20%", "hippo: 10%", "monkey: 34%"], "imageBase64": "/2fjifds="}
-         
-        json_data4 = {"videoDuration": "8.0 seconds", "videoName": "vid.mp4", "totalFrames": 206, "videoPath": "../../res/vid.mp4", "FPS": 29, 
-         "frameNum": 8.0, "timeStamp": "0.999 seconds", "foundTargetWithConfidence": "0.6755003", 
-         "GeneralObjectsDetected": ["person: 99.2%", "goose: 20%", "hippo: 10%", "monkey: 34%"], "imageBase64": "/2fjifds="}
-
-
-        jj = json.dumps(json_data)
-        jj2 = json.dumps(json_data2)
-        jj3 = json.dumps(json_data3)
-        jj4 = json.dumps(json_data4)
-
-         
-        all_jsons.append(json.loads(jj))
-        all_jsons.append(json.loads(jj2))
-        all_jsons.append(json.loads(jj3))
-        all_jsons.append(json.loads(jj4))
-        
+        for l in read_file(messages_json['filename']):
+            all_jsons.append(json.loads(l))
 
         for j in get_targeted_jsons(all_jsons):
             messages_json['data'].append(j)
@@ -78,6 +52,17 @@ def displayAnalysisResults():
         messages_json['topicframeconfidence'] = get_topic_frame_confidence(all_jsons)
         
     return render_template("analyze.html", messages=messages_json)
+
+
+def read_file(fname):
+    """ json.dump str of json """
+    filename = "static/%s_Metadata.txt" % fname
+    fh = open(filename)
+    text = fh.read()
+    lines = text.split("\n")
+    lines = lines[0:len(lines)-1]   #cut off blank tail element in array
+    print lines
+    return lines
 
 
 def get_topic_frame_confidence(all_jsons):

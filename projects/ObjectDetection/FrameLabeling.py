@@ -6,22 +6,91 @@ from utilities import *
 
 # renamed class and file to FrameLabeling
 class FrameLabeling(object):
-
-    def __init__(self, prototxt, model, labels):
-        self.image = None
-        self.prototxt = prototxt
-        self.model = model
-        self.classes = open(labels).read().strip().split('\n')
-        self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
-        self.confidenceThreshold = 0.3
-        self.b64 = None
-        # added variables for size, mean_subtraction, and scalar values for easy of change
-        self.size = 300
-        self.mean_subtraction = 0.007843
-        self.scalar = 127.5
+    
+    def __init__(self): #prototxt, model, labels
+        """ Constructor """
+        self.validate_arg_parse()
+    
+    def validate_arg_parse():
+        """ Validates arg parser """
+        # Parser to parse arguments passed
+        parser = argparse.ArgumentParser()     
+    
+        parser.add_argument('--model',
+            help = 'Path to model', 
+            type = str,
+            required = True)
         
+        parser.add_argument('--model_prototxt',
+            help = 'Path to prototxt file',
+            type = str,
+            required = True)
+ 
+        parser.add_argument('--labels', 
+            help = "path to list of class labels",
+            type = str,
+            required = True)
+        
+        parser.add_argument('--size', 
+            help = "size of image after resize for normalization",
+            type = int,
+            required = False, 
+            default = 300)
+        
+        parser.add_argument('--scalar', 
+            help = "scalar adjustment for image normalization",
+            type = float, 
+            required = False, 
+            default = 0.007843)
+        
+        parser.add_argument('--mean_subtraction', 
+            help = "mean color channel subtraction for image normalization",
+            type = float, 
+            required = False, 
+            default = 127.5)
+        
+        parser.add_argument('--condfidence',
+            help = "minimum confidence for detections",
+            type = float,
+            required = False,
+            default = .3)
+        
+        parser.add_argument('--topic_name_in',
+            help = "topic that it is pulling from",
+            type = str,
+            required = False,
+            default = "general")
+    
+        args = parser.parse_args()
+        
+        self.image = None
+        self.b64 = None
+        self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
+        self.classes = open(labels).read().strip().split('\n')
+        
+        if args.model:
+            self.model = args.model
+        if args.model_prototxt:
+            self.prototxt = args.model_prototxt
+        if args.labels:
+            self.classes = open(args.labels).read().strip().split('\n')
+        if args.size:
+            self.size = args.size
+        if args.scalar:
+            self.scalar = args.scalar
+        if args.mean_subtraction:
+            self.mean_subtraction = args.mean_subtraction
+        if args.scalar:
+            self.scalar = args.scalar
+        if args.condidence:
+            self.confidenceThreshold = args.condfidence
+        if args.model && args.model_prototxt:
+            self.net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
+        if args.topic_name_in:
+            self.topic_name_in = args.topic_name_in
 
     def run_frame_labeling(self, json_data_parsed):
+        """ Runs frames for labeling """
         net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         (h, w) = self.image.shape[:2]
         blob = cv2.dnn.blobFromImage(cv2.resize(self.image, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)  # replaced hard  coded values for variables
@@ -45,12 +114,11 @@ class FrameLabeling(object):
         if labelingOccurred:
             labeledb64 = base64.b64encode(self.image)    # may need to write some logic here in order to avoid adding to the json if no labeling occurred.
             json_data_parsed['LabeledImage'] = labeledb64   # adds base64 string to json data
-            
-
-                       
+           
     def run_images(self):      
+        """ Runs each image """
         print("\n Consuming messages from 'general'\n")
-        consumer = Consumer.initialize("general")
+        consumer = Consumer.initialize(self.topic_name_in)
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
@@ -62,20 +130,15 @@ class FrameLabeling(object):
             Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoName'] + "_Metadata.txt") 
         consumer.close()
         print("\nFrame labeling consumer closed!")
-            
-           
 
     
 def main():
-    parser = argparse.ArgumentParser()   # Parser to parse arguments passed
-    parser.add_argument('--model', type=str, help='Path to frame labeling object detection model')
-    parser.add_argument('--model_prototxt', type=str, help='Path to model prototxt')
-    parser.add_argument("--labels", type=str, help="path to list of class labels")
-    args = parser.parse_args()
-    obj = FrameLabeling(args.model_prototxt, args.model, args.labels)
+    """ Auto run main method """
+    obj = FrameLabeling()
     obj.run_images()
     # ** TODO: Add database (Accumulo and Scylla) here by pushing finalized json data to database **
-    
+
+
 if __name__=="__main__":
     main()
 
