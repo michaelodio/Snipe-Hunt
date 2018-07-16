@@ -9,6 +9,7 @@ class VideoETL(object):
     def __init__(self): 
         """ Constructor """
         self.validate_arg_parse()
+        Logger.initilaize('../../logs/ETL.log')
     
     def validate_arg_parse(self):
         """ Validates arg parser """
@@ -39,10 +40,12 @@ class VideoETL(object):
     def splitFrames(self):
         """ Splits up the frames """
         print("Splitting Frames and extracting metadata...\n")
+        logging.info("Splitting Frames and extracting metadata...")
         cap = cv2.VideoCapture(self.videoPath)    # open video in openCV
         totalFrame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))    # grab total frames in the video
         if cap.isOpened is False:
             print("Error opening video stream or file")
+            logging.error("Cannot open video stream or file")
         for x in range(totalFrame):     # loop through all of the frames and extract meta data on each frame
             retval, videoframe = cap.read()     # grab the next frame
             self.extractFrameMetadata(videoframe, totalFrame, cap)    # collect metadata on the frame
