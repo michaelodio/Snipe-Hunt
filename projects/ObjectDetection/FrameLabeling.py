@@ -68,10 +68,13 @@ class FrameLabeling(object):
         self.b64 = None
         
         if args.model:
+            Utilities.verifyPath(args.model)
             self.model = args.model
         if args.model_prototxt:
+            Utilities.verifyPath(args.model_prototxt)
             self.prototxt = args.model_prototxt
         if args.labels:
+            Utilities.verifyPath(args.labels)
             self.classes = open(args.labels).read().strip().split('\n')
         if args.size:
             self.size = args.size
@@ -124,13 +127,13 @@ class FrameLabeling(object):
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
-            print("\n Running frame labeling against frame: " + str(json_data_parsed['frameNum']) + "\n")
-            logging.info("Running frame labeling against frame: " + str(json_data_parsed['frameNum']))
+            print("\n Running frame labeling against frame: " + str(json_data_parsed['frameMetadata']['frameNum']) + "\n")
+            logging.info("Running frame labeling against frame: " + str(json_data_parsed['frameMetadata']['frameNum']))
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
             self.image = frame
             self.run_frame_labeling(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
-            Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoName'] + "_Metadata.txt") 
+            Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata.txt") 
         consumer.close()
         print("\nFrame labeling consumer closed!")
         logging.info("Frame labeling consumer closed")
