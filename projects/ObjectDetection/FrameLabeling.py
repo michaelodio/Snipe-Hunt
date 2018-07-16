@@ -11,7 +11,7 @@ class FrameLabeling(object):
         """ Constructor """
         self.validate_arg_parse()
     
-    def validate_arg_parse():
+    def validate_arg_parse(self):
         """ Validates arg parser """
         # Parser to parse arguments passed
         parser = argparse.ArgumentParser()     
@@ -49,7 +49,7 @@ class FrameLabeling(object):
             required = False, 
             default = 127.5)
         
-        parser.add_argument('--condfidence',
+        parser.add_argument('--confidence',
             help = "minimum confidence for detections",
             type = float,
             required = False,
@@ -65,8 +65,6 @@ class FrameLabeling(object):
         
         self.image = None
         self.b64 = None
-        self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
-        self.classes = open(labels).read().strip().split('\n')
         
         if args.model:
             self.model = args.model
@@ -82,20 +80,21 @@ class FrameLabeling(object):
             self.mean_subtraction = args.mean_subtraction
         if args.scalar:
             self.scalar = args.scalar
-        if args.condidence:
-            self.confidenceThreshold = args.condfidence
-        if args.model && args.model_prototxt:
+        if args.confidence:
+            self.confidenceThreshold = args.confidence
+        if args.model and args.model_prototxt:
             self.net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         if args.topic_name_in:
             self.topic_name_in = args.topic_name_in
+            
+        self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
 
     def run_frame_labeling(self, json_data_parsed):
         """ Runs frames for labeling """
-        net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         (h, w) = self.image.shape[:2]
-        blob = cv2.dnn.blobFromImage(cv2.resize(self.image, (self.size, self.size)), self.mean_subtraction, (self.size, self.size), self.scalar)  # replaced hard  coded values for variables
-        net.setInput(blob)
-        detections = net.forward()
+        blob = cv2.dnn.blobFromImage(cv2.resize(self.image, (self.size, self.size)), self.scalar, (self.size, self.size), self.mean_subtraction)  # replaced hard  coded values for variables
+        self.net.setInput(blob)
+        detections = self.net.forward()
         labelingOccurred = False
         for i in np.arange(0, detections.shape[2]):
             confidence = detections[0, 0, i, 2]
@@ -106,7 +105,7 @@ class FrameLabeling(object):
                 if idx >= 1 and idx <= 20:     # display the prediction and avoids index 0 which is 'background'
                     labelingOccurred = True
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
-                    print("[INFO] {}".format(label))
+                    print("LABELING [INFO] {}".format(label))
                     cv2.rectangle(self.image, (startX, startY), (endX, endY), self.colors[idx], 2)
                     y = startY - 15 if startY - 15 > 15 else startY + 15
                     cv2.putText(self.image, label, (startX, y),

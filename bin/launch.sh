@@ -13,12 +13,15 @@ python clean_and_clear_topics.py
 cd ../projects/ObjectDetection/
 python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                         --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
-                        --labels "../../res/labels.txt" &
+                        --labels "../../res/labels.txt" \
+                        --topic_name_in "general" &
 pids[0]=$!
 
 python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                               --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
-                              --labels "../../res/labels.txt" &
+                              --labels "../../res/labels.txt" \
+                              --topic_name_in "target2" \
+                              --topic_name_out "general" &
 #python GeneralObjDetectionYOLO.py &
 pids[1]=$!
 
@@ -27,11 +30,15 @@ python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_grap
                                           --input_layer "Placeholder" \
                                           --output_layer "final_result" \
                                           --input_height 224 \
-                                          --input_width 224 &
+                                          --input_width 224 \
+                                          --topic_name_in "framefeeder" \
+                                          --topic_name_out "target2" &
+                                          
 pids[2]=$!
 
 cd ../ETL/
-python ETLProcess.py --video "../../res/Videos/vid.mp4"
+python ETLProcess.py --video "../../res/Videos/vid.mp4" \
+                     --topic_name_out "framefeeder"
 
 for pid in ${pids[*]}; do
     wait $pid

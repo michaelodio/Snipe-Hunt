@@ -16,7 +16,7 @@ class GeneralObjectDetection(object):
         """ Constructor """
         self.validate_arg_parse()
         
-    def validate_arg_parse():
+    def validate_arg_parse(self):
         """ Validates arg parser """
         # Parser to parse arguments passed
         parser = argparse.ArgumentParser()   
@@ -54,7 +54,7 @@ class GeneralObjectDetection(object):
             required = False, 
             default = 127.5)
         
-        parser.add_argument('--condfidence',
+        parser.add_argument('--confidence',
             help = "minimum confidence for detections",
             type = float,
             required = False,
@@ -89,9 +89,9 @@ class GeneralObjectDetection(object):
             self.mean_subtraction = args.mean_subtraction
         if args.scalar:
             self.scalar = args.scalar
-        if args.condidence:
-            self.confidenceThreshold = args.condfidence
-        if args.model && args.model_prototxt:
+        if args.confidence:
+            self.confidenceThreshold = args.confidence
+        if args.model and args.model_prototxt:
             self.net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         if args.topic_name_in:
             self.topic_name_in = args.topic_name_in
@@ -107,7 +107,7 @@ class GeneralObjectDetection(object):
             (self.size, self.size)), self.scalar, (self.size, self.size),
             self.mean_subtraction)
         self.net.setInput(blob)
-        detections = net.forward()
+        detections = self.net.forward()
         # create a list to store found labels
         label_list = []
         for i in np.arange(0, detections.shape[2]):
@@ -118,12 +118,12 @@ class GeneralObjectDetection(object):
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
                     print("[INFO] {}".format(label))
                     label_list.append(label)    # adds new label to label_list
-        if label_list:   # if label_list is not empty (meaning gen objects wer found), then add to json
+        if label_list:   # if label_list is not empty (meaning gen objects were found), then add to json
             json_data_parsed['GeneralObjectsDetected'] = label_list  # appends label_list to JSON data
  
     def run_images(self):
         """ Runs each image through the general object detection """
-        print("Consuming messages from '%s'\n" % topic_name_in)
+        print("Consuming messages from '%s'\n" % self.topic_name_in)
         consumer = Consumer.initialize(self.topic_name_in)
         for m in consumer:
             json_data = m.value     

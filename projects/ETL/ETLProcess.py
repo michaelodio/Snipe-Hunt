@@ -8,9 +8,9 @@ class VideoETL(object):
 
     def __init__(self): 
         """ Constructor """
-        validate_arg_parse()
+        self.validate_arg_parse()
     
-    def validate_arg_parse():
+    def validate_arg_parse(self):
         """ Validates arg parser """
         # Parser to parse arguments passed
         parser = argparse.ArgumentParser()  
@@ -66,7 +66,7 @@ class VideoETL(object):
         frameNum = cap.get(cv2.CAP_PROP_POS_FRAMES)   # collect the current frame number
         FPS = int(cap.get(cv2.CAP_PROP_FPS))     # grab the frames per second of the video
         videoDuration = round(totalFrame / FPS)   # calculate the video's duration
-        relativePosition = frameNum / totalFrame   # calculate this frames relative position in the video
+        relativePosition = "%.2f" % (frameNum / totalFrame)   # calculate this frames relative position in the video
         videoName = os.path.basename(self.videoPath) # collect the videos name
         timeStamp = round(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000    # collect time stamp and convert it to seconds
         retval, frameConvertedToJPG = cv2.imencode('.jpg', videoframe)   # encode frame to .jpg for base64string conversion
@@ -80,7 +80,7 @@ class VideoETL(object):
 def main():
     """ Auto run main method """
     etl = VideoETL()
-    etl.run()
+    etl.splitFrames()
 
 
 if __name__ == "__main__":

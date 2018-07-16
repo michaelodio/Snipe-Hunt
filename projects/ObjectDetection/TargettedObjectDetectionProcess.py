@@ -11,7 +11,7 @@ class TargettedObjectDetection(object):
         """ Constructor """
         self.validate_arg_parse()
         
-    def validate_arg_parse():
+    def validate_arg_parse(self):
         """ Validates arg parser """
         parser = argparse.ArgumentParser()   # Parser to parse arguments passed
     
@@ -86,7 +86,7 @@ class TargettedObjectDetection(object):
             frame = Utilities.decodeFrame(json_data_parsed)    # take parsed string and send it to utilities to decode it from base64 
             frameAsTensor = tf.image.decode_jpeg(frame, channels=3)   # convert frame to Tensor as string
             print("\n Running labelImage against frame: " + str(json_data_parsed['frameNum']) + "\n")        
-            confidenceStat = labelImage(graph, labels, input_layer, output_layer, input_height, input_width, frameAsTensor)    # tests frame for targeted object
+            confidenceStat = labelImage(self.graph, self.labels, self.input_layer, self.output_layer, self.input_height, self.input_width, frameAsTensor)    # tests frame for targeted object
             if confidenceStat != None:     # if the target object was found within the threshold confidence, append that information to the JSON file. 
                 json_data_parsed['foundTargetWithConfidence'] = str(confidenceStat)
                 json_data = json.dumps(json_data_parsed)
