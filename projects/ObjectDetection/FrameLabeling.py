@@ -116,7 +116,7 @@ class FrameLabeling(object):
                     cv2.putText(self.image, label, (startX, y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
         if labelingOccurred:
-            labeledb64 = base64.b64encode(self.image)    # may need to write some logic here in order to avoid adding to the json if no labeling occurred.
+            labeledb64 = base64.b64encode(self.image)    
             json_data_parsed['LabeledImage'] = labeledb64   # adds base64 string to json data
            
     def run_images(self):      

@@ -17,12 +17,17 @@ python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                         --topic_name_in "general" &
 pids[0]=$!
 
-python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
-                              --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
-                              --labels "../../res/labels.txt" \
-                              --topic_name_in "target2" \
-                              --topic_name_out "general" &
-#python GeneralObjDetectionYOLO.py &
+#python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
+                              #--model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
+                              #--labels "../../res/labels.txt" \
+                              #--topic_name_in "target2" \
+                              #--topic_name_out "general" &
+                              
+python GeneralObjDetectionYOLO.py --net "cfg/yolov3-tiny.cfg" \
+                                  --weights "yolov3-tiny.weights" \
+                                  --meta "cfg/coco.data" \
+                                  --topic_name_in "target2" \
+                                  --topic_name_out "general" &
 pids[1]=$!
 
 python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_graph.pb" \
