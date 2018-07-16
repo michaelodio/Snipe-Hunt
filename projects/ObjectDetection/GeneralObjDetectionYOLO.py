@@ -68,11 +68,13 @@ class GeneralObjectDetection(object):
         args = parser.parse_args()
                 
         if args.net:
-            #Utilities.verifyPath(args.video)
+            Utilities.verifyPath(args.net)
             self.net = args.net
         if args.weights:
+            Utilities.verifyPath(args.weights)
             self.weights = args.weights
         if args.meta:
+            Utilities.verifyPath(args.meta)
             self.meta = args.meta
         if args.topic_name_in:
             self.topic_name_in = args.topic_name_in
