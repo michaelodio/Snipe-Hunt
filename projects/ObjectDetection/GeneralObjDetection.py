@@ -122,7 +122,7 @@ class GeneralObjectDetection(object):
                     print("GEN [INFO] {}".format(label))
                     label_list.append(label)    # adds new label to label_list
         if label_list:   # if label_list is not empty (meaning gen objects were found), then add to json
-            json_data_parsed['GeneralObjectsDetected'] = label_list  # appends label_list to JSON data
+            json_data_parsed['frameMetadata']['GeneralObjectsDetected'] = label_list  # appends label_list to JSON data
  
     def run_images(self):
         """ Runs each image through the general object detection """
@@ -131,12 +131,12 @@ class GeneralObjectDetection(object):
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
-            print("\n Running General Object Det against frame: " + str(json_data_parsed['frameNum']) + "\n")
+            print("\n Running General Object Det against frame: " + str(json_data_parsed['frameMetadata']['frameNum']) + "\n")
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)   # this utility method will not only decode the b64 string, but also prepare the image to be compatible with opencv
             self.image = frame
             self.run_object_detection(json_data_parsed)
             json_data = json.dumps(json_data_parsed)  # writes json_data_parsed to the JSON file
-            Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/" + json_data_parsed['videoName'] + "_Metadata.txt")
+            Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata.txt")
             Utilities.exportJson(json_data, self.topic_name_out)   # exports JSON file with the list of labels for the identified objects
         consumer.close()
         print("\nGeneral Object Detection consumer closed!")

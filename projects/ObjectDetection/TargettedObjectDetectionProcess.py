@@ -87,12 +87,12 @@ class TargettedObjectDetection(object):
             json_data_parsed = json.loads(json_data)   # loads json data into a parsed string (back to dict)
             frame = Utilities.decodeFrame(json_data_parsed)    # take parsed string and send it to utilities to decode it from base64 
             frameAsTensor = tf.image.decode_jpeg(frame, channels=3)   # convert frame to Tensor as string
-            print("\n Running labelImage against frame: " + str(json_data_parsed['frameNum']) + "\n")        
+            print("\n Running labelImage against frame: " + str(json_data_parsed['frameMetadata']['frameNum']) + "\n")        
             confidenceStat = labelImage(self.graph, self.labels, self.input_layer, self.output_layer, self.input_height, self.input_width, frameAsTensor)    # tests frame for targeted object
             if confidenceStat != None:     # if the target object was found within the threshold confidence, append that information to the JSON file. 
-                json_data_parsed['foundTargetWithConfidence'] = str(confidenceStat)
+                json_data_parsed['frameMetadata']['foundTargetWithConfidence'] = str(confidenceStat)
                 json_data = json.dumps(json_data_parsed)
-            Utilities.storeJson(json_data, "../../res/FramesMetadataTargetImgClassification/" + json_data_parsed['videoName'] + "_Metadata.txt")    # Store updated metadata Jsons locally
+            Utilities.storeJson(json_data, "../../res/FramesMetadataTargetImgClassification/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata.txt")    # Store updated metadata Jsons locally
             Utilities.exportJson(json_data, self.topic_name_out)    # export updated Json files to kafka topic 'target'
         consumer.close()
         print("\nTargetted Object Detection consumer closed!")

@@ -58,7 +58,21 @@ class VideoETL(object):
         timeStamp = round(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000    # collect time stamp and convert it to seconds
         retval, frameConvertedToJPG = cv2.imencode('.jpg', videoframe)   # encode frame to .jpg for base64string conversion
         frameAsBase64String = Utilities.encodeFrame(frameConvertedToJPG)    # encode frame to base64String
-        frameJson = json.dumps({'videoPath': self.videoPath, 'videoName': videoName, 'videoDuration': str(videoDuration) + " seconds", 'totalFrames': totalFrame, 'FPS': FPS, 'frameNum': frameNum, 'timeStamp': str(timeStamp) + " seconds", 'relativePostition': relativePosition, 'imageBase64': frameAsBase64String})     # create frame json with collected metadata
+        videoMetadata = {}
+        frameMetadata = {}
+        metadata = {}
+        videoMetadata['videoPath'] = self.videoPath
+        videoMetadata['videoName'] = videoName
+        videoMetadata['videoDuration'] = str(videoDuration) + " seconds"
+        videoMetadata['totalFrames'] = totalFrame
+        videoMetadata['FPS'] = FPS
+        frameMetadata['frameNum'] = frameNum
+        frameMetadata['timestamp'] = str(timeStamp) + " seconds"
+        frameMetadata['relativePosition'] = relativePosition
+        metadata['videoMetadata'] = videoMetadata
+        metadata['frameMetadata'] = frameMetadata
+        metadata['imageBase64'] = frameAsBase64String
+        frameJson = json.dumps(metadata)     # create frame json with collected metadata
         Utilities.exportJson(frameJson, self.topic_name_out)    # export frame json to kafka topic
         Utilities.storeJson(frameJson, "../../res/FramesMetadataETL/" + videoName + "_Metadata.txt")  # store frame json locally
         return
