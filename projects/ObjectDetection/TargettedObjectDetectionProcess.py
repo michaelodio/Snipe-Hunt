@@ -10,6 +10,7 @@ class TargettedObjectDetection(object):
     def __init__(self):
         """ Constructor """
         self.validate_arg_parse()
+        Logger.initilaize("../../logs/TargettedObjectDetection.log")
         
     def validate_arg_parse(self):
         """ Validates arg parser """
@@ -78,14 +79,16 @@ class TargettedObjectDetection(object):
     
     def run(self):
         """ Runs targetted obj detection """
-        print("\nConsuming messages from 'framefeeder'")
+        print("Consuming messages from '%s'\n" % self.topic_name_in)
+        logging.info("Consuming messages from '%s'" % self.topic_name_in)
         consumer = Consumer.initialize(self.topic_name_in)
         for m in consumer:
             json_data = m.value   # pull jsons from kafka topic into list for processing
             json_data_parsed = json.loads(json_data)   # loads json data into a parsed string (back to dict)
             frame = Utilities.decodeFrame(json_data_parsed)    # take parsed string and send it to utilities to decode it from base64 
             frameAsTensor = tf.image.decode_jpeg(frame, channels=3)   # convert frame to Tensor as string
-            print("\n Running labelImage against frame: " + str(json_data_parsed['frameNum']) + "\n")        
+            print("\n Running labelImage against frame: " + str(json_data_parsed['frameNum']) + "\n")   
+            logging.info("Running labelImage against frame: " + str(json_data_parsed['frameNum']))     
             confidenceStat = labelImage(self.graph, self.labels, self.input_layer, self.output_layer, self.input_height, self.input_width, frameAsTensor)    # tests frame for targeted object
             if confidenceStat != None:     # if the target object was found within the threshold confidence, append that information to the JSON file. 
                 json_data_parsed['foundTargetWithConfidence'] = str(confidenceStat)
@@ -94,6 +97,7 @@ class TargettedObjectDetection(object):
             Utilities.exportJson(json_data, self.topic_name_out)    # export updated Json files to kafka topic 'target'
         consumer.close()
         print("\nTargetted Object Detection consumer closed!")
+        self.logger.info("Targetted Object Detection consumer closed")
 
 
 def main():

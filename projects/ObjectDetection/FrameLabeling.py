@@ -10,7 +10,8 @@ class FrameLabeling(object):
     def __init__(self): #prototxt, model, labels
         """ Constructor """
         self.validate_arg_parse()
-    
+        Logger.initilaize("../../logs/FrameLabeling.log")
+            
     def validate_arg_parse(self):
         """ Validates arg parser """
         # Parser to parse arguments passed
@@ -106,6 +107,7 @@ class FrameLabeling(object):
                     labelingOccurred = True
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
                     print("LABELING [INFO] {}".format(label))
+                    logging.info("LABELING [INFO] {}".format(label))
                     cv2.rectangle(self.image, (startX, startY), (endX, endY), self.colors[idx], 2)
                     y = startY - 15 if startY - 15 > 15 else startY + 15
                     cv2.putText(self.image, label, (startX, y),
@@ -116,12 +118,14 @@ class FrameLabeling(object):
            
     def run_images(self):      
         """ Runs each image """
-        print("\n Consuming messages from 'general'\n")
+        print("Consuming messages from '%s'\n" % self.topic_name_in)
+        logging.info("Consuming messages from '%s'" % self.topic_name_in)
         consumer = Consumer.initialize(self.topic_name_in)
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
             print("\n Running frame labeling against frame: " + str(json_data_parsed['frameNum']) + "\n")
+            logging.info("Running frame labeling against frame: " + str(json_data_parsed['frameNum']))
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
             self.image = frame
             self.run_frame_labeling(json_data_parsed)
@@ -129,6 +133,7 @@ class FrameLabeling(object):
             Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoName'] + "_Metadata.txt") 
         consumer.close()
         print("\nFrame labeling consumer closed!")
+        logging.info("Frame labeling consumer closed")
 
     
 def main():
