@@ -67,10 +67,13 @@ class FrameLabeling(object):
         self.b64 = None
         
         if args.model:
+            Utilities.verifyPath(args.model)
             self.model = args.model
         if args.model_prototxt:
+            Utilities.verifyPath(args.model_prototxt)
             self.prototxt = args.model_prototxt
         if args.labels:
+            Utilities.verifyPath(args.labels)
             self.classes = open(args.labels).read().strip().split('\n')
         if args.size:
             self.size = args.size

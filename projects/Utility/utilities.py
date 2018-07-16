@@ -63,3 +63,10 @@ class Utilities(object):
                 if f.endswith(tuple(extensions)):
                     storePaths.append(os.path.join(root, f))
         return storePaths
+        
+    @staticmethod
+    def verifyPath(path):
+        try:
+            os.path.exists(path)
+        except OSError as err:
+            print("OS error: {0}".format(err))  #log this

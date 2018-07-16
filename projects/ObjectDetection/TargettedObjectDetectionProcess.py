@@ -60,8 +60,10 @@ class TargettedObjectDetection(object):
         args = parser.parse_args()
     
         if args.graph:
+            Utilities.verifyPath(args.graph)
             self.graph = args.graph
         if args.labels:
+            Utilities.verifyPath(args.labels)
             self.labels = args.labels
         if args.input_layer:
             self.input_layer = args.input_layer

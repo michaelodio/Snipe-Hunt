@@ -29,25 +29,12 @@ class VideoETL(object):
         args = parser.parse_args()
                 
         if args.video:
+            Utilities.verifyPath(args.video)
             self.videoPath = args.video
         if args.topic_name_out:
             self.topic_name_out = args.topic_name_out
 
-    def run(self):
-        """ Runs the ETL process """
-        '''
-        FLAGS, unparsed = parser.parse_known_args()
-        if ('videoFromUI' in keyword_parameters):    # if a videoPath was provided from the UI use that video path instead.
-            FLAGS.video = keyword_parameters['videoFromUI']
-        if FLAGS.video.endswith("/"):
-            videosPath = Utilities.get_file_paths(FLAGS.video)
-            for video in videosPath:
-                videoEditor = VideoETL(video)   # create instance of VideoEditor object for processing the video with OpenCV
-                videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
-        if FLAGS.video.endswith(tuple(extensions)):
-            videoEditor = VideoETL(FLAGS.video)   # create instance of VideoEditor object for processing the video with OpenCV
-            videoEditor.splitFrames()   # splits the frames of the video as well as runs the extractFrameMetadata method on that frame.
-        '''
+
 
     def splitFrames(self):
         """ Splits up the frames """

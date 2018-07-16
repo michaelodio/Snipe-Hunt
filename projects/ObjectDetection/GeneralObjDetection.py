@@ -76,10 +76,13 @@ class GeneralObjectDetection(object):
         self.image = None
         
         if args.model:
+            Utilities.verifyPath(args.model)
             self.model = args.model
         if args.model_prototxt:
+            Utilities.verifyPath(args.model_prototxt)
             self.prototxt = args.model_prototxt
         if args.labels:
+            Utilities.verifyPath(args.labels)
             self.classes = open(args.labels).read().strip().split('\n')
         if args.size:
             self.size = args.size
@@ -116,7 +119,7 @@ class GeneralObjectDetection(object):
                 idx = int(detections[0, 0, i, 1])
                 if idx >= 1 and idx <= 20:      # display the prediction
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
-                    print("[INFO] {}".format(label))
+                    print("GEN [INFO] {}".format(label))
                     label_list.append(label)    # adds new label to label_list
         if label_list:   # if label_list is not empty (meaning gen objects were found), then add to json
             json_data_parsed['GeneralObjectsDetected'] = label_list  # appends label_list to JSON data
