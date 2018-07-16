@@ -1,3 +1,0 @@
-Module: https://tfhub.dev/google/imagenet/mobilenet_v2_140_224/classification/1
-Download Time: 2018-06-25 18:48:29.563488
-Downloader Hostname: braintrust-dsvm2 (PID:4459)
