@@ -13,7 +13,7 @@ import random
 import os
 import sys
 import time
-from logger import *
+import logging
 sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
 from kafka_consumer import *
 from kafka_producer import *
@@ -71,3 +71,18 @@ class Utilities(object):
             os.path.exists(path)
         except OSError as err:
             print("OS error: {0}".format(err))  #log this
+    
+                
+    @staticmethod
+    def setup_logger(name, log_file, level=logging.INFO):
+        """ Function setup as many loggers as want """
+    
+        handler = logging.FileHandler(log_file)
+        handler.setFormatter(logging.Formatter('%(asctime)s    %(levelname)s: %(message)s'))
+    
+        logger = logging.getLogger(name)
+        logger.setLevel(level)
+        logger.addHandler(handler)
+        
+        return logger
+    

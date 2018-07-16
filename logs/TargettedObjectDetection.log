@@ -1,1 +1,18 @@
-
+2018-07-16 21:52:46,793    INFO: Consuming messages from 'framefeeder'
+2018-07-16 21:52:47,080    INFO: Running labelImage against frame: 1.0
+2018-07-16 21:52:48,355    INFO: Running labelImage against frame: 2.0
+2018-07-16 21:52:49,694    INFO: Running labelImage against frame: 3.0
+2018-07-16 21:52:50,906    INFO: Running labelImage against frame: 4.0
+2018-07-16 21:52:51,994    INFO: Running labelImage against frame: 5.0
+2018-07-16 21:52:53,227    INFO: Running labelImage against frame: 6.0
+2018-07-16 21:52:54,367    INFO: Running labelImage against frame: 7.0
+2018-07-16 21:52:55,559    INFO: Running labelImage against frame: 8.0
+2018-07-16 21:52:56,759    INFO: Running labelImage against frame: 9.0
+2018-07-16 21:52:57,779    INFO: Running labelImage against frame: 10.0
+2018-07-16 21:52:58,910    INFO: Running labelImage against frame: 11.0
+2018-07-16 21:53:00,150    INFO: Running labelImage against frame: 12.0
+2018-07-16 21:53:01,252    INFO: Running labelImage against frame: 13.0
+2018-07-16 21:53:02,368    INFO: Running labelImage against frame: 14.0
+2018-07-16 21:53:03,476    INFO: Running labelImage against frame: 15.0
+2018-07-16 21:53:04,746    INFO: Running labelImage against frame: 16.0
+2018-07-16 21:53:05,732    INFO: Running labelImage against frame: 17.0

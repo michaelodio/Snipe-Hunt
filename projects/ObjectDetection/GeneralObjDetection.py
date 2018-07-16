@@ -15,7 +15,7 @@ class GeneralObjectDetection(object):
     def __init__(self):
         """ Constructor """
         self.validate_arg_parse()
-        Logger.initilaize("../../logs/GeneralObjectDetection.log")
+        self.logger = Utilities.setup_logger("general-obj", "../../logs/GeneralObjectDetection.log")
         
     def validate_arg_parse(self):
         """ Validates arg parser """
@@ -129,13 +129,15 @@ class GeneralObjectDetection(object):
     def run_images(self):
         """ Runs each image through the general object detection """
         print("Consuming messages from '%s'\n" % self.topic_name_in)
-        logging.info("Consuming messages from '%s'" % self.topic_name_in)
+        self.logger.info("Consuming messages from '%s'" % self.topic_name_in)
+
+        
         consumer = Consumer.initialize(self.topic_name_in)
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
             print("\n Running General Object Det against frame: " + str(json_data_parsed['frameMetadata']['frameNum']) + "\n")
-            logging.info("Running General Object Det against frame: " + str(json_data_parsed['frameNum']['frameNum']))
+            self.logger.info("Running General Object Det against frame: " + str(json_data_parsed['frameNum']['frameNum']))
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)   # this utility method will not only decode the b64 string, but also prepare the image to be compatible with opencv
             self.image = frame
             self.run_object_detection(json_data_parsed)
@@ -144,7 +146,7 @@ class GeneralObjectDetection(object):
             Utilities.exportJson(json_data, self.topic_name_out)   # exports JSON file with the list of labels for the identified objects
         consumer.close()
         print("\nGeneral Object Detection consumer closed!")
-        logging.info("General Object Detection consumer closed")
+        self.logger.info("General Object Detection consumer closed")
  
  
 def main():
