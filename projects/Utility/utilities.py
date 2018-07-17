@@ -69,6 +69,7 @@ class Utilities(object):
     def verifyPath(path, logger):
         if not os.path.exists(path):
             logger.error("File path: " + path + " does not exist")  #log this
+            raise ValueError("File path: " + path + " does not exist") 
     
                 
     @staticmethod
