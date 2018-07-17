@@ -30,7 +30,7 @@ python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel"
                                   #--topic_name_out "general" &
 pids[1]=$!
 
-python TargettedObjectDetectionProcess.py --graph "../../res/TfM2odel/output_graph.pb" \
+python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_graph.pb" \
                                           --labels "../../res/TfModel/output_labels.txt" \
                                           --input_layer "Placeholder" \
                                           --output_layer "final_result" \

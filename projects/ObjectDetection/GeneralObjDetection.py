@@ -121,7 +121,7 @@ class GeneralObjectDetection(object):
                 if idx >= 1 and idx <= 20:      # display the prediction
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
                     print("GEN [INFO] {}".format(label))
-                    logging.info("[INFO] {}".format(label))
+                    self.logger.info("    [INFO] {}".format(label))
                     label_list.append(label)    # adds new label to label_list
         if label_list:   # if label_list is not empty (meaning gen objects were found), then add to json
             json_data_parsed['frameMetadata']['GeneralObjectsDetected'] = label_list  # appends label_list to JSON data
@@ -137,7 +137,7 @@ class GeneralObjectDetection(object):
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
             print("\n Running General Object Det against frame: " + str(json_data_parsed['frameMetadata']['frameNum']) + "\n")
-            self.logger.info("Running General Object Det against frame: " + str(json_data_parsed['frameNum']['frameNum']))
+            self.logger.info("Running General Object Det against frame: " + str(json_data_parsed['frameMetadata']['frameNum']))
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)   # this utility method will not only decode the b64 string, but also prepare the image to be compatible with opencv
             self.image = frame
             self.run_object_detection(json_data_parsed)

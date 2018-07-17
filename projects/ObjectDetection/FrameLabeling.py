@@ -110,7 +110,7 @@ class FrameLabeling(object):
                     labelingOccurred = True
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
                     print("LABELING [INFO] {}".format(label))
-                    self.logger.info("LABELING [INFO] {}".format(label))
+                    self.logger.info("    [INFO] {}".format(label))
                     cv2.rectangle(self.image, (startX, startY), (endX, endY), self.colors[idx], 2)
                     y = startY - 15 if startY - 15 > 15 else startY + 15
                     cv2.putText(self.image, label, (startX, y),

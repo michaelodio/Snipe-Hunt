@@ -1,6 +1,3 @@
-# USAGE
-# python deep_learning_with_opencv.py --image images/jemma.png --prototxt bvlc_googlenet.prototxt --model bvlc_googlenet.caffemodel --labels synset_words.txt
-
 # import the necessary packages
 import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
@@ -8,8 +5,7 @@ from utilities import *
 from darknet import main as yoloObjDetection
 
 
-# changed class from ImageClassification to ObjectDetection
-# uses the code for  FrameLabeling as a base
+
 
 class METADATA(Structure):
     _fields_ = [("classes", c_int),
@@ -31,6 +27,7 @@ class GeneralObjectDetection(object):
     # extracted and added variables for size, mean_subtraction, and scalar
     def __init__(self):
         """ Constructor - Initalizes prototxt and model """
+        self.logger = Utilities.setup_logger("yolo", '../../logs/GenObjYOLO.log')
         self.validate_arg_parse()
         
     def validate_arg_parse(self):
@@ -68,13 +65,13 @@ class GeneralObjectDetection(object):
         args = parser.parse_args()
                 
         if args.net:
-            Utilities.verifyPath(args.net)
+            Utilities.verifyPath(args.net, self.logger)
             self.net = args.net
         if args.weights:
-            Utilities.verifyPath(args.weights)
+            Utilities.verifyPath(args.weights, self.logger)
             self.weights = args.weights
         if args.meta:
-            Utilities.verifyPath(args.meta)
+            Utilities.verifyPath(args.meta, self.logger)
             self.meta = args.meta
         if args.topic_name_in:
             self.topic_name_in = args.topic_name_in
@@ -89,6 +86,7 @@ class GeneralObjectDetection(object):
        results = yoloObjDetection(self.net, self.meta, self.image)
        if results:
            json_data_parsed['frameMetadata']['GeneralObjectsDetected'] = results
+           self.logger.info("    Objects found: " + str(results))
               
        
         
@@ -96,14 +94,17 @@ class GeneralObjectDetection(object):
     def run_images(self):
         """ Runs each image through the general object detection """
         consumer = Consumer.initialize(self.topic_name_in)
-        print("Consuming messages from 'target2'\n")
+        print("Consuming messages from " + self.topic_name_in)
+        self.logger.info("Consuming messages from " + self.topic_name_in)
         self.net = load_net(self.net, self.weights, 0)  #load net initially to avoid loading net over and over again
         self.meta = load_meta(self.meta)      #load meta initially to avoid loading meta over and over again
         print("Finished loading net and meta for YOLO\n")
+        self.logger.info("Finished loading net and meta for YOLO")
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
             print("\n Running General Object Det against frame: " + str(json_data_parsed['frameMetadata']['frameNum']) + "\n")
+            self.logger.info("Running General Object Det against frame: " + str(json_data_parsed['frameMetadata']['frameNum']))
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
             self.image = frame
             self.run_objectDetection(json_data_parsed)

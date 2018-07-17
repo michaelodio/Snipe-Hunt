@@ -5,4 +5,14 @@ res/Apps/kafka/bin/kafka-log\.txt
 
 res/Apps/kafka/bin/zookeeper-log\.txt
 
+res/FramesMetadataETL/
+
+res/FramesMetadataGenObjDetections/
+
+res/FramesMetadataLabelingFrame/
+
+res/FramesMetadataTargetImgClassification/
+
+logs/
+
 *.pyc

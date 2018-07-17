@@ -74,7 +74,7 @@ def load_labels(label_file):
   return label
 
 
-def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frameTensor):
+def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frameTensor, logger):
   frame = frameTensor
   model_file = graph
   label_file = labels
@@ -141,6 +141,7 @@ def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frameT
   foundFF = None
   for i in top_k:
     print(labels[i], results[i])
+    logger.info("    " + labels[i] + " " + str(results[i]))
     if labels[i] == "french flag" and results[i] >= THRESHOLD:
        foundFF = results[i]
   print("\n")
