@@ -14,6 +14,7 @@ import os
 import sys
 import time
 import logging
+from pyaccumulo import Accumulo, Mutation, Range
 sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
 from kafka_consumer import *
 from kafka_producer import *
@@ -84,4 +85,20 @@ class Utilities(object):
         logger.addHandler(handler)
         
         return logger
+        
+    @staticmethod
+    def exportJsonDB(json_data, frameNum):
+        conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
+        table = "Detection"
+        if not conn.table_exists(table):
+            conn.create_table(table)
+        m = Mutation("row_%d"%frameNum)
+        m.put(cf="cf1", cq="cq1", val=json_data)
+        conn.write(table, m)
+        
+    @staticmethod
+    def printTableDB(table):
+        for entry in conn.scan(table):
+            print(entry.row, entry.cf, entry.cq, entry.cv, entry.ts, entry.val)
+
     
