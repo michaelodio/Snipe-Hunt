@@ -9,8 +9,8 @@ class FrameLabeling(object):
     
     def __init__(self): #prototxt, model, labels
         """ Constructor """
-        self.validate_arg_parse()
         self.logger = Utilities.setup_logger("frame-labeler", "../../logs/FrameLabeling.log")
+        self.validate_arg_parse()
             
     def validate_arg_parse(self):
         """ Validates arg parser """
@@ -68,13 +68,13 @@ class FrameLabeling(object):
         self.b64 = None
         
         if args.model:
-            Utilities.verifyPath(args.model)
+            Utilities.verifyPath(args.model, self.logger)
             self.model = args.model
         if args.model_prototxt:
-            Utilities.verifyPath(args.model_prototxt)
+            Utilities.verifyPath(args.model_prototxt, self.logger)
             self.prototxt = args.model_prototxt
         if args.labels:
-            Utilities.verifyPath(args.labels)
+            Utilities.verifyPath(args.labels, self.logger)
             self.classes = open(args.labels).read().strip().split('\n')
         if args.size:
             self.size = args.size

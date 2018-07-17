@@ -9,8 +9,8 @@ class TargettedObjectDetection(object):
     
     def __init__(self):
         """ Constructor """
-        self.validate_arg_parse()
         self.logger = Utilities.setup_logger("targetted-obj", "../../logs/TargettedObjectDetection.log")
+        self.validate_arg_parse()
         
     def validate_arg_parse(self):
         """ Validates arg parser """
@@ -61,10 +61,10 @@ class TargettedObjectDetection(object):
         args = parser.parse_args()
     
         if args.graph:
-            Utilities.verifyPath(args.graph)
+            Utilities.verifyPath(args.graph, self.logger)
             self.graph = args.graph
         if args.labels:
-            Utilities.verifyPath(args.labels)
+            Utilities.verifyPath(args.labels, self.logger)
             self.labels = args.labels
         if args.input_layer:
             self.input_layer = args.input_layer

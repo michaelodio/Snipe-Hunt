@@ -14,8 +14,8 @@ class GeneralObjectDetection(object):
     # extracted and added variables for size, mean_subtraction, and scalar
     def __init__(self):
         """ Constructor """
-        self.validate_arg_parse()
         self.logger = Utilities.setup_logger("general-obj", "../../logs/GeneralObjectDetection.log")
+        self.validate_arg_parse()
         
     def validate_arg_parse(self):
         """ Validates arg parser """
@@ -77,13 +77,13 @@ class GeneralObjectDetection(object):
         self.image = None
         
         if args.model:
-            Utilities.verifyPath(args.model)
+            Utilities.verifyPath(args.model, self.logger)
             self.model = args.model
         if args.model_prototxt:
-            Utilities.verifyPath(args.model_prototxt)
+            Utilities.verifyPath(args.model_prototxt, self.logger)
             self.prototxt = args.model_prototxt
         if args.labels:
-            Utilities.verifyPath(args.labels)
+            Utilities.verifyPath(args.labels, self.logger)
             self.classes = open(args.labels).read().strip().split('\n')
         if args.size:
             self.size = args.size

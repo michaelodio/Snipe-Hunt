@@ -8,8 +8,8 @@ class VideoETL(object):
 
     def __init__(self): 
         """ Constructor """
-        self.validate_arg_parse()
         self.logger = Utilities.setup_logger("etl", '../../logs/ETL.log')
+        self.validate_arg_parse()
     
     def validate_arg_parse(self):
         """ Validates arg parser """
@@ -30,7 +30,7 @@ class VideoETL(object):
         args = parser.parse_args()
                 
         if args.video:
-            Utilities.verifyPath(args.video)
+            Utilities.verifyPath(args.video, self.logger)
             self.videoPath = args.video
         if args.topic_name_out:
             self.topic_name_out = args.topic_name_out

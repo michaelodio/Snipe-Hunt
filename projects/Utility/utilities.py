@@ -66,11 +66,9 @@ class Utilities(object):
         return storePaths
         
     @staticmethod
-    def verifyPath(path):
-        try:
-            os.path.exists(path)
-        except OSError as err:
-            print("OS error: {0}".format(err))  #log this
+    def verifyPath(path, logger):
+        if not os.path.exists(path):
+            logger.error("File path: " + path + " does not exist")  #log this
     
                 
     @staticmethod
