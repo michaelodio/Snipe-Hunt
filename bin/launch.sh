@@ -1,13 +1,23 @@
 #!/bin/sh
 
+
 cd ../etc/
 python clean_frame_metadata_logs.py
 
 cd ../bin
 ./start_kafka_server.sh
 wait
-
+#
+#cd ../res/Apps/hadoop-2.6.5/
+#bin/hdfs namenode -format 
+#sbin/start-dfs.sh 
+#
+#cd ../accumulo-1.9.1/
+#./bin/accumulo init 
+#./bin/start-all.sh 
+#./bin/accumulo proxy -p proxy/proxy.properties &
 cd ../etc/
+#cd ../../../etc/
 python clean_and_clear_topics.py
 
 cd ../projects/ObjectDetection/
