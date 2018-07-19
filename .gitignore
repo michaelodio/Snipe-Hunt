@@ -1,18 +1,24 @@
 
-res/Apps/kafka/logs/
+res/Apps/kafka/*
 
-res/Apps/kafka/bin/kafka-log\.txt
+res/FramesMetadataETL/*
 
-res/Apps/kafka/bin/zookeeper-log\.txt
+!res/FramesMetadataETL/init
 
-res/FramesMetadataETL/
+res/FramesMetadataGenObjDetections/*
 
-res/FramesMetadataGenObjDetections/
+!res/FramesMetadataGenObjDetections/init
 
-res/FramesMetadataLabelingFrame/
+res/FramesMetadataLabelingFrame/*
 
-res/FramesMetadataTargetImgClassification/
+!res/FramesMetadataLabelingFrame/init
 
-logs/
+res/FramesMetadataTargetImgClassification/*
+
+!res/FramesMetadataTargetImgClassification/init
+
+logs/*
+
+!logs/init
 
 *.pyc

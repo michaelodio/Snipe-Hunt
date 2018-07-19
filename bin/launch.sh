@@ -48,14 +48,14 @@ gnome-terminal -e "tail -f -n 0 ../../logs/TargettedObjectDetection.log" &
                                           
 
 cd ../ETL/
-python ETLProcess.py --video "../../res/Videos/vid.mp4" \
+python ETLProcess.py --video $1 \
                      --topic_name_out "framefeeder" &
                      
 gnome-terminal -e "tail -f -n 0 ../../logs/ETL.log"
 
 
-
 #cd ../../etc/
 #python clean-pyc.py
+
 
 
