@@ -81,7 +81,6 @@ class TargettedObjectDetection(object):
     
     def run(self):
         """ Runs targetted obj detection """
-        print("Consuming messages from '%s'\n" % self.topic_name_in)
         self.logger.info("Consuming messages from '%s'" % self.topic_name_in)
         consumer = Consumer.initialize(self.topic_name_in)
         for m in consumer:
@@ -89,16 +88,14 @@ class TargettedObjectDetection(object):
             json_data_parsed = json.loads(json_data)   # loads json data into a parsed string (back to dict)
             frame = Utilities.decodeFrame(json_data_parsed)    # take parsed string and send it to utilities to decode it from base64 
             frameAsTensor = tf.image.decode_jpeg(frame, channels=3)   # convert frame to Tensor as string 
-            print("\n Running labelImage against frame: " + str(json_data_parsed['frameMetadata']['frameNum']) + "\n")   
             self.logger.info("Running labelImage against frame: " + str(json_data_parsed['frameMetadata']['frameNum']))     
             confidenceStat = labelImage(self.graph, self.labels, self.input_layer, self.output_layer, self.input_height, self.input_width, frameAsTensor, self.logger)    # tests frame for targeted object
             if confidenceStat != None:     # if the target object was found within the threshold confidence, append that information to the JSON file. 
                 json_data_parsed['frameMetadata']['foundTargetWithConfidence'] = str(confidenceStat)
                 json_data = json.dumps(json_data_parsed)
-            Utilities.storeJson(json_data, "../../res/FramesMetadataTargetImgClassification/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata.txt")    # Store updated metadata Jsons locally
+            Utilities.storeJson(json_data, "../../res/FramesMetadataTargetImgClassification/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata" + str(json_data_parsed['frameMetadata']['frameNum']) + ".txt")    # Store updated metadata Jsons locally
             Utilities.exportJson(json_data, self.topic_name_out)    # export updated Json files to kafka topic 'target'
         consumer.close()
-        print("\nTargetted Object Detection consumer closed!")
         self.logger.info("Targetted Object Detection consumer closed")
 
 

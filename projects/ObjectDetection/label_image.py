@@ -140,10 +140,8 @@ def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frameT
   labels = load_labels(label_file)
   foundFF = None
   for i in top_k:
-    print(labels[i], results[i])
     logger.info("    " + labels[i] + " " + str(results[i]))
     if labels[i] == "french flag" and results[i] >= THRESHOLD:
        foundFF = results[i]
-  print("\n")
   return foundFF
     

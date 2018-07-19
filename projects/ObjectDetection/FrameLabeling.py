@@ -109,7 +109,6 @@ class FrameLabeling(object):
                 if idx >= 1 and idx <= 20:     # display the prediction and avoids index 0 which is 'background'
                     labelingOccurred = True
                     label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
-                    print("LABELING [INFO] {}".format(label))
                     self.logger.info("    [INFO] {}".format(label))
                     cv2.rectangle(self.image, (startX, startY), (endX, endY), self.colors[idx], 2)
                     y = startY - 15 if startY - 15 > 15 else startY + 15
@@ -121,22 +120,19 @@ class FrameLabeling(object):
            
     def run_images(self):      
         """ Runs each image """
-        print("Consuming messages from '%s'\n" % self.topic_name_in)
         self.logger.info("Consuming messages from '%s'" % self.topic_name_in)
         consumer = Consumer.initialize(self.topic_name_in)
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
-            print("\n Running frame labeling against frame: " + str(json_data_parsed['frameMetadata']['frameNum']) + "\n")
             self.logger.info("Running frame labeling against frame: " + str(json_data_parsed['frameMetadata']['frameNum']))
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
             self.image = frame
             self.run_frame_labeling(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
-            Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata.txt")
-            Utilities.exportJsonDB(json_data, json_data_parsed['frameMetadata']['frameNum']) #utility method for exporting json to accumulo database
+            Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata" + str(json_data_parsed['frameMetadata']['frameNum']) + ".txt")
+            #Utilities.exportJsonDB(json_data, json_data_parsed['frameMetadata']['frameNum']) #utility method for exporting json to accumulo database
         consumer.close()
-        print("\nFrame labeling consumer closed!")
         self.logger.info("Frame labeling consumer closed")
 
     

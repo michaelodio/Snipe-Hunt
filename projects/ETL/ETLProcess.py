@@ -6,7 +6,6 @@ extensions = [".mp4", ".mpg", ".mov", ".wmv"]  # global variables for movie exte
 
 class VideoETL(object):
 
-    def __init__(self): 
         """ Constructor """
         self.logger = Utilities.setup_logger("etl", '../../logs/ETL.log')
         self.validate_arg_parse()
@@ -39,12 +38,10 @@ class VideoETL(object):
 
     def splitFrames(self):
         """ Splits up the frames """
-        print("Splitting Frames and extracting metadata...\n")
         self.logger.info("Splitting Frames and extracting metadata...")
         cap = cv2.VideoCapture(self.videoPath)    # open video in openCV
         totalFrame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))    # grab total frames in the video
         if cap.isOpened is False:
-            print("Error opening video stream or file")
             self.logger.error("Cannot open video stream or file in ETL")
         for x in range(totalFrame):     # loop through all of the frames and extract meta data on each frame
             retval, videoframe = cap.read()     # grab the next frame
@@ -79,7 +76,7 @@ class VideoETL(object):
         metadata['imageBase64'] = frameAsBase64String
         frameJson = json.dumps(metadata)     # create frame json with collected metadata
         Utilities.exportJson(frameJson, self.topic_name_out)    # export frame json to kafka topic
-        Utilities.storeJson(frameJson, "../../res/FramesMetadataETL/" + videoName + "_Metadata.txt")  # store frame json locally
+        Utilities.storeJson(frameJson, "../../res/FramesMetadataETL/" + videoName + "_Metadata" + str(frameNum) + ".txt")  # store frame json locally
 
     def run(self):
         if self.videoPath.endswith("/"):

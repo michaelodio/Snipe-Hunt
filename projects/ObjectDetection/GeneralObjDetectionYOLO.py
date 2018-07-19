@@ -109,7 +109,7 @@ class GeneralObjectDetection(object):
             self.image = frame
             self.run_objectDetection(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
-            Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata.txt") 
+            Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata" + str(json_data_parsed['frameMetadata']['frameNum']) + ".txt") 
             Utilities.exportJson(json_data, self.topic_name_out)
         consumer.close()
         print("\nGeneral Object Detection consumer closed!")
