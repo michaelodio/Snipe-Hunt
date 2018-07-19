@@ -9,7 +9,7 @@ class TargettedObjectDetection(object):
     
     def __init__(self):
         """ Constructor """
-        self.logger = Utilities.setup_logger("targetted-obj", "../../logs/TargettedObjectDetection.log")
+        self.logger = Utilities.setup_logger("targetted-obj", "../../logs/TargettedObjectDetection.log") #add verbosity
         self.validate_arg_parse()
         
     def validate_arg_parse(self):

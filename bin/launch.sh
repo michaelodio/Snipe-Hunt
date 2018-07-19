@@ -16,7 +16,6 @@ python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                         --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
                         --labels "../../res/labels.txt" \
                         --topic_name_in "general" &
-pids[0]=$!
 
 python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                               --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
@@ -29,7 +28,6 @@ python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel"
                                   #--meta "cfg/coco.data" \
                                   #--topic_name_in "target2" \
                                   #--topic_name_out "general" &
-pids[1]=$!
 
 python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_graph.pb" \
                                           --labels "../../res/TfModel/output_labels.txt" \
@@ -39,16 +37,10 @@ python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_grap
                                           --input_width 224 \
                                           --topic_name_in "framefeeder" \
                                           --topic_name_out "target2" &
-                                          
-pids[2]=$!
 
 cd ../ETL/
-python ETLProcess.py --video "../../res/Videos/vid.mp4" \
+python ETLProcess.py --video $1 \
                      --topic_name_out "framefeeder"
-
-for pid in ${pids[*]}; do
-    wait $pid
-done
 
 cd ../../etc/
 python clean-pyc.py

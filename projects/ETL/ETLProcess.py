@@ -95,7 +95,6 @@ def main():
     """ Auto run main method """
     etl = VideoETL()
     etl.run()
-    #etl.splitFrames()
 
 
 if __name__ == "__main__":
