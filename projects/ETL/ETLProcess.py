@@ -81,11 +81,21 @@ class VideoETL(object):
         Utilities.exportJson(frameJson, self.topic_name_out)    # export frame json to kafka topic
         Utilities.storeJson(frameJson, "../../res/FramesMetadataETL/" + videoName + "_Metadata.txt")  # store frame json locally
 
+    def run(self):
+        if self.videoPath.endswith("/"):
+            videos = Utilities.get_file_paths(self.videoPath)
+            for video in videos:
+                self.videoPath = video
+                self.splitFrames()
+        if self.videoPath.endswith(tuple(extensions)):
+            self.splitFrames()
+
 
 def main():
     """ Auto run main method """
     etl = VideoETL()
-    etl.splitFrames()
+    etl.run()
+    #etl.splitFrames()
 
 
 if __name__ == "__main__":

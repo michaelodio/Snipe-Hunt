@@ -86,19 +86,25 @@ class Utilities(object):
         
         return logger
         
+        
     @staticmethod
     def exportJsonDB(json_data, frameNum):
         conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
-        table = "Detection"
+        table = json.loads(json_data)['videoMetadata']['videoName']
+        table = table.replace('.', '_')
+        table = table.encode('ascii', 'ignore')
         if not conn.table_exists(table):
             conn.create_table(table)
         m = Mutation("row_%d"%frameNum)
         m.put(cf="cf1", cq="cq1", val=json_data)
         conn.write(table, m)
+        conn.close()
+        
         
     @staticmethod
     def printTableDB(table):
+        conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
         for entry in conn.scan(table):
             print(entry.row, entry.cf, entry.cq, entry.cv, entry.ts, entry.val)
-
+        conn.close()
     
