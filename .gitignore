@@ -1,9 +1,5 @@
 
-res/Apps/kafka/logs/
-
-res/Apps/kafka/bin/kafka-log.txt
-
-res/Apps/kafka/bin/zookeeper-log.txt
+res/Apps/kafka/*
 
 res/FramesMetadataETL/*
 
@@ -24,11 +20,5 @@ res/FramesMetadataTargetImgClassification/*
 logs/*
 
 !logs/init
-
-logs/FrameLabeling.log
-
-logs/GeneralObjectDetection.log
-
-logs/TargettedObjectDetection.log
 
 *.pyc
