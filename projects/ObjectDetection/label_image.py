@@ -142,6 +142,6 @@ def main(graph, labels, inputLayer, outputLayer, inputHeight, inputWidth, frameT
   for i in top_k:
     logger.info("    " + labels[i] + " " + str(results[i]))
     if labels[i] == "french flag" and results[i] >= THRESHOLD:
-       foundFF = results[i]
+       foundFF = results[i] * 100
   return foundFF
     

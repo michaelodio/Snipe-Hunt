@@ -131,7 +131,7 @@ class FrameLabeling(object):
             self.run_frame_labeling(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
             Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata" + str(json_data_parsed['frameMetadata']['frameNum']) + ".txt")
-            Utilities.exportJsonDB(json_data, json_data_parsed['frameMetadata']['frameNum']) #utility method for exporting json to accumulo database
+            #Utilities.exportJsonDB(json_data, json_data_parsed['frameMetadata']['frameNum']) #utility method for exporting json to accumulo database
         consumer.close()
         self.logger.info("Frame labeling consumer closed")
 
