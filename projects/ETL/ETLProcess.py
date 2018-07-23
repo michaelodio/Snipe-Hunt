@@ -6,6 +6,7 @@ extensions = [".mp4", ".mpg", ".mov", ".wmv"]  # global variables for movie exte
 
 class VideoETL(object):
 
+    def __init__(self): 
         """ Constructor """
         self.logger = Utilities.setup_logger("etl", '../../logs/ETL.log')
         self.validate_arg_parse()
@@ -51,7 +52,7 @@ class VideoETL(object):
 
     def extractFrameMetadata(self, videoframe, totalFrame, cap):
         """ Extracts the metadata from the frame """
-        frameNum = cap.get(cv2.CAP_PROP_POS_FRAMES)   # collect the current frame number
+        frameNum = int(cap.get(cv2.CAP_PROP_POS_FRAMES))   # collect the current frame number
         self.logger.info("    Splitting and extracting metadata on frame number: " + str(frameNum))
         FPS = int(cap.get(cv2.CAP_PROP_FPS))     # grab the frames per second of the video
         videoDuration = round(totalFrame / FPS)   # calculate the video's duration
