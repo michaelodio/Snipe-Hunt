@@ -127,7 +127,7 @@ class videoAnalysis(object):
 
 def main():
     vidanalysis = videoAnalysis()
-    vidanalysis.run("vid_mp4")
+    vidanalysis.run("vid2_mp4")
 
    
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+from __future__ import division  # This has to be here (wont work by importing from utilities)
 import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
@@ -57,6 +58,9 @@ class VideoETL(object):
         FPS = int(cap.get(cv2.CAP_PROP_FPS))     # grab the frames per second of the video
         videoDuration = round(totalFrame / FPS)   # calculate the video's duration
         relativePosition = "%.2f" % (frameNum / totalFrame)   # calculate this frames relative position in the video
+        print("FrameNum = " + str(frameNum))
+        print("Total frames = " + str(totalFrame))
+        print(relativePosition)
         videoName = os.path.basename(self.videoPath) # collect the videos name
         timeStamp = round(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000    # collect time stamp and convert it to seconds
         retval, frameConvertedToJPG = cv2.imencode('.jpg', videoframe)   # encode frame to .jpg for base64string conversion
