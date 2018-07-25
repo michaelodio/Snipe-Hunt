@@ -31,14 +31,14 @@ class videoAnalysis(object):
             raise ValueError("Failed to make connection to accumulo!\n") 
         self.logger.info("established connection successfully")
         try:
-            for entry in self.conn.scan(table):
+            for entry in self.conn.scan(table, scanrange=Range(srow='row_0'), cols=[["cf1"]]):  #starting at row 0 (the first row) only scan col 1 which contains the metadata for analysis
                 if self.count == 0:
                     self.totalFrames = json.loads(entry.val)['videoMetadata']['totalFrames']
                 self.count = self.count + 1
         except:
             self.logger.info("Failed to scan table in Accumulo! Shutting down conn")
-            raise ValueError("Failed to scan table in Accumulo! Shutting down conn")
             self.conn.close()
+            raise ValueError("Failed to scan table in Accumulo! Shutting down conn")
         self.logger.info("number of entries = " + str(self.count))
         self.logger.info("Total frames = " + str(self.totalFrames))
         if self.count == self.totalFrames:
@@ -51,7 +51,7 @@ class videoAnalysis(object):
     def calculateAverageTargetConfidence(self, table):
         self.logger.info("Calculating the average target confidence across the whole video...")
         try:
-            for entry in self.conn.scan(table):
+            for entry in self.conn.scan(table, scanrange=Range(srow='row_0'), cols=[["cf1"]]):
                 json_data_parsed = json.loads(entry.val)
                 if 'foundTargetWithConfidence' in json_data_parsed['frameMetadata']:
                     percent = float(json_data_parsed['frameMetadata']['foundTargetWithConfidence'])
@@ -66,8 +66,8 @@ class videoAnalysis(object):
                         self.targetConfidenceHiFrame = int(json_data_parsed['frameMetadata']['frameNum'])
         except:
             self.logger.info("Failed to scan table in Accumulo! Shutting down conn")
-            raise ValueError("Failed to scan table in Accumulo! Shutting down conn")
             self.conn.close()
+            raise ValueError("Failed to scan table in Accumulo! Shutting down conn")
         self.averageTargetConfidence = self.averageTargetConfidence / self.totalFrames  #divides by total frames to calculate avg target confidence across whole video
         self.targetFrameList.sort()   #sort the frame numbers in the target frames list
         self.logger.info("The average target confidence across the whole video = " + str(self.averageTargetConfidence))
@@ -81,7 +81,7 @@ class videoAnalysis(object):
     def AverageGenObjectConfidence(self, table):
         self.logger.info("Calculating the average gen obj confidence across the whole video...")
         try:
-            for entry in self.conn.scan(table):
+            for entry in self.conn.scan(table, scanrange=Range(srow='row_0'), cols=[["cf1"]]):
                 json_data_parsed = json.loads(entry.val)
                 if 'GeneralObjectsDetected' in json_data_parsed['frameMetadata']:
                     for x in json_data_parsed['frameMetadata']['GeneralObjectsDetected']:
@@ -104,10 +104,10 @@ class videoAnalysis(object):
                             self.generalObjectsFoundAnalysisData[obj]['lowestConfFrame'] = int(json_data_parsed['frameMetadata']['frameNum'])   #update the frameNum the conf was found in                      
         except:
             self.logger.info("Failed to scan table in Accumulo! Shutting down conn")
-            raise ValueError("Failed to scan table in Accumulo! Shutting down conn")
             self.conn.close()
+            raise ValueError("Failed to scan table in Accumulo! Shutting down conn")
         for label in self.generalObjectsFoundAnalysisData.keys():
-            self.generalObjectsFoundAnalysisData[label]['averageConf'] = self.generalObjectsFoundAnalysisData[obj]['averageConf'] / self.totalFrames  #divide by the total frames to calculate average confidence for each gen obj across whole video
+            self.generalObjectsFoundAnalysisData[label]['averageConf'] = self.generalObjectsFoundAnalysisData[label]['averageConf'] / self.totalFrames  #divide by the total frames to calculate average confidence for each gen obj across whole video
             (self.generalObjectsFoundAnalysisData[label]['framesAboveThresh']).sort()
         self.logger.info("Analysis data on general objects = " + str(self.generalObjectsFoundAnalysisData))
         self.conn.close()
@@ -127,7 +127,7 @@ class videoAnalysis(object):
 
 def main():
     vidanalysis = videoAnalysis()
-    vidanalysis.run("vid2_mp4")
+    vidanalysis.run("vid_mp4")
 
    
 if __name__ == "__main__":

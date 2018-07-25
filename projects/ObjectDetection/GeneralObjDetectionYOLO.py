@@ -94,16 +94,14 @@ class GeneralObjectDetection(object):
     def run_images(self):
         """ Runs each image through the general object detection """
         consumer = Consumer.initialize(self.topic_name_in)
-        print("Consuming messages from " + self.topic_name_in)
+        self.logger.info("Consuming messages from " + self.topic_name_in)
         self.logger.info("Consuming messages from " + self.topic_name_in)
         self.net = load_net(self.net, self.weights, 0)  #load net initially to avoid loading net over and over again
         self.meta = load_meta(self.meta)      #load meta initially to avoid loading meta over and over again
-        print("Finished loading net and meta for YOLO\n")
         self.logger.info("Finished loading net and meta for YOLO")
         for m in consumer:
             json_data = m.value     
             json_data_parsed = json.loads(json_data)
-            print("\n Running General Object Det against frame: " + str(json_data_parsed['frameMetadata']['frameNum']) + "\n")
             self.logger.info("Running General Object Det against frame: " + str(json_data_parsed['frameMetadata']['frameNum']))
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
             self.image = frame
@@ -112,7 +110,8 @@ class GeneralObjectDetection(object):
             Utilities.storeJson(json_data, "../../res/FramesMetadataGenObjDetections/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata" + str(json_data_parsed['frameMetadata']['frameNum']) + ".txt") 
             Utilities.exportJson(json_data, self.topic_name_out)
         consumer.close()
-        print("\nGeneral Object Detection consumer closed!")
+        self.logger.info("\nGeneral Object Detection consumer closed!")
+        
         
                       
     
