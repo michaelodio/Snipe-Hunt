@@ -17,7 +17,7 @@ class videoAnalysis(object):
         self.targetConfidenceLoFrame = None
         self.targetFrameList = []
         self.generalObjectsFoundAnalysisData = {}
-        self.objectsFramesAboveThresh = {}
+        self.finalJson = {}
         
 
 
@@ -112,11 +112,40 @@ class videoAnalysis(object):
         self.logger.info("Analysis data on general objects = " + str(self.generalObjectsFoundAnalysisData))
         self.conn.close()
         
+    def makeFinalJson(self):
+        self.finalJson['avgTargetConfidence'] = self.averageTargetConfidence
+        self.finalJson['highestTargetConfidence'] = self.targetConfidenceHi
+        self.finalJson['lowestTargetConfidence'] = self.targetConfidenceLo
+        self.finalJson['highestTargetConfidenceFrame'] = self.targetConfidenceHiFrame
+        self.finalJson['lowestTargetConfidenceFrame'] = self.targetConfidenceLoFrame
+        self.finalJson['targetFrameList'] = self.targetFrameList
+        self.finalJson['genObjsAnalysis'] = self.generalObjectsFoundAnalysisData
+        
+        
+    def pushResultsToDB(self, table):
+        self.logger.info("Pushing analysis results to Accumulo under table name " + table + "_analysis")
+        try:
+            self.conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
+        except:
+            self.logger.info("Failed to connect to Accumulo")
+            raise ValueError("Failed to make connection to accumulo!\n")
+        table = table + "_analysis"
+        if not self.conn.table_exists(table):
+            self.conn.create_table(table) 
+        m = Mutation("row_1")  # one row that contains the full analysis json
+        self.finalJson = json.dumps(self.finalJson)
+        m.put(cf="cf1", cq="cq1", val=self.finalJson)
+        self.conn.write(table, m)
+        self.conn.close()
+        self.logger.info("Pushed analysis results to Accumulo")
+        
         
     def performAnalysis(self, table):
         self.logger.info("Performing video analysis...")
         self.calculateAverageTargetConfidence(table)  #calculates average target confidence and finds the highest/lowest target confidence with their specific frame number
         self.AverageGenObjectConfidence(table)        #calculates average gen objs confidence and finds the highest/lowest gen objs confidence with their specific frame number
+        self.makeFinalJson()                          #prepare the final json with the collected analysis data
+        self.pushResultsToDB(table)                   #push final json to accumulo under 'videoname_analysis'
         
         
     def run(self, table):

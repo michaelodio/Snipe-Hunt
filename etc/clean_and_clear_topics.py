@@ -43,8 +43,8 @@ def clean_clear(topic_name):
 
 def main():
     """ Auto run main method """
-    clean_clear("general")
     clean_clear("target2")
+    clean_clear("general")
     clean_clear("framefeeder")
     print "Topics cleaned and cleared"
 

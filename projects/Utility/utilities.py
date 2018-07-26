@@ -13,6 +13,7 @@ import random
 import os
 import sys
 import time
+import time
 import logging
 from pyaccumulo import Accumulo, Mutation, Range
 sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
