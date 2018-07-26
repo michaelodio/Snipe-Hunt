@@ -6,67 +6,67 @@ from utilities import *
 
 # renamed class and file to FrameLabeling
 class FrameLabeling(object):
-    
+
     def __init__(self): #prototxt, model, labels
         """ Constructor """
         self.logger = Utilities.setup_logger("frame-labeler", "../../logs/FrameLabeling.log")
         self.validate_arg_parse()
-            
+
     def validate_arg_parse(self):
         """ Validates arg parser """
         # Parser to parse arguments passed
-        parser = argparse.ArgumentParser()     
-    
+        parser = argparse.ArgumentParser()
+
         parser.add_argument('--model',
-            help = 'Path to model', 
+            help = 'Path to model',
             type = str,
             required = True)
-        
+
         parser.add_argument('--model_prototxt',
             help = 'Path to prototxt file',
             type = str,
             required = True)
- 
-        parser.add_argument('--labels', 
+
+        parser.add_argument('--labels',
             help = "path to list of class labels",
             type = str,
             required = True)
-        
-        parser.add_argument('--size', 
+
+        parser.add_argument('--size',
             help = "size of image after resize for normalization",
             type = int,
-            required = False, 
+            required = False,
             default = 300)
-        
-        parser.add_argument('--scalar', 
+
+        parser.add_argument('--scalar',
             help = "scalar adjustment for image normalization",
-            type = float, 
-            required = False, 
+            type = float,
+            required = False,
             default = 0.007843)
-        
-        parser.add_argument('--mean_subtraction', 
+
+        parser.add_argument('--mean_subtraction',
             help = "mean color channel subtraction for image normalization",
-            type = float, 
-            required = False, 
+            type = float,
+            required = False,
             default = 127.5)
-        
+
         parser.add_argument('--confidence',
             help = "minimum confidence for detections",
             type = float,
             required = False,
             default = .3)
-        
+
         parser.add_argument('--topic_name_in',
             help = "topic that it is pulling from",
             type = str,
             required = False,
             default = "general")
-    
+
         args = parser.parse_args()
-        
+
         self.image = None
         self.b64 = None
-        
+
         if args.model:
             Utilities.verifyPath(args.model, self.logger)
             self.model = args.model
@@ -90,7 +90,7 @@ class FrameLabeling(object):
             self.net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         if args.topic_name_in:
             self.topic_name_in = args.topic_name_in
-            
+
         self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
 
     def run_frame_labeling(self, json_data_parsed):
@@ -115,15 +115,15 @@ class FrameLabeling(object):
                     cv2.putText(self.image, label, (startX, y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
         if labelingOccurred:
-            labeledb64 = base64.b64encode(self.image)    
+            labeledb64 = base64.b64encode(self.image)
             json_data_parsed['LabeledImage'] = labeledb64   # adds base64 string to json data
-           
-    def run_images(self):      
+
+    def run_images(self):
         """ Runs each image """
         self.logger.info("Consuming messages from '%s'" % self.topic_name_in)
         consumer = Consumer.initialize(self.topic_name_in)
         for m in consumer:
-            json_data = m.value     
+            json_data = m.value
             json_data_parsed = json.loads(json_data)
             self.logger.info("Running frame labeling against frame: " + str(json_data_parsed['frameMetadata']['frameNum']))
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
@@ -135,7 +135,7 @@ class FrameLabeling(object):
         consumer.close()
         self.logger.info("Frame labeling consumer closed")
 
-    
+
 def main():
     """ Auto run main method """
     obj = FrameLabeling()
@@ -145,4 +145,3 @@ def main():
 
 if __name__=="__main__":
     main()
-
