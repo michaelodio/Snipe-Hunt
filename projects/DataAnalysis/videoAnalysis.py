@@ -85,13 +85,19 @@ class videoAnalysis(object):
             self.logger.info("Failed to scan table in Accumulo! Shutting down conn")
             self.conn.close()
             raise ValueError("Failed to scan table in Accumulo! Shutting down conn")
+
         self.averageTargetConfidence = self.averageTargetConfidence / self.totalFrames  #divides by total frames to calculate avg target confidence across whole video
+        self.targetPercentage = (len(self.targetFrameList) / self.totalFrames) * 100
+        self.targetScreenTime = (len(self.targetFrameList) / json_data_parsed['videoMetadata']['FPS']
         self.targetFrameList.sort()   #sort the frame numbers in the target frames list
+        
         self.logger.info("The average target confidence across the whole video = " + str(self.averageTargetConfidence))
         self.logger.info("The highest target confidence across the whole video = " + str(self.targetConfidenceHi))
         self.logger.info("The highest target confidence frame num = " + str(self.targetConfidenceHiFrame))
         self.logger.info("The lowest target confidence across the whole video = " + str(self.targetConfidenceLo))
         self.logger.info("The lowest target confidence frame num = " + str(self.targetConfidenceLoFrame))
+        self.logger.info("The target is on screen for " + str(self.targetPercentage) + "% of the video")
+        self.logger.info("The target has " + str(self.targetScreenTime) + "seconds of screen time" 
         self.logger.info("List of frames that target was found in with confidence above threshold = " + str(self.targetFrameList))
         self.logger.info("List of time ranges where the target found:")
         for timeStamp in len(self.targetTimesPresent['startTime']):
