@@ -6,4 +6,5 @@ cd ../res/Apps/kafka/bin/
                   --zookeeper localhost:2181 \
                   --replication-factor 1 \
                   --partitions 1 \
+                  --config max.message.bytes=15000000 \
                   --topic $1
