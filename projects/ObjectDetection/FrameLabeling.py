@@ -61,6 +61,12 @@ class FrameLabeling(object):
             type = str,
             required = False,
             default = "general")
+            
+        parser.add_argument('--topic_name_out',
+            help = "topic that it is pushing to",
+            type = str, 
+            required = False,
+            default = "Accumulo")
 
         args = parser.parse_args()
 
@@ -90,6 +96,8 @@ class FrameLabeling(object):
             self.net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
         if args.topic_name_in:
             self.topic_name_in = args.topic_name_in
+        if args.topic_name_out:
+            self.topic_name_out = args.topic_name_out
 
         self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
 
@@ -131,7 +139,8 @@ class FrameLabeling(object):
             self.run_frame_labeling(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
             Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata" + str(json_data_parsed['frameMetadata']['frameNum']) + ".txt")
-            Utilities.exportJsonDB(json_data, json_data_parsed['frameMetadata']['frameNum']) #utility method for exporting json to accumulo database
+            #Utilities.exportJsonDB(json_data, json_data_parsed['frameMetadata']['frameNum']) #utility method for exporting json to accumulo database
+            Utilities.exportJson(json_data, self.topic_name_out)  #send json to Accumulo kafka topic for shipping to database
         consumer.close()
         self.logger.info("Frame labeling consumer closed")
 
