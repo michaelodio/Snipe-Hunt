@@ -22,3 +22,5 @@ logs/*
 !logs/init
 
 *.pyc
+
+projects/exp\.py
