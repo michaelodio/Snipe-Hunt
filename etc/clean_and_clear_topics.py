@@ -46,6 +46,7 @@ def main():
     clean_clear("target2")
     clean_clear("general")
     clean_clear("framefeeder")
+    clean_clear("Accumulo")
     print "Topics cleaned and cleared"
 
 

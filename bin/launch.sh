@@ -11,13 +11,19 @@ wait
 cd ../etc/
 python clean_and_clear_topics.py
 
-cd ../projects/ObjectDetection/
+cd ../projects/DataStorage/
+python ToAccumulo.py --topic_name_in "Accumulo" &
+
+gnome-terminal -e "tail -f -n 0 ../../logs/shipToAccumulo.log" &
+
+cd ../ObjectDetection/
 python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                         --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
                         --labels "../../res/labels.txt" \
-                        --topic_name_in "general" &
+                        --topic_name_in "general" \
+                        --topic_name_out "Accumulo" &
 
-xterm -e "tail -f -n 0 ../../logs/FrameLabeling.log" &
+gnome-terminal -e "tail -f -n 0 ../../logs/FrameLabeling.log" &
 
 
 python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
@@ -26,7 +32,7 @@ python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel"
                               --topic_name_in "target2" \
                               --topic_name_out "general" &
 
-xterm -e "tail -f -n 0 ../../logs/GeneralObjectDetection.log" &
+gnome-terminal -e "tail -f -n 0 ../../logs/GeneralObjectDetection.log" &
 
 
 #python GeneralObjDetectionYOLO.py --net "cfg/yolov3-tiny.cfg" \
@@ -44,14 +50,14 @@ python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_grap
                                           --topic_name_in "framefeeder" \
                                           --topic_name_out "target2" &
 
-xterm -e "tail -f -n 0 ../../logs/TargettedObjectDetection.log" &
+gnome-terminal -e "tail -f -n 0 ../../logs/TargettedObjectDetection.log" &
 
 
 cd ../ETL/
 python ETLProcess.py --video $1 \
                      --topic_name_out "framefeeder" &
 
-xterm -e "tail -f -n 0 ../../logs/ETL.log"
+gnome-terminal -e "tail -f -n 0 ../../logs/ETL.log"
 
 
 #cd ../../etc/
