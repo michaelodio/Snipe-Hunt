@@ -140,7 +140,7 @@ class FrameLabeling(object):
             json_data = json.dumps(json_data_parsed)
             Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata" + str(json_data_parsed['frameMetadata']['frameNum']) + ".txt")
             #Utilities.exportJsonDB(json_data, json_data_parsed['frameMetadata']['frameNum']) #utility method for exporting json to accumulo database
-            Utilities.exportJson(json_data, self.topic_name_out)
+            Utilities.exportJson(json_data, self.topic_name_out)  #send json to Accumulo kafka topic for shipping to database
         consumer.close()
         self.logger.info("Frame labeling consumer closed")
 

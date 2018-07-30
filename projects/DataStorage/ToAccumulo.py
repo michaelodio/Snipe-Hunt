@@ -30,9 +30,26 @@ class shipToAccumulo(object):
         self.logger.info("Shipping to accumulo...")
         consumer = Consumer.initialize(self.topic_name_in)
         for m in consumer:
-            self.logger.info("sending to accum...")
+            conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
+            json_data_parsed = json.loads(json_data) #put json data back into dictionary
+            frameNum = json_data_parsed['frameMetadata']['frameNum']
+            table = json_data_parsed['videoMetadata']['videoName'] #get the video name and set that as the table name
+            table = table.replace('.', '_')
+            table = table.encode('ascii', 'ignore')
+            if not conn.table_exists(table):
+                conn.create_table(table)
+            m = Mutation("row_%d"%frameNum)  #table row number is the frame number
+            m.put(cf="cf2", cq="cq2", val = json_data_parsed['imageBase64'])   #saves the frame image separately from the metadata
+            if 'LabeledImage' in json_data_parsed.keys():
+                m.put(cf="cf3", cq="cq3", val = json_data_parsed['LabeledImage'])  #saves the labeled image separately from the metadata
+                json_data_parsed.pop('LabeledImage', None) #delete the base64 representation of the labeled frame
+            json_data_parsed.pop('imageBase64', None)  #delete the base64 representation of the frame
+            json_data = json.dumps(json_data_parsed)
+            m.put(cf="cf1", cq="cq1", val=json_data)   #set the first column to now only the metadata.
+            conn.write(table, m)
+            conn.close()
         consumer.close()
-        self.logger.info("Frame labeling consumer closed")
+        self.logger.info("Accumulo consumer closed")
 
 
 
