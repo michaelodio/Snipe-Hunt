@@ -105,8 +105,6 @@ class videoAnalysis(object):
         
     def AverageGenObjectConfidence(self, table):
         self.logger.info("Calculating the average gen obj confidence across the whole video...")
-        previously_present = False  # Flag for determining if last frame had current general object
-        previous_time_stamp = 0 # placeholder variable for constructing time stamp ranges
         try:
             for entry in self.conn.scan(table, scanrange=Range(srow='row_0'), cols=[["cf1"]]):
                 json_data_parsed = json.loads(entry.val)
@@ -114,6 +112,9 @@ class videoAnalysis(object):
                     for x in json_data_parsed['frameMetadata']['GeneralObjectsDetected']:
                         obj = x.split(":")[0]  #splits the string to only collect the label
                         objConf = float(x.split(":")[1].strip(' %'))  #strips the float confidence value out of the string
+                        num_in_frame = json_data_parsed['frameMetadata']['GeneralObjectsDetected'].count(x)
+                        previously_present = False  # Flag for determining if last frame had current general object
+                        previous_time_stamp = 0 # Variable that stores time stamps for constructing the end time stamp list
                         if obj not in self.generalObjectsFoundAnalysisData.keys():   #if the label is in the analysis dict
                             self.generalObjectsFoundAnalysisData[obj] = {}
                             self.generalObjectsFoundAnalysisData[obj]['lowestConf'] = 100.0
@@ -123,9 +124,20 @@ class videoAnalysis(object):
                             self.generalObjectsFoundAnalysisData[obj]['timeRange']={'startTime':[],'endTime':[]} # dictionary of lists for the start and end times for the time ranges where obj is present
                             self.generalObjectsFoundAnalysisData[obj]['screenTime'] = 0.0 #total amount of time where obj is present
                             self.generalObjectsFoundAnalysisData[obj]['percentage'] = 0.0 # percentage of the video where obj is present
+                            self.generalObjectsFoundAnalysisData[obj]['mostInFrame'] = 0
+                            self.generalObjectsFoundAnalysisData[obj]['framesWithMost'] = [0]
+                            self.generalObjectsFoundAnalysisData[obj]['framesAtLeastTwo']=[]
                         self.generalObjectsFoundAnalysisData[obj]['averageConf'] = self.generalObjectsFoundAnalysisData[obj]['averageConf'] + objConf   #add confidence across whole video to later calculate the average
                         if objConf >= self.confidenceThresh:
                             (self.generalObjectsFoundAnalysisData[obj]['framesAboveThresh']).append(int(json_data_parsed['frameMetadata']['frameNum'])) # if the conf is above the thresh, add it to the frame list for that object
+#                            if num_in_frame > self.generalObjectsFoundAnalysisData[obj]['mostOnscreen']:
+#                                self.generalObjectsFoundAnalysisData[obj]['mostInFrame']= num_in_frame
+#                                self.generalObjectsFoundAnalysisData[obj]['framesWithMost'].clear()
+#                                self.generalObjectsFoundAnalysisData[obj]['framesWithMost'].append(int(json_data_parsed['frameMetadata']['frameNum']))
+#                            elif num_in_frame == self.generalObjectsFoundAnalysisData[obj]['mostOnscreen']
+#                                self.generalObjectsFoundAnalysisData[obj]['framesWithMost'].append(int(json_data_parsed['frameMetadata']['frameNum']))
+#                            if num_in_frame > 1:
+#                                self.generalObjectsFoundAnalysisData[obj]['framesAtLeastTwo'].append(int(json_data_parsed['frameMetadata']['frameNum']))
                             if not previously_present:
                                 self.generalObjectsFoundAnalysisData[obj]['timeRange']['startTime'].append(json_data_parsed['frameMetadata']['timestamp'])  # saves current frame's time stamp if current object was not present in the previous frame
                                 previously_present= True                                                                                                    # but present in current frame

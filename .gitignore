@@ -24,3 +24,5 @@ logs/*
 *.pyc
 
 projects/exp\.py
+
+\.Rhistory
