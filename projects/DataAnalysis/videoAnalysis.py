@@ -79,6 +79,8 @@ class videoAnalysis(object):
                     if percent > self.targetConfidenceHi:
                         self.targetConfidenceHi = percent
                         self.targetConfidenceHiFrame = int(json_data_parsed['frameMetadata']['frameNum'])
+        except Exception as e:
+            self.logger.info(str(e))
         except:
             self.logger.info("Failed to scan table in Accumulo! Shutting down conn")
             self.conn.close()
@@ -86,7 +88,7 @@ class videoAnalysis(object):
 
         self.averageTargetConfidence = self.averageTargetConfidence / self.totalFrames  #divides by total frames to calculate avg target confidence across whole video
         self.targetPercentage = (len(self.targetFrameList) / self.totalFrames) * 100
-        self.targetScreenTime = (len(self.targetFrameList) / json_data_parsed['videoMetadata']['FPS']
+        self.targetScreenTime = (len(self.targetFrameList) / json_data_parsed['videoMetadata']['FPS'])
         self.targetFrameList.sort()   #sort the frame numbers in the target frames list
         
         self.logger.info("The average target confidence across the whole video = " + str(self.averageTargetConfidence))
@@ -95,7 +97,7 @@ class videoAnalysis(object):
         self.logger.info("The lowest target confidence across the whole video = " + str(self.targetConfidenceLo))
         self.logger.info("The lowest target confidence frame num = " + str(self.targetConfidenceLoFrame))
         self.logger.info("The target is on screen for " + str(self.targetPercentage) + "% of the video")
-        self.logger.info("The target has " + str(self.targetScreenTime) + "seconds of screen time" 
+        self.logger.info("The target has " + str(self.targetScreenTime) + "seconds of screen time")
         self.logger.info("List of frames that target was found in with confidence above threshold = " + str(self.targetFrameList))
         self.logger.info("List of time ranges where the target found:")
         for timeStamp in len(self.targetTimesPresent['startTime']):
@@ -127,12 +129,12 @@ class videoAnalysis(object):
                             if not previously_present:
                                 self.generalObjectsFoundAnalysisData[obj]['timeRange']['startTime'].append(json_data_parsed['frameMetadata']['timestamp'])  # saves current frame's time stamp if current object was not present in the previous frame
                                 previously_present= True                                                                                                    # but present in current frame
-                            previous_time_stamp= int(json_data_parsed['frameMetadata']['frameNum']
+                            previous_time_stamp= int(json_data_parsed['frameMetadata']['frameNum'])
                         else:
                             if previously_present:  # saves previous frame's time stamp if current obj was present in the previous frame but absent from the current frame
                                 self.generalObjectsFoundAnalysisData[obj]['timeRange']['endTime'].append(json_data_parsed['frameMetadata']['timestamp'])
                                 previously_present= False
-                        if (self.totalFrames == json_data_parsed['frameMetadata']['frameNum']) and previously_present
+                        if (self.totalFrames == json_data_parsed['frameMetadata']['frameNum']) and previously_present:
                             self.generalObjectsFoundAnalysisData[obj]['timeRange']['endTime'].append(json_data_parsed['frameMetadata']['frameNum'])
                         if objConf > self.generalObjectsFoundAnalysisData[obj]['highestConf']:  # if the new found label confidence is higher than current highest conf
                             self.generalObjectsFoundAnalysisData[obj]['highestConf'] = objConf  #update the new highest confidence
