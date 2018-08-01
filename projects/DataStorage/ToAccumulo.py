@@ -9,6 +9,7 @@ class shipToAccumulo(object):
         """ Constructor """
         self.logger = Utilities.setup_logger("ToAccumulo", "../../logs/shipToAccumulo.log")
         self.validate_arg_parse()
+        self.previousTable = None
         
     def validate_arg_parse(self):
         """ Validates arg parser """
@@ -25,6 +26,7 @@ class shipToAccumulo(object):
         
         if args.topic_name_in:
             self.topic_name_in = args.topic_name_in
+            
         
     def run(self):
         self.logger.info("Shipping to accumulo...")
@@ -40,7 +42,6 @@ class shipToAccumulo(object):
             self.logger.info("shipping json for video: " + table + " frameNum: " + str(frameNum))
             if not conn.table_exists(table):
                 conn.create_table(table)
-            wr = conn.create_batch_writer(table)
             m = Mutation("row_%d"%frameNum)  #table row number is the frame number
             m.put(cf="cf2", cq="cq2", val = json_data_parsed['imageBase64'])   #saves the frame image separately from the metadata
             if 'LabeledImage' in json_data_parsed.keys():
@@ -49,8 +50,7 @@ class shipToAccumulo(object):
             json_data_parsed.pop('imageBase64', None)  #delete the base64 representation of the frame
             json_data = json.dumps(json_data_parsed)
             m.put(cf="cf1", cq="cq1", val=json_data)   #set the first column to now only the metadata.
-            #conn.write(table, m)
-            wr.add_mutation(m)
+            conn.write(table, m)
             self.logger.info("Done shipping json for video: " + table + " frameNum: " + str(frameNum))
         consumer.close()
         conn.close()
