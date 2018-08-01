@@ -11,20 +11,36 @@ wait
 cd ../etc/
 python clean_and_clear_topics.py
 
-cd ../projects/DataStorage/
-python ToAccumulo.py --topic_name_in "Accumulo" &
+# ======================================================================
+#                             DATABASE
+# ======================================================================
 
-gnome-terminal -e "tail -f -n 0 ../../logs/shipToAccumulo.log" &
+#cd ../projects/DataStorage/
+#python ToAccumulo.py --topic_name_in "Accumulo" &
 
-cd ../ObjectDetection/
+#gnome-terminal -e "tail -f -n 0 ../../logs/shipToAccumulo.log" &
+
+
+
+# ======================================================================
+#                          FRAME LABELING
+# ======================================================================
+
+cd ../projects/ObjectDetection/
 python FrameLabeling.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                         --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
                         --labels "../../res/labels.txt" \
                         --topic_name_in "general" \
                         --topic_name_out "Accumulo" &
 
-gnome-terminal -e "tail -f -n 0 ../../logs/FrameLabeling.log" &
+gnome-terminal -e 'bash -c "printf \"\e]2;Frame Labeling\a\" && 
+                   tail -f -n 0 ../../logs/FrameLabeling.log; exec bash"' &
 
+
+
+# ======================================================================
+#                     GENERAL OBJECT DETECTION
+# ======================================================================
 
 python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel" \
                               --model_prototxt "../../res/MobileNetSSD_deploy.prototxt.txt" \
@@ -32,14 +48,20 @@ python GeneralObjDetection.py --model "../../res/MobileNetSSD_deploy.caffemodel"
                               --topic_name_in "target2" \
                               --topic_name_out "general" &
 
-gnome-terminal -e "tail -f -n 0 ../../logs/GeneralObjectDetection.log" &
-
-
 #python GeneralObjDetectionYOLO.py --net "cfg/yolov3-tiny.cfg" \
                                   #--weights "yolov3-tiny.weights" \
                                   #--meta "cfg/coco.data" \
                                   #--topic_name_in "target2" \
                                   #--topic_name_out "general" &
+                                  
+gnome-terminal -e 'bash -c "printf \"\e]2;General Object Detection\a\" && 
+                   tail -f -n 0 ../../logs/GeneralObjectDetection.log; exec bash"' &
+
+
+
+# ======================================================================
+#                    TARGETED OBJECT DETECTION
+# ======================================================================
 
 python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_graph.pb" \
                                           --labels "../../res/TfModel/output_labels.txt" \
@@ -50,14 +72,34 @@ python TargettedObjectDetectionProcess.py --graph "../../res/TfModel/output_grap
                                           --topic_name_in "framefeeder" \
                                           --topic_name_out "target2" &
 
-gnome-terminal -e "tail -f -n 0 ../../logs/TargettedObjectDetection.log" &
+gnome-terminal -e 'bash -c "printf \"\e]2;Targetted Object Detection\a\" && 
+                   tail -f -n 0 ../../logs/TargettedObjectDetection.log; exec bash"' &
 
+
+# ======================================================================
+#                             ETL
+# ======================================================================
 
 cd ../ETL/
-python ETLProcess.py --video $1 \
+python ETLProcess.py --topic_name_in "pathfinder" \
                      --topic_name_out "framefeeder" &
 
-gnome-terminal -e "tail -f -n 0 ../../logs/ETL.log"
+gnome-terminal -e 'bash -c "printf \"\e]2;ETL\a\" && 
+                   tail -f -n 0 ../../logs/ETL.log; exec bash"' &
+
+
+# ======================================================================
+#                          PATH PASSER
+# ======================================================================
+
+cd ../Utility/
+inotifywait -m /home/smoke-admin/Desktop/tomcat9/webapps/Witch-Hunt/res/ -e create -e moved_to |
+    while read path action file; do
+        python path_passer.py --video_path $path$file \
+                             --topic_name_out "pathfinder" &
+    done
+
+
 
 
 #cd ../../etc/
