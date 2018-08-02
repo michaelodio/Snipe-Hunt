@@ -54,7 +54,7 @@ class FrameLabeling(object):
             help = "minimum confidence for detections",
             type = float,
             required = False,
-            default = .3)
+            default = 0.01)
 
         parser.add_argument('--topic_name_in',
             help = "topic that it is pulling from",

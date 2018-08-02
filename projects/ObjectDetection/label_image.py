@@ -21,7 +21,7 @@ import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
 
-THRESHOLD = 0.92
+THRESHOLD = 0.01
 
 
 def load_graph(model_file):
