@@ -17,10 +17,11 @@ class VideoETL(object):
         # Parser to parse arguments passed
         parser = argparse.ArgumentParser()  
         
-        parser.add_argument('--video', 
+        parser.add_argument('--topic_name_in', 
             help = 'Path to video or folder of videos for processing',
             type = str, 
-            required = True)
+            required = False, 
+            default = "pathfinder")
             
         parser.add_argument('--topic_name_out', 
             help = 'topic that it is pushing to',
@@ -29,10 +30,10 @@ class VideoETL(object):
             default = "framefeeder")
         
         args = parser.parse_args()
-                
-        if args.video:
-            Utilities.verifyPath(args.video, self.logger)
-            self.videoPath = args.video
+        self.videoPath = ""
+        
+        if args.topic_name_in:
+            self.topic_name_in = args.topic_name_in    
         if args.topic_name_out:
             self.topic_name_out = args.topic_name_out
 
@@ -81,13 +82,15 @@ class VideoETL(object):
         Utilities.storeJson(frameJson, "../../res/FramesMetadataETL/" + videoName + "_Metadata" + str(frameNum) + ".txt")  # store frame json locally
 
     def run(self):
-        if self.videoPath.endswith("/"):
-            videos = Utilities.get_file_paths(self.videoPath)
-            for video in videos:
-                self.videoPath = video
+        self.logger.info("Consuming messages from '%s'" % self.topic_name_in)
+        consumer = Consumer.initialize(self.topic_name_in)
+        for m in consumer:
+            self.videoPath = m.value
+            self.videoPath = self.videoPath[1:-1]
+            self.logger.info("Pulled Message: '%s'" % self.videoPath)
+            if self.videoPath.endswith(tuple(extensions)):
                 self.splitFrames()
-        if self.videoPath.endswith(tuple(extensions)):
-            self.splitFrames()
+
 
 
 def main():

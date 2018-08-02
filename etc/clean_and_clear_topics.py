@@ -47,6 +47,7 @@ def main():
     clean_clear("general")
     clean_clear("framefeeder")
     clean_clear("Accumulo")
+    clean_clear("pathfinder")
     print "Topics cleaned and cleared"
 
 
