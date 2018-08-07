@@ -1,4 +1,3 @@
-from __future__ import division  # used to avoid integer divsion truncation and adds '//' to force it
 import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
@@ -6,6 +5,7 @@ from utilities import *
 class videoAnalysis(object):
 
     def __init__(self): 
+        """ Constructor """
         self.logger = Utilities.setup_logger("videoanalysis", '../../logs/videoAnalysis.log')
         self.count = 0
         self.confidenceThresh = 60.0
@@ -26,6 +26,7 @@ class videoAnalysis(object):
         
 
     def readyForAnalysis(self, table):
+        """ Preps table for analysis """
         self.logger.info("Checking if a video is ready for analysis...")
         self.logger.info("Attempting to connect to Accumulo...")
         try:
@@ -51,7 +52,9 @@ class videoAnalysis(object):
         self.logger.info("Video is not ready for analysis!")
         return False
         
+        
     def calculateTargetScreenTime(self, json_data_parsed):
+        """ Determines the on screen time for a target """
         previously_present = False
         for x in range(len(self.targetFrameList)):
             if x == len(self.targetFrameList) - 1:
@@ -73,6 +76,7 @@ class videoAnalysis(object):
                 
                 
     def calculateObjScreenTime(self, json_data_parsed):
+        """ Determines the on screen time for general objects """
         previously_present = False
         for label in self.generalObjectsFoundAnalysisData.keys():
             self.generalObjectsFoundAnalysisData[label]['timeRange'] = {'startTime':[],'endTime':[]} # dictionary of lists for the start and end times for the time ranges where obj is present
@@ -96,6 +100,7 @@ class videoAnalysis(object):
         
         
     def calculateAverageTargetConfidence(self, table):
+        """ Calculates average target confidence and finds the highest/lowest target confidence with their specific frame number """
         self.logger.info("Calculating the average target confidence across the whole video...")
         try:
             for entry in self.conn.scan(table, scanrange=Range(srow='row_0'), cols=[["cf1"]]):
@@ -137,7 +142,8 @@ class videoAnalysis(object):
            self.logger.info("Start time: " + str(self.targetTimesPresent['startTime'][x]) + " End time: " + str(self.targetTimesPresent['endTime'][x]))
         
         
-    def AverageGenObjectConfidence(self, table):
+    def calculateAverageGenObjectConfidence(self, table):
+         """ Calculates average gen objs confidence and finds the highest/lowest gen objs confidence with their specific frame number """
         self.logger.info("Calculating the average gen obj confidence across the whole video...")
         try:
             for entry in self.conn.scan(table, scanrange=Range(srow='row_0'), cols=[["cf1"]]):
@@ -178,6 +184,7 @@ class videoAnalysis(object):
         
         
     def makeFinalJson(self):
+         """ Prepares the final json with the collected analysis data """
         self.finalJson['avgTargetConfidence'] = self.averageTargetConfidence
         self.finalJson['highestTargetConfidence'] = self.targetConfidenceHi
         self.finalJson['lowestTargetConfidence'] = self.targetConfidenceLo
@@ -188,6 +195,7 @@ class videoAnalysis(object):
         
         
     def pushResultsToDB(self, table):
+         """ Pushes final json to accumulo under 'videoname_analysis' """
         self.logger.info("Pushing analysis results to Accumulo under table name " + table + "_analysis")
         try:
             self.conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
@@ -206,24 +214,25 @@ class videoAnalysis(object):
         
         
     def performAnalysis(self, table):
+         """ Runs analysis """
         self.logger.info("Performing video analysis...")
-        self.calculateAverageTargetConfidence(table)  #calculates average target confidence and finds the highest/lowest target confidence with their specific frame number
-        self.AverageGenObjectConfidence(table)        #calculates average gen objs confidence and finds the highest/lowest gen objs confidence with their specific frame number
-        self.makeFinalJson()                          #prepare the final json with the collected analysis data
-        self.pushResultsToDB(table)                   #push final json to accumulo under 'videoname_analysis'
+        self.calculateAverageTargetConfidence(table)
+        self.calculateAverageGenObjectConfidence(table)
+        self.makeFinalJson()
+        self.pushResultsToDB(table)
         
         
     def run(self, table):
+         """ Launches the analysis """
         if self.readyForAnalysis(table):
             self.performAnalysis(table)
 
 
-
 def main():
+     """ Auto run main method """
     vidanalysis = videoAnalysis()
     vidanalysis.run("vid_mp4")
 
-   
+
 if __name__ == "__main__":
     main()
-    

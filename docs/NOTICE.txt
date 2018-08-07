@@ -1,0 +1,4 @@
+added parameter to launch, use:
+
+./launch.sh "../../res/Videos/People.mp4"
+

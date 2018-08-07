@@ -59,6 +59,7 @@ class Utilities(object):
 
     @staticmethod
     def get_file_paths(directory):
+        """ Returns all valid file paths """
         storePaths = []
         extensions = [".mp4", ".mpg", ".mov", ".wmv"]
         for root, dirs, files in os.walk(directory):
@@ -69,6 +70,7 @@ class Utilities(object):
         
     @staticmethod
     def verifyPath(path, logger):
+        """ Verifies that the path exists """
         if not os.path.exists(path):
             logger.error("File path: " + path + " does not exist")
             raise ValueError("File path: " + path + " does not exist") 
@@ -76,11 +78,10 @@ class Utilities(object):
                 
     @staticmethod
     def setup_logger(name, log_file, level=logging.INFO):
-        """ Function setup as many loggers as want """
-    
+        """ Sets up as many loggers as want """
         handler = logging.FileHandler(log_file)
         handler.setFormatter(logging.Formatter('%(asctime)s    %(levelname)s: %(message)s'))
-    
+        
         logger = logging.getLogger(name)
         logger.setLevel(level)
         logger.addHandler(handler)
@@ -90,6 +91,7 @@ class Utilities(object):
         
     @staticmethod
     def exportJsonDB(json_data, frameNum):
+        """ Exports the JSON data to the Accumulo database """
         conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
         json_data_parsed = json.loads(json_data) #put json data back into dictionary
         table = json_data_parsed['videoMetadata']['videoName'] #get the video name and set that as the table name
@@ -111,6 +113,7 @@ class Utilities(object):
         
     @staticmethod
     def printTableDB(table):
+        """ Displays the data in the database """
         conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
         for entry in conn.scan(table):
             print(entry.row, entry.cf, entry.cq, entry.cv, entry.ts, entry.val)

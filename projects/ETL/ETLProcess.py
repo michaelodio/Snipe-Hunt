@@ -1,4 +1,3 @@
-from __future__ import division  # This has to be here (wont work by importing from utilities)
 import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
@@ -36,7 +35,6 @@ class VideoETL(object):
             self.topic_name_in = args.topic_name_in    
         if args.topic_name_out:
             self.topic_name_out = args.topic_name_out
-
 
 
     def splitFrames(self):
@@ -82,6 +80,7 @@ class VideoETL(object):
         Utilities.storeJson(frameJson, "../../res/FramesMetadataETL/" + videoName + "_Metadata" + str(frameNum) + ".txt")  # store frame json locally
 
     def run(self):
+        """ Launches the ETL Process """
         self.logger.info("Consuming messages from '%s'" % self.topic_name_in)
         consumer = Consumer.initialize(self.topic_name_in)
         for m in consumer:

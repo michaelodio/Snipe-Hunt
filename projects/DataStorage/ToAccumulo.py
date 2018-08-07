@@ -1,4 +1,3 @@
-# import the necessary packages
 import sys
 sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
@@ -29,6 +28,7 @@ class shipToAccumulo(object):
             
         
     def run(self):
+        """ Ships the data to accumulo """
         self.logger.info("Shipping to accumulo...")
         consumer = Consumer.initialize(self.topic_name_in)
         conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
@@ -57,15 +57,11 @@ class shipToAccumulo(object):
         self.logger.info("Accumulo consumer closed")
 
 
-
-
-
 def main():
     """ Auto run main method """
     accumuloOut = shipToAccumulo()
     accumuloOut.run()
     
-
 
 if __name__=="__main__":
         main()

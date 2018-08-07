@@ -1,5 +1,3 @@
-#import sys
-#sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
 from utilities import *
 
 class PathPasser(object):
