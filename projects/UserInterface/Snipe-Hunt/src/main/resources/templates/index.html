@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title> Snipe-Hunt </title>
+    <meta charset="utf-8">
+
+    <!-- Scaling of the webpage on smaller devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Setting icon of page -->
+    <link rel="icon" href="http://braintrust-us.com/wp-content/uploads/2016/11/cropped-BrainTrustIcon-1-32x32.png" sizes="32x32" />
+    <link rel="icon" href="http://braintrust-us.com/wp-content/uploads/2016/11/cropped-BrainTrustIcon-1-192x192.png" sizes="192x192" />
+
+    <!-- Adding in the CSS style sheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+
+</head>
+
+<!-- Connected body to the AngularJS module -->
+<body ng-app="MainApp">
+
+    <!--========== WELCOME ==========-->
+
+    <div class="container-fluid" style="background-color:white;">
+        <div class="container">
+            <nav class="welcome">
+                <a href="https://azure.microsoft.com/en-us/">
+                    <img src="images/azure.png" width="65px" />
+                </a>
+                <a href="http://braintrust-us.com/" style="padding-left: 20px;">
+                    <img src="images/braintrust.jpg" width="250px" />
+                </a>
+                <div class="phone">
+                    <a style="color: black; margin-right: 25px;" href="#!/upload"> Home </a>
+                    <a style="color: black; margin-right: 25px;" href="#!/aboutus"> About Us </a>
+                    410-799-3504
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!--========== CONTENT ===========-->
+
+	<!-- clearfix used to clear the floating divs -->
+    <div class="clearfix">
+        <div class="container-fluid content">
+        	<!-- Used for AngularJS routing -->
+            <div ng-view></div>
+        </div>
+    </div>
+
+    <!--=========== FOOTER ===========-->
+
+    <div class="footer">
+        <p>
+            Copyright &copy; 2008-2018 BrainTrust All rights reserved
+        </p>
+    </div>
+
+
+    <!-- Plain Javascipt -->
+    <script src="js/etc/modalSearch.js"></script>
+    <script src="js/etc/fileNamer.js"></script>
+        <script src="js/etc/videoLoader.js"></script>
+    
+
+    <!-- Import used Javascript libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+
+    <!-- AngularJS imports -->
+
+    <!-- Modules -->
+    <script src="js/app.js"></script>
+
+    <!-- Controllers -->
+    <script src="js/controllers/FileController.js"></script>
+    <script src="js/controllers/AccumuloController.js"></script>
+
+    <!-- Directives -->
+    <script src="js/directives/fileModel.js"></script>
+
+</body>
+
+</html>

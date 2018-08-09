@@ -1,0 +1,140 @@
+<div class="row" data-ng-init="getAccumulo()">
+    <div class="body-left container-fluid col" id="left">
+        <div class="container">
+
+            <video id="myVideo" width="100%" onclick="videoReload()" controls autoplay>
+                <source ng-src="res/{{ jsons[0].videoMetadata.videoName }}" type="video/{{ jsons[0].videoMetadata.videoName.substr(jsons[0].videoMetadata.videoName.lastIndexOf('.')+1) }}">
+            </video>
+            
+            <h1>
+                <!--{{ jsons[0].videoMetadata.videoPath.substr(jsons[0].videoMetadata.videoPath.lastIndexOf('/')+1) }}-->
+                {{ jsons[0].videoMetadata.videoName }}
+            </h1>
+            <p>
+                Video Path: {{ jsons[0].videoMetadata.videoPath }}
+                <br/> Video Duration: {{ jsons[0].videoMetadata.videoDuration }}
+                <br/> Total Frames: {{ jsons[0].videoMetadata.totalFrames }}
+                <br/> FPS: {{ jsons[0].videoMetadata.FPS }}
+
+            </p>
+
+            <!--<button type="button" class="btn btn-outline-light" ng-click="getAccumulo()">get analysis</button>-->
+        </div>
+    </div>
+
+    <div class="body-right container-fluid col">
+        <div class="container">
+            <div class="body-right container-fluid">
+                <div class="container">
+
+                    <h1>Target Detected</h1>
+
+                    <div class="dropdown">
+                        <li style="list-style-type: none; margin: 10px;display: inline-grid;">
+                            <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">Target - Avg conf: {{analytics.avgTargetConfidence | number}}%
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li> Highest Conf: {{ analytics.highestTargetConfidence | number }}% </li>
+                                <li> Highest Frame Conf: {{ analytics.highestTargetConfidenceFrame | number }} </li>
+                                <li> Lowest Conf: {{ analytics.lowestTargetConfidence | number }}% </li>
+                                <li> Lowest Conf Frame: {{ analytics.lowestTargetConfidenceFrame | number }} </li>
+                                <li class="dropdown-submenu">
+                                    Present Time Range
+                                    <ul class="dropdown-menu">
+                                        <li ng-repeat=" child in analytics.targetTimesPresent.startTime">
+                                            {{ child | number }} - {{analytics.targetTimesPresent.endTime[$index] | number}} secs </li>
+                                    </ul>
+                                </li>
+                                <li> Screen time: {{analytics.targetScreenTime }}</li>
+                                <li> Percentage present in video: {{analytics.targetPercentage | number}}% </li>
+                            </ul>
+                        </li>
+                    </div>
+
+                    <h1> General Objects Detected</h1>
+
+                    <div class="dropdown">
+                        <li style="list-style-type: none; margin: 10px;display: inline-grid;" ng-repeat="(key, obj) in analytics.genObjsAnalysis">
+                            <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">{{key}} - Avg conf: {{obj.averageConf | number}}%
+                            <span class="caret"></span></button>
+                        <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                            <li> Highest Conf: {{ obj.highestConf | number }}% </li>
+                            <li> Highest Frame Conf: {{ obj.highestConfFrame | number }} </li>
+                            <li> Lowest Conf: {{ obj.lowestConf | number }}% </li>
+                            <li> Lowest Conf Frame: {{ obj.lowestConfFrame | number }} </li>
+                            <li class="divider"></li>
+                            <li class="dropdown-submenu">
+                                Present Time Range
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat=" child in obj.timeRange.startTime track by $index">
+                                        {{ child | number }} - {{obj.timeRange.endTime[$index] | number}} secs </li>
+                                </ul>
+                            </li>
+
+                            <li> Screen Time: {{ obj.screenTime | number }} </li>
+                            <li> Percentage present in video: {{ obj.percentage | number }} </li>
+                        </ul>
+                        </li>
+                    </div>
+
+                    <h1> Video Frame Summaries </h1>
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal"> View Frame Summaries </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal" role="dialog">
+                        <div class="modal-dialog modal-xl">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Frame Summaries</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-hover" id="myTable">
+                                        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for frame">
+                                        <thead>
+                                        <tr>
+                                            <th> Frame Num </th>
+                                            <th> Frame Rate </th>
+                                            <th> Target Confidence </th>
+                                            <th> Time Stamp </th>
+                                            <th> Detected Objects</th>
+                                            <th> Frame Image </th>
+                                            <th> Labeled Image</th>
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody ng-repeat="j in jsons | orderBy : 'frameMetadata.frameNum'">
+                                        <tr>
+
+                                            <td> {{ j.frameMetadata.frameNum }} </td>
+                                            <td> {{ j.videoMetadata.FPS }} </td>
+                                            <td> {{ j.frameMetadata.foundTargetWithConfidence | number }}% </td>
+                                            <td> {{ j.frameMetadata.timestamp }} </td>
+                                            <td> {{ j.frameMetadata.GeneralObjectsDetected }} </td>
+                                            <td><img style="width: 100%" data-ng-src="data:image/jpg;base64,{{ j.imageBase64 }}"></td>
+                                            <td><img style="width: 100%" data-ng-src="data:image/jpg;base64,{{ j.LabeledImage }}"></td>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal"> Close </button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+        </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

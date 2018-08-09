@@ -1,0 +1,59 @@
+<div class="body-top container-fluid" data-ng-init="getAllFiles()">
+    <div class="body-top container">
+        <h1>
+            Snipe-Hunt
+        </h1>
+
+        <p>
+            This project will analyze videos for any occurances of a given target
+            <br/> It will provide confidence levels of identification certainty and number of occurances within the video as well as other general objects detected.
+        </p>
+        <p>
+            Please select Browse to choose the video you would like analyzed, and then select Upload to begin:
+        </p>
+    </div>
+</div>
+
+<div class="body-below container-fluid">
+    <div class="body-below container clearfix">
+        <div class="clearfix">
+            <form style="float:left;">
+
+                <label class="btn btn-outline-light">
+                <!-- Runs displayFileName method from plain JS filenamer -->
+    			<input id="fileInput" type="file" file-model="myForm.files[0]" onchange="displayFileName();" />   <!-- multiple -->
+    			Browse
+			</label>
+                <!-- Runs the angularJS method to upload the file -->
+                <button class="btn btn-outline-light" type="button" ng-click="doUploadFile()"> Upload </button>
+            </form>
+            <!-- Populates the span with the upload results -->
+            <span id="showFileName"></span>
+        </div>
+    </div>
+</div>
+
+<div class="body-bottom container-fluid">
+    <div class="body-bottom container">
+        <div>
+                    <!-- runs the angularJS method to get the files -->
+            <!--<button type="button" class="btn btn-outline-dark" ng-click="getAllFiles()">
+            	View Uploaded Videos
+            </button>-->
+            <!--<a class="btn btn-outline-dark" href="#!/analyze"> Go to analysis </a> -->
+            <!--<a class="btn btn-outline-dark" href="#!/aboutus"> Go to about us </a>-->
+
+            <ul>
+            <!-- List through each video that is found in file path -->
+                <li class="vid-list" ng-repeat="file in allFiles">
+
+                    <video style="cursor: pointer;" onclick="location.href = '#!/analyze';" width="300" height="170">
+                        <source src="res/{{ file }}" type="video/mp4">
+                    </video>
+                    <p class="thumbnail-text"> {{ file }} </p>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

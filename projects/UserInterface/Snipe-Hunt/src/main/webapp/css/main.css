@@ -1,0 +1,332 @@
+/* ===================================== */
+/*		GLOBAL
+/* ===================================== */
+
+/* Setting variables */
+:root {
+    --dark-navy: #30344d;
+    --braintrust-blue: rgb(87, 133, 225);
+    --off-white: rgb(240, 240, 240);
+}
+
+/* Remove padding and margin spacing for resetting */
+* {
+    padding: 0px 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+a {
+    color: white;
+}
+
+a:hover {
+    color: lightgray;
+}
+
+body {
+    background-color: var(--off-white);
+}
+
+video {
+    background-color: lightgray;
+    max-width: 98%;
+    max-height:98%;
+}
+
+
+/* ===================================== */
+/*		WELCOME
+/* ===================================== */
+
+.welcome {
+    padding-left: 0px;
+    padding-top: 35px;
+    padding-bottom: 35px;
+    background-color: white;
+}
+
+.phone {
+	color: var(--dark-navy);
+	font-weight: bold;
+    padding-top: 12px;
+    float: right;
+    font-size: 12px;
+}
+
+/* ===================================== */
+/*		ABOUT
+/* ===================================== */
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  width: 325px;
+  text-align: center;
+  padding: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  border: 1px solid black;
+  display: inline-grid;
+}
+
+.card img {
+	height: 150px;
+	text-align: center;
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.name {
+	margin-top: 10px;	
+}
+
+.company {
+	margin-bottom: 0; 
+	padding: 0px 0px;
+}
+
+.push-around {
+	margin: 10px;
+}
+
+.about a {
+	color: black;
+}
+
+/* ===================================== */
+/*		CONTENT
+/* ===================================== */
+
+.content {
+    padding: 0px 0px;
+}
+
+/* Useful when floating divs */
+.clearfix::after {
+    content: ""; 
+    clear: both;
+    display: table;
+}
+ 
+
+/* ===================================== */
+/*		UPLOAD CONTENT
+/* ===================================== */
+
+.body-top {
+    background-color: #30344d;
+    padding: 10px 10px;
+}
+
+.body-top h1 {
+    color: rgb(240, 240, 240);
+    margin: 10px;
+}
+
+.body-top p {
+    color: rgb(210, 210, 210);
+    margin: 10px;
+}
+
+.body-below {
+    background-color: var(--braintrust-blue);
+    /*background-color: rgb(140, 140, 140);*/
+    padding: 8px;
+}
+
+.body-below button {
+    margin-left: 20px;
+}
+
+.body-below label {
+	margin-top: 10px;
+    margin-left: 20px;
+}
+
+/* Hiding the ugly input file */
+input[type="file"] {
+    display: none;
+}
+
+.thumbnail-text {
+	padding-left: 15px;
+	color: black;
+}
+
+.body-bottom {
+    background-color: var(--off-white);
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-bottom: 50px;
+}
+
+.body-bottom a {
+    margin-left: 0px;
+}
+
+.body-bottom ul {
+    margin-top: 10px;
+}
+
+#showFileName {
+	margin-below: 1px;
+	padding: 15px;
+	float:right;
+	color: white;
+}
+
+.vid-list {
+	list-style-type: none; 
+	display: inline-grid; 
+	margin-top: 25px;
+}
+
+.upload-result {
+	color: white; 
+	margin-left: 20px;
+}
+
+
+/* ===================================== */
+/*		ANALYZE CONTENT
+/* ===================================== */
+
+.body-left {
+    background-color: var(--dark-navy);
+    border-right: 30px solid var(--braintrust-blue);
+    padding-top: 15px;
+        padding-bottom: 60px;
+    float: left;
+}
+
+.body-left h1 {
+	margin: 10px;
+    color: var(--braintrust-blue);
+}
+
+.body-left p {
+    color: rgb(194, 195, 195);
+    margin: 20px;
+    margin-bottom: 30px;
+}
+
+.body-right {
+    background-color: var(--off-white);
+    padding-top: 5px;
+    padding-bottom: 30px;
+    color: black;
+    float: right;
+}
+
+.body-right table {
+    margin: 10px;
+}
+
+/* Used for flexbox layout for analysis divs are always same height*/
+.row {
+    display: flex;
+    /* equal height of the children */
+    max-width: 100%;
+}
+
+/* Sets the left div to be 60% of width */
+#left {
+    flex-basis: 60%;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.col {
+    flex: 1;
+}
+
+
+th {
+    background-color: rgb(210, 210, 210);
+}
+
+/* Used in dropdown submenus */
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+    overflow: auto;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+    overflow: auto;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+
+li {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+@media (min-width: 768px) {
+    .modal-xl {
+        width: 90%;
+        max-width:1200px;
+    }
+}
+
+/* ===================================== */
+/*		FOOTER
+/* ===================================== */
+
+.footer {
+	position:fixed;
+	bottom: 0px;
+	width: 100%;
+    background-color: white;
+    text-align: center;
+}
+
+.footer p {
+    padding: 20px 20px;
+    color: darkslategray;
+    margin: 0;
+    font-size: 13px;
+}
