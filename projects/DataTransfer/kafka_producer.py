@@ -10,8 +10,8 @@ class Producer(object):
         """ Initializes the producer """
         # Sets up the kafka producer to serialized json output on localhost port 9092
         return KafkaProducer(bootstrap_servers='localhost:9092',
-                                      value_serializer=lambda v: json.dumps(v).encode('utf-8'), max_request_size='15000000')
-    
+                             value_serializer=lambda v: json.dumps(v).encode('utf-8'), max_request_size='15000000')
+
 
 def push_json(producer, topic_name, data):
     """ Pushes JSON to topic within time interval """

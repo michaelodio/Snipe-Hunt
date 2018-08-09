@@ -16,32 +16,29 @@ import time
 import time
 import logging
 from pyaccumulo import Accumulo, Mutation, Range
-sys.path.insert(0, "../DataTransfer/")   # used to import files from other folder dir in project
-from kafka_consumer import *
-from kafka_producer import *
+
+from ..DataTransfer.kafka_consumer import *
+from ..DataTransfer.kafka_producer import *
+
 
 class Utilities(object):
-
 
     @staticmethod
     def storeJson(frameJson, filePath):
         """ Stores the json to a filepath """
-        file1 = open(filePath, 'a+')   # open file handler for specific filePath
+        file1 = open(filePath, 'a+')  # open file handler for specific filePath
         file1.write(str(frameJson) + "\n")
         file1.close()
-
 
     @staticmethod
     def exportJson(frameJson, topic):
         """ Exports the json to a topic """
-        push_json(Producer.initialize(), topic, frameJson) # Push frame json to specified Kafka topic
-
+        push_json(Producer.initialize(), topic, frameJson)  # Push frame json to specified Kafka topic
 
     @staticmethod
     def encodeFrame(frame):
         """ Encodes the image using base 64 """
         return base64.b64encode(frame)
-
 
     @staticmethod
     def decodeFrame(frameJson):
@@ -67,50 +64,49 @@ class Utilities(object):
                 if f.endswith(tuple(extensions)):
                     storePaths.append(os.path.join(root, f))
         return storePaths
-        
+
     @staticmethod
     def verifyPath(path, logger):
         """ Verifies that the path exists """
         if not os.path.exists(path):
             logger.error("File path: " + path + " does not exist")
-            raise ValueError("File path: " + path + " does not exist") 
-            
-                
+            raise ValueError("File path: " + path + " does not exist")
+
     @staticmethod
     def setup_logger(name, log_file, level=logging.INFO):
         """ Sets up as many loggers as want """
         handler = logging.FileHandler(log_file)
         handler.setFormatter(logging.Formatter('%(asctime)s    %(levelname)s: %(message)s'))
-        
+
         logger = logging.getLogger(name)
         logger.setLevel(level)
         logger.addHandler(handler)
-        
+
         return logger
-        
-        
+
     @staticmethod
     def exportJsonDB(json_data, frameNum):
         """ Exports the JSON data to the Accumulo database """
         conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
-        json_data_parsed = json.loads(json_data) #put json data back into dictionary
-        table = json_data_parsed['videoMetadata']['videoName'] #get the video name and set that as the table name
+        json_data_parsed = json.loads(json_data)  # put json data back into dictionary
+        table = json_data_parsed['videoMetadata']['videoName']  # get the video name and set that as the table name
         table = table.replace('.', '_')
         table = table.encode('ascii', 'ignore')
         if not conn.table_exists(table):
             conn.create_table(table)
-        m = Mutation("row_%d"%frameNum)  #table row number is the frame number
-        m.put(cf="cf2", cq="cq2", val = json_data_parsed['imageBase64'])   #saves the frame image separately from the metadata
+        m = Mutation("row_%d" % frameNum)  # table row number is the frame number
+        m.put(cf="cf2", cq="cq2",
+              val=json_data_parsed['imageBase64'])  # saves the frame image separately from the metadata
         if 'LabeledImage' in json_data_parsed.keys():
-            m.put(cf="cf3", cq="cq3", val = json_data_parsed['LabeledImage'])  #saves the labeled image separately from the metadata
-            json_data_parsed.pop('LabeledImage', None) #delete the base64 representation of the labeled frame
-        json_data_parsed.pop('imageBase64', None)  #delete the base64 representation of the frame
+            m.put(cf="cf3", cq="cq3",
+                  val=json_data_parsed['LabeledImage'])  # saves the labeled image separately from the metadata
+            json_data_parsed.pop('LabeledImage', None)  # delete the base64 representation of the labeled frame
+        json_data_parsed.pop('imageBase64', None)  # delete the base64 representation of the frame
         json_data = json.dumps(json_data_parsed)
-        m.put(cf="cf1", cq="cq1", val=json_data)   #set the first column to now only the metadata.
+        m.put(cf="cf1", cq="cq1", val=json_data)  # set the first column to now only the metadata.
         conn.write(table, m)
         conn.close()
-        
-        
+
     @staticmethod
     def printTableDB(table):
         """ Displays the data in the database """
@@ -118,4 +114,3 @@ class Utilities(object):
         for entry in conn.scan(table):
             print(entry.row, entry.cf, entry.cq, entry.cv, entry.ts, entry.val)
         conn.close()
-    

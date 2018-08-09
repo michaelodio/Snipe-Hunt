@@ -1,13 +1,11 @@
 # import the necessary packages
-import sys
-sys.path.insert(0, "../Utility/")   # used to import files from other folder dir in project
-from utilities import *
+from ..Utility.utilities import *
 
 
 # renamed class and file to FrameLabeling
 class FrameLabeling(object):
 
-    def __init__(self): #prototxt, model, labels
+    def __init__(self):  # prototxt, model, labels
         """ Constructor """
         self.logger = Utilities.setup_logger("frame-labeler", "../../logs/FrameLabeling.log")
         self.validate_arg_parse()
@@ -18,55 +16,55 @@ class FrameLabeling(object):
         parser = argparse.ArgumentParser()
 
         parser.add_argument('--model',
-            help = 'Path to model',
-            type = str,
-            required = True)
+                            help='Path to model',
+                            type=str,
+                            required=True)
 
         parser.add_argument('--model_prototxt',
-            help = 'Path to prototxt file',
-            type = str,
-            required = True)
+                            help='Path to prototxt file',
+                            type=str,
+                            required=True)
 
         parser.add_argument('--labels',
-            help = "path to list of class labels",
-            type = str,
-            required = True)
+                            help="path to list of class labels",
+                            type=str,
+                            required=True)
 
         parser.add_argument('--size',
-            help = "size of image after resize for normalization",
-            type = int,
-            required = False,
-            default = 300)
+                            help="size of image after resize for normalization",
+                            type=int,
+                            required=False,
+                            default=300)
 
         parser.add_argument('--scalar',
-            help = "scalar adjustment for image normalization",
-            type = float,
-            required = False,
-            default = 0.007843)
+                            help="scalar adjustment for image normalization",
+                            type=float,
+                            required=False,
+                            default=0.007843)
 
         parser.add_argument('--mean_subtraction',
-            help = "mean color channel subtraction for image normalization",
-            type = float,
-            required = False,
-            default = 127.5)
+                            help="mean color channel subtraction for image normalization",
+                            type=float,
+                            required=False,
+                            default=127.5)
 
         parser.add_argument('--confidence',
-            help = "minimum confidence for detections",
-            type = float,
-            required = False,
-            default = 0.01)
+                            help="minimum confidence for detections",
+                            type=float,
+                            required=False,
+                            default=0.01)
 
         parser.add_argument('--topic_name_in',
-            help = "topic that it is pulling from",
-            type = str,
-            required = False,
-            default = "general")
-            
+                            help="topic that it is pulling from",
+                            type=str,
+                            required=False,
+                            default="general")
+
         parser.add_argument('--topic_name_out',
-            help = "topic that it is pushing to",
-            type = str, 
-            required = False,
-            default = "Accumulo")
+                            help="topic that it is pushing to",
+                            type=str,
+                            required=False,
+                            default="Accumulo")
 
         args = parser.parse_args()
 
@@ -104,7 +102,9 @@ class FrameLabeling(object):
     def run_frame_labeling(self, json_data_parsed):
         """ Runs frames for labeling """
         (h, w) = self.image.shape[:2]
-        blob = cv2.dnn.blobFromImage(cv2.resize(self.image, (self.size, self.size)), self.scalar, (self.size, self.size), self.mean_subtraction)  # replaced hard  coded values for variables
+        blob = cv2.dnn.blobFromImage(cv2.resize(self.image, (self.size, self.size)), self.scalar,
+                                     (self.size, self.size),
+                                     self.mean_subtraction)  # replaced hard  coded values for variables
         self.net.setInput(blob)
         detections = self.net.forward()
         labelingOccurred = False
@@ -114,17 +114,17 @@ class FrameLabeling(object):
                 idx = int(detections[0, 0, i, 1])
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 (startX, startY, endX, endY) = box.astype("int")
-                if idx >= 1 and idx <= 20:     # display the prediction and avoids index 0 which is 'background'
+                if idx >= 1 and idx <= 20:  # display the prediction and avoids index 0 which is 'background'
                     labelingOccurred = True
-                    label = "{}: {:.2f}%".format(self.classes[idx], confidence*100)
+                    label = "{}: {:.2f}%".format(self.classes[idx], confidence * 100)
                     self.logger.info("    [INFO] {}".format(label))
                     cv2.rectangle(self.image, (startX, startY), (endX, endY), self.colors[idx], 2)
                     y = startY - 15 if startY - 15 > 15 else startY + 15
                     cv2.putText(self.image, label, (startX, y),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors[idx], 2)
         if labelingOccurred:
             labeledb64 = base64.b64encode(self.image)
-            json_data_parsed['LabeledImage'] = labeledb64   # adds base64 string to json data
+            json_data_parsed['LabeledImage'] = labeledb64  # adds base64 string to json data
 
     def run_images(self):
         """ Runs each image """
@@ -133,14 +133,17 @@ class FrameLabeling(object):
         for m in consumer:
             json_data = m.value
             json_data_parsed = json.loads(json_data)
-            self.logger.info("Running frame labeling against frame: " + str(json_data_parsed['frameMetadata']['frameNum']))
+            self.logger.info(
+                "Running frame labeling against frame: " + str(json_data_parsed['frameMetadata']['frameNum']))
             frame = Utilities.decodeFrameForObjectDetection(json_data_parsed)
             self.image = frame
             self.run_frame_labeling(json_data_parsed)
             json_data = json.dumps(json_data_parsed)
-            Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoMetadata']['videoName'] + "_Metadata" + str(json_data_parsed['frameMetadata']['frameNum']) + ".txt")
-            #Utilities.exportJsonDB(json_data, json_data_parsed['frameMetadata']['frameNum']) #utility method for exporting json to accumulo database
-            Utilities.exportJson(json_data, self.topic_name_out)  #send json to Accumulo kafka topic for shipping to database
+            Utilities.storeJson(json_data, "../../res/FramesMetadataLabelingFrame/" + json_data_parsed['videoMetadata'][
+                'videoName'] + "_Metadata" + str(json_data_parsed['frameMetadata']['frameNum']) + ".txt")
+            # Utilities.exportJsonDB(json_data, json_data_parsed['frameMetadata']['frameNum']) #utility method for exporting json to accumulo database
+            Utilities.exportJson(json_data,
+                                 self.topic_name_out)  # send json to Accumulo kafka topic for shipping to database
         consumer.close()
         self.logger.info("Frame labeling consumer closed")
 
@@ -152,5 +155,5 @@ def main():
     # ** TODO: Add database (Accumulo and Scylla) here by pushing finalized json data to database **
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()

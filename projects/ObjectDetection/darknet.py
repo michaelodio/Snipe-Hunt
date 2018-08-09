@@ -2,26 +2,30 @@ from ctypes import *
 import math
 import random
 
+
 def sample(probs):
     s = sum(probs)
-    probs = [a/s for a in probs]
+    probs = [a / s for a in probs]
     r = random.uniform(0, 1)
     for i in range(len(probs)):
         r = r - probs[i]
         if r <= 0:
             return i
-    return len(probs)-1
+    return len(probs) - 1
+
 
 def c_array(ctype, values):
-    arr = (ctype*len(values))()
+    arr = (ctype * len(values))()
     arr[:] = values
     return arr
+
 
 class BOX(Structure):
     _fields_ = [("x", c_float),
                 ("y", c_float),
                 ("w", c_float),
                 ("h", c_float)]
+
 
 class DETECTION(Structure):
     _fields_ = [("bbox", BOX),
@@ -38,13 +42,13 @@ class IMAGE(Structure):
                 ("c", c_int),
                 ("data", POINTER(c_float))]
 
+
 class METADATA(Structure):
     _fields_ = [("classes", c_int),
                 ("names", POINTER(c_char_p))]
 
-    
 
-#lib = CDLL("/home/pjreddie/documents/darknet/libdarknet.so", RTLD_GLOBAL)
+# lib = CDLL("/home/pjreddie/documents/darknet/libdarknet.so", RTLD_GLOBAL)
 lib = CDLL("../ObjectDetection/libdarknet.so", RTLD_GLOBAL)
 lib.network_width.argtypes = [c_void_p]
 lib.network_width.restype = c_int
@@ -114,15 +118,17 @@ predict_image = lib.network_predict_image
 predict_image.argtypes = [c_void_p, IMAGE]
 predict_image.restype = POINTER(c_float)
 
+
 def array_to_image(arr):
-	arr = arr.transpose(2, 0, 1)
-	c = arr.shape[0]
-	h = arr.shape[1]
-	w = arr.shape[2]
-	arr = (arr / 255.0).flatten()
-	data = c_array(c_float, arr)
-	im = IMAGE(w, h, c, data)
-	return im
+    arr = arr.transpose(2, 0, 1)
+    c = arr.shape[0]
+    h = arr.shape[1]
+    w = arr.shape[2]
+    arr = (arr / 255.0).flatten()
+    data = c_array(c_float, arr)
+    im = IMAGE(w, h, c, data)
+    return im
+
 
 def classify(net, meta, im):
     out = predict_image(net, im)
@@ -132,13 +138,14 @@ def classify(net, meta, im):
     res = sorted(res, key=lambda x: -x[1])
     return res
 
+
 def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
     im = None
     if isinstance(image, bytes):
-        #image is a filename
+        # image is a filename
         im = load_image(image, 0, 0)
     else:
-        #image is a numpy array
+        # image is a numpy array
         im = array_to_image(image)
         rgbgr_image(im)
     num = c_int(0)
@@ -153,22 +160,21 @@ def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
         for i in range(meta.classes):
             if dets[j].prob[i] > 0:
                 b = dets[j].bbox
-                #res.append((meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
-                confidence = "%.2f" % (dets[j].prob[i] *100)
+                # res.append((meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
+                confidence = "%.2f" % (dets[j].prob[i] * 100)
                 metadataString = meta.names[i] + ": " + confidence + "%"
-                res.append(metadataString) 
-    #res = sorted(res, key=lambda x: -x[1])
+                res.append(metadataString)
+                # res = sorted(res, key=lambda x: -x[1])
     if isinstance(image, bytes): free_image(im)
     free_detections(dets, num)
     return res
-    
+
+
 def main(net, meta, img):
-    
     r = detect(net, meta, img)
     print r
     return r
-    
+
+
 if __name__ == "__main__":
     main()
-    
-
