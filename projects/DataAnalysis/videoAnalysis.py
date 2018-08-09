@@ -7,7 +7,7 @@ class videoAnalysis(object):
         """ Constructor """
         self.logger = Utilities.setup_logger("videoanalysis", '../../logs/videoAnalysis.log')
         self.count = 0
-        self.confidenceThresh = 60.0
+        self.confidence_thresh = 60.0
         self.totalFrames = None
         self.averageTargetConfidence = 0.0
         self.conn = None
@@ -123,7 +123,7 @@ class videoAnalysis(object):
                 if 'foundTargetWithConfidence' in json_data_parsed['frameMetadata']:
                     percent = float(json_data_parsed['frameMetadata']['foundTargetWithConfidence'])
                     self.averageTargetConfidence = self.averageTargetConfidence + percent
-                    if percent >= self.confidenceThresh:
+                    if percent >= self.confidence_thresh:
                         self.targetFrameList.append(json_data_parsed['frameMetadata']['frameNum'])
                     if percent < self.targetConfidenceLo:
                         self.targetConfidenceLo = percent
@@ -160,122 +160,111 @@ class videoAnalysis(object):
 
     def calculateAverageGenObjectConfidence(self, table):
         """ Calculates average gen objs confidence and finds the highest/lowest gen objs confidence with their specific frame number """
-
-    self.logger.info("Calculating the average gen obj confidence across the whole video...")
-    try:
-        for entry in self.conn.scan(table, scanrange=Range(srow='row_0'), cols=[["cf1"]]):
-            json_data_parsed = json.loads(entry.val)
-            if 'GeneralObjectsDetected' in json_data_parsed['frameMetadata']:
-                for x in json_data_parsed['frameMetadata']['GeneralObjectsDetected']:
-                    obj = x.split(":")[0]  # splits the string to only collect the label
-                    objConf = float(x.split(":")[1].strip(' %'))  # strips the float confidence value out of the string
-                    if obj not in self.generalObjectsFoundAnalysisData.keys():  # if the label is in the analysis dict
-                        self.generalObjectsFoundAnalysisData[obj] = {}
-                        self.generalObjectsFoundAnalysisData[obj]['lowestConf'] = 100.0
-                        self.generalObjectsFoundAnalysisData[obj]['highestConf'] = 0.0
-                        self.generalObjectsFoundAnalysisData[obj]['averageConf'] = 0.0
-                        self.generalObjectsFoundAnalysisData[obj][
-                            'framesAboveThresh'] = []  # a list of the frames that had a confidence above the threshold
-                        self.generalObjectsFoundAnalysisData[obj][
-                            'screenTime'] = 0.0  # total amount of time where obj is present
-                        self.generalObjectsFoundAnalysisData[obj][
-                            'percentage'] = 0.0  # percentage of the video where obj is present
-                    self.generalObjectsFoundAnalysisData[obj]['averageConf'] = \
-                        self.generalObjectsFoundAnalysisData[obj][
-                            'averageConf'] + objConf  # add confidence across whole video to later calculate the average
-                    if objConf >= self.confidenceThresh:
-                        (self.generalObjectsFoundAnalysisData[obj]['framesAboveThresh']).append(int(
-                            json_data_parsed['frameMetadata'][
-                                'frameNum']))  # if the conf is above the thresh, add it to the frame list for that object
-                    if objConf > self.generalObjectsFoundAnalysisData[obj][
-                        'highestConf']:  # if the new found label confidence is higher than current highest conf
-                        self.generalObjectsFoundAnalysisData[obj][
-                            'highestConf'] = objConf  # update the new highest confidence
-                        self.generalObjectsFoundAnalysisData[obj]['highestConfFrame'] = int(
-                            json_data_parsed['frameMetadata']['frameNum'])  # update the frameNum the conf was found in
-                    if objConf < self.generalObjectsFoundAnalysisData[obj][
-                        'lowestConf']:  # if the new found label confidence is lower than current lowest conf
-                        self.generalObjectsFoundAnalysisData[obj][
-                            'lowestConf'] = objConf  # update the new lowest confidence
-                        self.generalObjectsFoundAnalysisData[obj]['lowestConfFrame'] = int(
-                            json_data_parsed['frameMetadata']['frameNum'])  # update the frameNum the conf was found in
-    except:
-        self.logger.info("Failed to scan table in Accumulo! Shutting down conn")
+        self.logger.info("Calculating the average gen obj confidence across the whole video...")
+        try:
+            for entry in self.conn.scan(table, scanrange=Range(srow='row_0'), cols=[["cf1"]]):
+                json_data_parsed = json.loads(entry.val)
+                if 'GeneralObjectsDetected' in json_data_parsed['frameMetadata']:
+                    for x in json_data_parsed['frameMetadata']['GeneralObjectsDetected']:
+                        obj = x.split(":")[0]  # splits the string to only collect the label
+                        objConf = float(
+                            x.split(":")[1].strip(' %'))  # strips the float confidence value out of the string
+                        if obj not in self.generalObjectsFoundAnalysisData.keys():  # if the label is in the analysis dict
+                            self.generalObjectsFoundAnalysisData[obj] = {}
+                            self.generalObjectsFoundAnalysisData[obj]['lowestConf'] = 100.0
+                            self.generalObjectsFoundAnalysisData[obj]['highestConf'] = 0.0
+                            self.generalObjectsFoundAnalysisData[obj]['averageConf'] = 0.0
+                            self.generalObjectsFoundAnalysisData[obj][
+                                'framesAboveThresh'] = []  # a list of the frames that had a confidence above the threshold
+                            self.generalObjectsFoundAnalysisData[obj][
+                                'screenTime'] = 0.0  # total amount of time where obj is present
+                            self.generalObjectsFoundAnalysisData[obj][
+                                'percentage'] = 0.0  # percentage of the video where obj is present
+                        self.generalObjectsFoundAnalysisData[obj]['averageConf'] = \
+                            self.generalObjectsFoundAnalysisData[obj][
+                                'averageConf'] + objConf  # add confidence across whole video to later calculate the average
+                        if objConf >= self.confidenceThresh:
+                            (self.generalObjectsFoundAnalysisData[obj]['framesAboveThresh']).append(int(
+                                json_data_parsed['frameMetadata'][
+                                    'frameNum']))  # if the conf is above the thresh, add it to the frame list for that object
+                        if objConf > self.generalObjectsFoundAnalysisData[obj][
+                            'highestConf']:  # if the new found label confidence is higher than current highest conf
+                            self.generalObjectsFoundAnalysisData[obj][
+                                'highestConf'] = objConf  # update the new highest confidence
+                            self.generalObjectsFoundAnalysisData[obj]['highestConfFrame'] = int(
+                                json_data_parsed['frameMetadata'][
+                                    'frameNum'])  # update the frameNum the conf was found in
+                        if objConf < self.generalObjectsFoundAnalysisData[obj][
+                            'lowestConf']:  # if the new found label confidence is lower than current lowest conf
+                            self.generalObjectsFoundAnalysisData[obj][
+                                'lowestConf'] = objConf  # update the new lowest confidence
+                            self.generalObjectsFoundAnalysisData[obj]['lowestConfFrame'] = int(
+                                json_data_parsed['frameMetadata'][
+                                    'frameNum'])  # update the frameNum the conf was found in
+        except:
+            self.logger.info("Failed to scan table in Accumulo! Shutting down conn")
+            self.conn.close()
+            raise ValueError("Failed to scan table in Accumulo! Shutting down conn")
+        for label in self.generalObjectsFoundAnalysisData.keys():
+            self.generalObjectsFoundAnalysisData[label]['averageConf'] = self.generalObjectsFoundAnalysisData[label][
+                                                                             'averageConf'] / self.totalFrames  # divide by the total frames to calculate average confidence for each gen obj across whole video
+            self.generalObjectsFoundAnalysisData[label]['percentage'] = str(
+                (len(self.generalObjectsFoundAnalysisData[label]['framesAboveThresh']) / self.totalFrames) * 100) + "%"
+            self.generalObjectsFoundAnalysisData[label]['screenTime'] = str(
+                len(self.generalObjectsFoundAnalysisData[label]['framesAboveThresh']) /
+                json_data_parsed['videoMetadata']['FPS']) + " seconds"
+            (self.generalObjectsFoundAnalysisData[label]['framesAboveThresh']).sort()
+        self.calculateObjScreenTime(json_data_parsed)
+        self.logger.info("Analysis data on general objects = " + str(self.generalObjectsFoundAnalysisData))
         self.conn.close()
-        raise ValueError("Failed to scan table in Accumulo! Shutting down conn")
-    for label in self.generalObjectsFoundAnalysisData.keys():
-        self.generalObjectsFoundAnalysisData[label]['averageConf'] = self.generalObjectsFoundAnalysisData[label][
-                                                                         'averageConf'] / self.totalFrames  # divide by the total frames to calculate average confidence for each gen obj across whole video
-        self.generalObjectsFoundAnalysisData[label]['percentage'] = str(
-            (len(self.generalObjectsFoundAnalysisData[label]['framesAboveThresh']) / self.totalFrames) * 100) + "%"
-        self.generalObjectsFoundAnalysisData[label]['screenTime'] = str(
-            len(self.generalObjectsFoundAnalysisData[label]['framesAboveThresh']) / json_data_parsed['videoMetadata'][
-                'FPS']) + " seconds"
-        (self.generalObjectsFoundAnalysisData[label]['framesAboveThresh']).sort()
-    self.calculateObjScreenTime(json_data_parsed)
-    self.logger.info("Analysis data on general objects = " + str(self.generalObjectsFoundAnalysisData))
-    self.conn.close()
 
+    def makeFinalJson(self):
+        """ Prepares the final json with the collected analysis data """
+        self.finalJson['avgTargetConfidence'] = self.averageTargetConfidence
+        self.finalJson['highestTargetConfidence'] = self.targetConfidenceHi
+        self.finalJson['lowestTargetConfidence'] = self.targetConfidenceLo
+        self.finalJson['highestTargetConfidenceFrame'] = self.targetConfidenceHiFrame
+        self.finalJson['lowestTargetConfidenceFrame'] = self.targetConfidenceLoFrame
+        self.finalJson['targetFrameList'] = self.targetFrameList
+        self.finalJson['genObjsAnalysis'] = self.generalObjectsFoundAnalysisData
 
-def makeFinalJson(self):
-    """ Prepares the final json with the collected analysis data """
+    def pushResultsToDB(self, table):
+        """ Pushes final json to accumulo under 'videoname_analysis' """
+        self.logger.info("Pushing analysis results to Accumulo under table name " + table + "_analysis")
+        try:
+            self.conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
+        except:
+            self.logger.info("Failed to connect to Accumulo")
+            raise ValueError("Failed to make connection to accumulo!\n")
+        table = table + "_analysis"
+        if not self.conn.table_exists(table):
+            self.conn.create_table(table)
+        m = Mutation("row_1")  # one row that contains the full analysis json
+        self.finalJson = json.dumps(self.finalJson)
+        m.put(cf="cf1", cq="cq1", val=self.finalJson)
+        self.conn.write(table, m)
+        self.conn.close()
+        self.logger.info("Pushed analysis results to Accumulo")
 
+    def performAnalysis(self, table):
+        """ Runs analysis """
+        self.logger.info("Performing video analysis...")
+        self.calculateAverageTargetConfidence(table)
+        self.calculateAverageGenObjectConfidence(table)
+        self.makeFinalJson()
+        self.pushResultsToDB(table)
 
-self.finalJson['avgTargetConfidence'] = self.averageTargetConfidence
-self.finalJson['highestTargetConfidence'] = self.targetConfidenceHi
-self.finalJson['lowestTargetConfidence'] = self.targetConfidenceLo
-self.finalJson['highestTargetConfidenceFrame'] = self.targetConfidenceHiFrame
-self.finalJson['lowestTargetConfidenceFrame'] = self.targetConfidenceLoFrame
-self.finalJson['targetFrameList'] = self.targetFrameList
-self.finalJson['genObjsAnalysis'] = self.generalObjectsFoundAnalysisData
-
-
-def pushResultsToDB(self, table):
-    """ Pushes final json to accumulo under 'videoname_analysis' """
-
-
-self.logger.info("Pushing analysis results to Accumulo under table name " + table + "_analysis")
-try:
-    self.conn = Accumulo(host="localhost", port=50096, user="root", password="RoadRally4321")
-except:
-    self.logger.info("Failed to connect to Accumulo")
-    raise ValueError("Failed to make connection to accumulo!\n")
-table = table + "_analysis"
-if not self.conn.table_exists(table):
-    self.conn.create_table(table)
-m = Mutation("row_1")  # one row that contains the full analysis json
-self.finalJson = json.dumps(self.finalJson)
-m.put(cf="cf1", cq="cq1", val=self.finalJson)
-self.conn.write(table, m)
-self.conn.close()
-self.logger.info("Pushed analysis results to Accumulo")
-
-
-def performAnalysis(self, table):
-    """ Runs analysis """
-
-
-self.logger.info("Performing video analysis...")
-self.calculateAverageTargetConfidence(table)
-self.calculateAverageGenObjectConfidence(table)
-self.makeFinalJson()
-self.pushResultsToDB(table)
-
-
-def run(self, table):
-    """ Launches the analysis """
-
-
-if self.readyForAnalysis(table):
-    self.performAnalysis(table)
+    def run(self, table):
+        """ Launches the analysis """
+        if self.readyForAnalysis(table):
+            self.performAnalysis(table)
 
 
 def main():
     """ Auto run main method """
+    vidanalysis = videoAnalysis()
+    vidanalysis.run("vid_mp4")
 
-
-vidanalysis = videoAnalysis()
-vidanalysis.run("vid_mp4")
 
 if __name__ == "__main__":
     main()
